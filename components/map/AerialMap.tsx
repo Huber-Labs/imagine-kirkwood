@@ -109,6 +109,7 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
         width={1000}
         height={600}
         preserveAspectRatio="xMidYMid slice"
+        crossOrigin="anonymous"
         filter="url(#editorial-aerial)"
         onError={() => {
           if (imageSrc !== AERIAL_IMAGE_FALLBACK) {

@@ -16,12 +16,12 @@ function LegendContent() {
   return (
     <div className="space-y-3">
       <div>
-        <p className="mb-2 text-xs text-white/45">Phase</p>
+        <p className="map-chrome-label mb-2 text-xs">Phase</p>
         <ul className="space-y-1.5">
           {phases.map((phase) => (
             <li
               key={phase}
-              className="flex items-center gap-2 text-xs text-white/80"
+              className="map-chrome-body flex items-center gap-2 text-xs"
             >
               <span className={`phase-dot phase-dot--${phase}`} />
               {PHASE_LABELS[phase]}
@@ -30,17 +30,17 @@ function LegendContent() {
         </ul>
       </div>
       <div>
-        <p className="mb-2 text-xs text-white/45">Category</p>
+        <p className="map-chrome-label mb-2 text-xs">Category</p>
         <ul className="space-y-1.5">
           {categories.map((category) => {
             const area = innovationAreas.find((a) => a.category === category);
             return (
               <li
                 key={category}
-                className="flex items-center gap-2 text-xs text-white/80"
+                className="map-chrome-body flex items-center gap-2 text-xs"
               >
                 <span
-                  className="h-2.5 w-2.5 shrink-0 rounded-sm ring-1 ring-white/20"
+                  className="h-2.5 w-2.5 shrink-0 rounded-sm ring-1 ring-white/25"
                   style={{ backgroundColor: area?.accent }}
                 />
                 {CATEGORY_LABELS[category]}
@@ -53,20 +53,18 @@ function LegendContent() {
   );
 }
 
-const panelClasses =
-  "rounded-xl border border-white/10 bg-black/55 p-3 shadow-lg backdrop-blur-md sm:p-4";
+const panelClasses = "map-chrome-panel rounded-xl p-3 sm:p-4";
 
 export function MapLegend() {
   return (
     <>
-      {/* Mobile: collapsible legend */}
       <details
         className={`absolute bottom-3 right-3 z-10 max-w-[calc(100%-1.5rem)] sm:hidden ${panelClasses}`}
       >
-        <summary className="cursor-pointer list-none text-xs font-medium uppercase tracking-wider text-white/70 [&::-webkit-details-marker]:hidden">
+        <summary className="map-chrome-body cursor-pointer list-none text-xs font-medium uppercase tracking-wider [&::-webkit-details-marker]:hidden">
           <span className="flex items-center justify-between gap-4">
             Innovation Areas
-            <span className="text-white/40">+</span>
+            <span className="map-chrome-label">+</span>
           </span>
         </summary>
         <div className="mt-3 max-h-40 overflow-y-auto">
@@ -74,11 +72,10 @@ export function MapLegend() {
         </div>
       </details>
 
-      {/* Desktop: always visible */}
       <div
         className={`absolute bottom-6 right-6 z-10 hidden sm:block ${panelClasses}`}
       >
-        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-white/70">
+        <p className="map-chrome-body mb-3 text-xs font-medium uppercase tracking-wider">
           Innovation Areas
         </p>
         <LegendContent />

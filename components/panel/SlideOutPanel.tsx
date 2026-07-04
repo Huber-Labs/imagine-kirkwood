@@ -31,14 +31,14 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
 
   return (
     <>
-      <button
-        type="button"
-        aria-label="Close panel"
-        onClick={onClose}
-        className={`fixed inset-0 z-40 bg-foreground/15 backdrop-blur-[3px] transition-[opacity,backdrop-filter] duration-500 ease-[var(--panel-ease)] md:bg-foreground/8 ${
-          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      />
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Close panel"
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-500 ease-[var(--panel-ease)] md:bg-black/25"
+        />
+      )}
 
       <aside
         role="dialog"

@@ -202,6 +202,29 @@ body {
   text-align: right;
 }
 
+/* Map scene — fixed dark presentation, independent of system theme */
+.map-scene {
+  color-scheme: dark;
+}
+
+.map-chrome-panel {
+  background: rgba(20, 19, 16, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.map-chrome-label {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.map-chrome-title {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.map-chrome-body {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
