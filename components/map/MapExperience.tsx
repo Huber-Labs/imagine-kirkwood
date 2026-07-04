@@ -26,11 +26,11 @@ export function MapExperience() {
   }, []);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[var(--map-limestone)]">
-      <div className="absolute left-4 top-4 z-20 sm:left-6 sm:top-6">
+    <div className="relative h-full w-full overflow-hidden bg-[#141310]">
+      <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:left-6 sm:top-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/75 px-4 py-2 text-sm text-foreground/60 shadow-sm backdrop-blur-md transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-3.5 py-2 text-sm text-white/75 shadow-lg backdrop-blur-md transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path
@@ -45,16 +45,16 @@ export function MapExperience() {
         </Link>
       </div>
 
-      <MapChrome />
-      <MapAttribution />
-      <MapLegend />
-
       <div className="absolute inset-0">
         <AerialMap
           selectedAreaId={selectedAreaId}
           onSelectArea={handleSelectArea}
         />
       </div>
+
+      <MapChrome />
+      <MapAttribution />
+      <MapLegend />
 
       <SlideOutPanel
         area={selectedArea}

@@ -19,12 +19,20 @@ interface AerialMapProps {
 
 export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
   const [imageSrc, setImageSrc] = useState(AERIAL_IMAGE_PATH);
-  const { brightness, limestone, vignette, labelOpacity } = AERIAL_EDITORIAL;
+  const {
+    brightness,
+    limestone,
+    scrim,
+    vignette,
+    labelColor,
+    labelOpacity,
+    titleOpacity,
+  } = AERIAL_EDITORIAL;
 
   return (
     <svg
       viewBox={MAP_VIEWBOX}
-      className="h-full w-full"
+      className="h-full w-full touch-manipulation"
       role="img"
       aria-label="Aerial view of Kirkwood Avenue with six innovation areas"
     >
@@ -42,7 +50,7 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
             values={String(AERIAL_EDITORIAL.saturation)}
             result="desaturated"
           />
-          <feComponentTransfer in="desaturated" result="brightened">
+          <feComponentTransfer in="desaturated" result="darkened">
             <feFuncR
               type="linear"
               slope={brightness.slope}
@@ -60,20 +68,30 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
             />
           </feComponentTransfer>
           <feGaussianBlur
-            in="brightened"
+            in="darkened"
             stdDeviation={AERIAL_EDITORIAL.soften}
             result="softened"
           />
         </filter>
 
-        <radialGradient id="editorial-vignette" cx="50%" cy="48%" r="68%">
-          <stop offset="55%" stopColor={vignette.color} stopOpacity={0} />
+        <radialGradient id="editorial-vignette" cx="50%" cy="48%" r="72%">
+          <stop offset="45%" stopColor={vignette.color} stopOpacity={0} />
           <stop
             offset="100%"
             stopColor={vignette.color}
             stopOpacity={vignette.opacity}
           />
         </radialGradient>
+
+        <filter id="label-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow
+            dx="0"
+            dy="1"
+            stdDeviation="2"
+            floodColor="#000"
+            floodOpacity="0.55"
+          />
+        </filter>
 
         <filter id="area-glow" x="-40%" y="-40%" width="180%" height="180%">
           <feGaussianBlur stdDeviation="6" result="blur" />
@@ -106,15 +124,23 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
         fillOpacity={limestone.opacity}
       />
 
+      <rect
+        width={1000}
+        height={600}
+        fill={scrim.color}
+        fillOpacity={scrim.opacity}
+      />
+
       <rect width={1000} height={600} fill="url(#editorial-vignette)" />
 
       <text
         x={corridorTitle.x}
         y={corridorTitle.y}
         textAnchor="middle"
-        fill={`rgba(28,27,24,${labelOpacity + 0.08})`}
+        fill={`rgba(${labelColor},${titleOpacity})`}
         fontSize={10}
         letterSpacing="0.22em"
+        filter="url(#label-shadow)"
         style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
       >
         {corridorTitle.label.toUpperCase()}
@@ -126,9 +152,10 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
           x={street.x}
           y={street.y}
           textAnchor={street.anchor}
-          fill={`rgba(28,27,24,${labelOpacity})`}
+          fill={`rgba(${labelColor},${labelOpacity})`}
           fontSize={9}
           letterSpacing="0.04em"
+          filter="url(#label-shadow)"
           style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
         >
           {street.label}

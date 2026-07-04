@@ -31,7 +31,7 @@ export function InnovationAreaShape({
   const labelY = area.geometry.labelY ?? center.y;
   const isActive = isHovered || isSelected;
 
-  const fillOpacity = isSelected ? 0.52 : isHovered ? 0.4 : 0.18;
+  const fillOpacity = isSelected ? 0.55 : isHovered ? 0.42 : 0.24;
   const strokeWidth = isSelected ? 2 : isHovered ? 1.5 : 1;
 
   return (
