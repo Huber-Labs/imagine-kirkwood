@@ -16,7 +16,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Imagine Kirkwood",
   description:
-    "Explore possibilities for Bloomington's Kirkwood Avenue — an interactive civic design experience.",
+    "An interactive civic exhibition exploring the future of Bloomington's Kirkwood Avenue.",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${instrumentSerif.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-row flex-wrap">{children}</body>
+      <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );
 }

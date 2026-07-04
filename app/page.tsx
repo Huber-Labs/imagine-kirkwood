@@ -1,12 +1,16 @@
-import { Hero } from "@/components/landing/Hero";
+import { ExhibitionHero } from "@/components/exhibition/ExhibitionHero";
+import { ExploreTransition } from "@/components/exhibition/ExploreTransition";
+import { PhilosophySection } from "@/components/exhibition/PhilosophySection";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 
 export default function Home() {
   return (
-    <div className="relative flex min-h-full flex-1 flex-col">
-      <SiteHeader />
-      <main className="flex flex-1 items-center justify-center px-6 py-24">
-        <Hero />
+    <div className="flex flex-col">
+      <SiteHeader variant="exhibition" />
+      <main>
+        <ExhibitionHero />
+        <PhilosophySection />
+        <ExploreTransition />
       </main>
     </div>
   );

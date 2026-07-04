@@ -1,21 +1,31 @@
 import Link from "next/link";
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  variant?: "default" | "exhibition";
+}
+
+export function SiteHeader({ variant = "default" }: SiteHeaderProps) {
+  const isExhibition = variant === "exhibition";
+
   return (
-    <header className="absolute inset-x-0 top-0 z-10">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+    <header className="absolute inset-x-0 top-0 z-20">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-7">
         <Link
           href="/"
-          className="font-[family-name:var(--font-instrument-serif)] text-lg tracking-tight text-foreground"
+          className={`font-[family-name:var(--font-instrument-serif)] text-lg tracking-tight ${
+            isExhibition ? "text-white/90" : "text-foreground"
+          }`}
         >
           Imagine Kirkwood
         </Link>
-        <Link
-          href="/explore"
-          className="text-sm text-muted transition-colors hover:text-foreground"
-        >
-          Explore
-        </Link>
+        {!isExhibition && (
+          <Link
+            href="/explore"
+            className="text-sm text-muted transition-colors hover:text-foreground"
+          >
+            Explore
+          </Link>
+        )}
       </div>
     </header>
   );

@@ -41,7 +41,7 @@ export function MapExperience() {
               strokeLinejoin="round"
             />
           </svg>
-          Back
+          Back to exhibition
         </Link>
       </div>
 

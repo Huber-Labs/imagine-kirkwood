@@ -35,7 +35,7 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
         type="button"
         aria-label="Close panel"
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[2px] transition-opacity duration-300 md:bg-foreground/10 ${
+        className={`fixed inset-0 z-40 bg-foreground/15 backdrop-blur-[3px] transition-[opacity,backdrop-filter] duration-500 ease-[var(--panel-ease)] md:bg-foreground/8 ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -44,18 +44,18 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-label={`${area.name} details`}
-        className={`fixed z-50 flex flex-col bg-surface shadow-[var(--panel-shadow)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl border-t border-border p-6 md:inset-x-auto md:inset-y-0 md:right-0 md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:border-l md:border-t-0 ${
+        className={`fixed z-50 flex flex-col overflow-y-auto bg-background shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 max-h-[94vh] rounded-t-[1.25rem] md:inset-x-auto md:inset-y-0 md:right-0 md:max-h-none md:w-[var(--panel-width)] md:rounded-none ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
             : "translate-y-full md:translate-y-0 md:translate-x-full"
         }`}
       >
-        <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-border md:hidden" />
+        <div className="mx-auto mt-3 mb-0.5 h-[3px] w-8 shrink-0 rounded-full bg-foreground/10 md:hidden" />
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 md:top-6 md:right-6"
+          className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white/90 backdrop-blur-md transition-[background-color,transform,color] duration-300 hover:bg-black/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 active:scale-95 md:top-6 md:right-6"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path
@@ -66,9 +66,7 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
             />
           </svg>
         </button>
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-2">
-          <AreaDetail key={area.id} area={area} />
-        </div>
+        <AreaDetail key={area.id} area={area} />
       </aside>
     </>
   );

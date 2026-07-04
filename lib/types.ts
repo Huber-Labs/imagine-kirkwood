@@ -28,12 +28,6 @@ export interface Idea {
   description: string;
 }
 
-export interface Inspiration {
-  id: string;
-  text: string;
-  source?: string;
-}
-
 export interface Observation {
   id: string;
   text: string;
@@ -54,6 +48,20 @@ export interface Proposal {
   status?: "draft" | "under-review" | "approved";
 }
 
+export interface Precedent {
+  id: string;
+  place: string;
+  summary: string;
+  image?: string;
+}
+
+export interface AreaVision {
+  northStar: string;
+  paragraphs: string[];
+  /** Explicit paths override the default /images/concepts/{id}/concept-01.webp */
+  conceptImages?: string[];
+}
+
 export interface InnovationArea {
   id: string;
   block: string;
@@ -62,19 +70,29 @@ export interface InnovationArea {
   phase: InnovationPhase;
   accent: string;
   geometry: AreaGeometry;
+  vision: AreaVision;
   today: {
     summary: string;
     description: string;
     stats: Stat[];
     observations?: Observation[];
+    photo?: string;
   };
   ideas: Idea[];
-  inspiration: Inspiration[];
-  participate: {
+  precedents: Precedent[];
+  imagineWithUs: {
     prompt: string;
     examples: string[];
   };
 }
+
+export const STORY_SECTIONS = {
+  today: "Today",
+  imagine: "Imagine",
+  aroundTheWorld: "Around the World",
+  imagineWithUs: "Imagine With Us",
+  learnMore: "Learn More",
+} as const;
 
 export const PHASE_LABELS: Record<InnovationPhase, string> = {
   test: "Test Tomorrow",
