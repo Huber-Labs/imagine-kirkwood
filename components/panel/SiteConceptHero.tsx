@@ -5,11 +5,13 @@ import {
   CONCEPT_PLACEHOLDER_PATH,
   getSiteConceptImage,
 } from "@/lib/concepts";
+import type { TimelinePhase } from "@/lib/types";
 
 interface SiteConceptHeroProps {
   siteId: string;
   siteName: string;
   accent: string;
+  activePhase: Exclude<TimelinePhase, "today">;
   conceptImages?: string[];
   embedded?: boolean;
 }
@@ -18,10 +20,11 @@ export function SiteConceptHero({
   siteId,
   siteName,
   accent,
+  activePhase,
   conceptImages,
   embedded = true,
 }: SiteConceptHeroProps) {
-  const slides = conceptImages ?? [getSiteConceptImage(siteId)];
+  const slides = conceptImages ?? [getSiteConceptImage(siteId, activePhase)];
   const [activeSlide] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);

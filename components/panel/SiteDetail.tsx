@@ -106,6 +106,9 @@ export function SiteDetail({ site, activePhase }: SiteDetailProps) {
                 siteId={site.id}
                 siteName={site.name}
                 accent={site.accent}
+                activePhase={
+                  activePhase as Exclude<TimelinePhase, "today">
+                }
                 conceptImages={phaseContent.conceptImages}
               />
               <div className="space-y-5 px-8">
@@ -131,10 +134,11 @@ export function SiteDetail({ site, activePhase }: SiteDetailProps) {
             className="panel-rise panel-rise--2"
           >
             <div className="space-y-10">
-              {site.precedents.map((precedent) => (
+              {site.precedents.map((precedent, index) => (
                 <PrecedentCard
                   key={precedent.id}
                   siteId={site.id}
+                  precedentIndex={index + 1}
                   precedent={precedent}
                 />
               ))}

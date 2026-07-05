@@ -56,6 +56,7 @@ export function TodayPhoto({ siteId, siteName, photoPath }: TodayPhotoProps) {
 
 interface PrecedentCardProps {
   siteId: string;
+  precedentIndex: number;
   precedent: {
     id: string;
     place: string;
@@ -64,9 +65,13 @@ interface PrecedentCardProps {
   };
 }
 
-export function PrecedentCard({ siteId, precedent }: PrecedentCardProps) {
+export function PrecedentCard({
+  siteId,
+  precedentIndex,
+  precedent,
+}: PrecedentCardProps) {
   const src =
-    precedent.image ?? getPrecedentImagePath(siteId, precedent.id);
+    precedent.image ?? getPrecedentImagePath(siteId, precedentIndex);
 
   return (
     <article className="space-y-4">

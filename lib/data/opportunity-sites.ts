@@ -74,6 +74,7 @@ export const opportunitySites: OpportunitySite[] = [
         "A small downtown park where students, buskers, and neighbors cross paths — but it rarely feels like a destination.",
       description:
         "People's Park sits at the heart of Kirkwood's gathering district. It hosts occasional events and daily foot traffic, yet lacks shade, seating, and a clear reason to stay.",
+      photo: "/images/opportunities/peoples-park/today/street.jpg",
       stats: [
         { label: "Daily foot traffic", value: "High" },
         { label: "Public seating", value: "Limited" },
@@ -96,6 +97,9 @@ export const opportunitySites: OpportunitySite[] = [
         "Imagine movable chairs, string lights, and a temporary stage — a low-cost way to test what draws people to stay.",
         "Food carts, acoustic sets, and open mic nights could activate the park on weekends without permanent construction.",
       ],
+      conceptImages: [
+        "/images/opportunities/peoples-park/try-soon/hero.webp",
+      ],
     },
     grow: {
       northStar: "The Event Lawn",
@@ -103,6 +107,7 @@ export const opportunitySites: OpportunitySite[] = [
         "With modest investment, People's Park becomes a flexible event lawn — shade trees, permanent power, and accessible seating.",
         "Farmers market stalls, art fairs, and community gatherings find a natural home steps from Kirkwood's theaters.",
       ],
+      conceptImages: ["/images/opportunities/peoples-park/grow/hero.webp"],
     },
     longTerm: {
       northStar: "Bloomington's Front Porch",
@@ -110,7 +115,9 @@ export const opportunitySites: OpportunitySite[] = [
         "A designed amphitheater, tree canopy, and generous plaza transform People's Park into the city's outdoor living room.",
         "Performances spill from the Buskirk-Chumley onto the lawn. Neighbors gather on summer evenings. The park becomes the heart of downtown life.",
       ],
-      conceptImages: ["/images/concepts/peoples-park/concept-01.webp"],
+      conceptImages: [
+        "/images/opportunities/peoples-park/long-term/hero.webp",
+      ],
     },
     precedents: [
       {
@@ -118,18 +125,21 @@ export const opportunitySites: OpportunitySite[] = [
         place: "Madison, WI",
         summary:
           "Capitol Square's temporary activations prove a small park can anchor an entire downtown.",
+        image: "/images/opportunities/peoples-park/precedents/01.jpg",
       },
       {
         id: "prec-pp-2",
         place: "Charlottesville, VA",
         summary:
           "The Downtown Mall's pocket parks give people reasons to pause between shops and shows.",
+        image: "/images/opportunities/peoples-park/precedents/02.jpg",
       },
       {
         id: "prec-pp-3",
         place: "Boulder, CO",
         summary:
           "Pearl Street's pop-up stages turn an ordinary block into nightly community ritual.",
+        image: "/images/opportunities/peoples-park/precedents/03.jpg",
       },
     ],
     community: {
