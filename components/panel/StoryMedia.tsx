@@ -26,7 +26,7 @@ export function StoryPhoto({ src, alt, className = "" }: StoryPhotoProps) {
       <img
         src={imageSrc}
         alt={alt}
-        className={`h-full w-full object-cover transition-opacity duration-700 ease-out ${
+        className={`story-photo__img h-full w-full object-cover object-[center_42%] transition-opacity duration-700 ease-out ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setLoaded(true)}
@@ -49,7 +49,7 @@ export function TodayPhoto({ siteId, siteName, photoPath }: TodayPhotoProps) {
     <StoryPhoto
       src={src}
       alt={`${siteName} today`}
-      className="aspect-[3/2] w-full"
+      className="story-photo--today aspect-[5/3] max-h-[34vh] w-full sm:max-h-none sm:aspect-[16/10]"
     />
   );
 }
@@ -78,7 +78,7 @@ export function PrecedentCard({
       <StoryPhoto
         src={src}
         alt={precedent.place}
-        className="aspect-[4/3] w-full"
+        className="aspect-[3/2] w-full sm:aspect-[16/10]"
       />
       <div className="space-y-1.5">
         <p className="text-xs tracking-[0.12em] uppercase text-[var(--panel-muted)]">

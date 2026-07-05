@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { InnovationAreaOverlay } from "@/components/map/InnovationAreaOverlay";
-import { OpportunitySiteShape } from "@/components/map/OpportunitySiteShape";
-import { innovationAreas } from "@/lib/data/innovation-areas";
+import { OpportunityPlaceMarker } from "@/components/map/OpportunityPlaceMarker";
 import { opportunitySites } from "@/lib/data/opportunity-sites";
 import {
   AERIAL_EDITORIAL,
@@ -37,16 +35,12 @@ export function AerialMap({
     titleOpacity,
   } = AERIAL_EDITORIAL;
 
-  const highlightedAreaId = selectedSiteId
-    ? opportunitySites.find((s) => s.id === selectedSiteId)?.areaId
-    : null;
-
   return (
     <svg
       viewBox={MAP_VIEWBOX}
       className="h-full w-full touch-manipulation"
       role="img"
-      aria-label="Aerial view of Kirkwood Avenue with opportunity sites"
+      aria-label="Aerial view of downtown Kirkwood with named opportunity places"
     >
       <defs>
         <filter
@@ -105,8 +99,42 @@ export function AerialMap({
           />
         </filter>
 
-        <filter id="area-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <filter
+          id="phase-glow-try-soon"
+          x="-80%"
+          y="-80%"
+          width="260%"
+          height="260%"
+        >
           <feGaussianBlur stdDeviation="6" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        <filter
+          id="phase-glow-grow"
+          x="-100%"
+          y="-100%"
+          width="300%"
+          height="300%"
+        >
+          <feGaussianBlur stdDeviation="10" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        <filter
+          id="phase-glow-long-term"
+          x="-120%"
+          y="-120%"
+          width="340%"
+          height="340%"
+        >
+          <feGaussianBlur stdDeviation="14" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -175,23 +203,21 @@ export function AerialMap({
         </text>
       ))}
 
-      {innovationAreas.map((area) => (
-        <InnovationAreaOverlay
-          key={area.id}
-          area={area}
-          isHighlighted={highlightedAreaId === area.id}
-        />
-      ))}
-
-      {opportunitySites.map((site) => (
-        <OpportunitySiteShape
-          key={site.id}
-          site={site}
-          isSelected={selectedSiteId === site.id}
-          activePhase={activePhase}
-          onSelect={onSelectSite}
-        />
-      ))}
+      {[...opportunitySites]
+        .sort((a, b) => {
+          if (a.id === selectedSiteId) return 1;
+          if (b.id === selectedSiteId) return -1;
+          return 0;
+        })
+        .map((site) => (
+          <OpportunityPlaceMarker
+            key={site.id}
+            site={site}
+            isSelected={selectedSiteId === site.id}
+            activePhase={activePhase}
+            onSelect={onSelectSite}
+          />
+        ))}
     </svg>
   );
 }

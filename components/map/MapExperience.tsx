@@ -52,7 +52,7 @@ export function MapExperience() {
         </Link>
       </div>
 
-      <div className="absolute inset-0 pb-24">
+      <div className="absolute inset-0 pb-[7.25rem] sm:pb-24">
         <AerialMap
           selectedSiteId={selectedSiteId}
           activePhase={activePhase}

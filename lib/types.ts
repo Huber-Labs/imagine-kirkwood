@@ -50,18 +50,37 @@ export interface InnovationArea {
   chapterIntro: string;
 }
 
-export interface SiteToday {
-  summary: string;
+/** Editorial chapter metadata shared across timeline phases. */
+export interface PhaseChapterFields {
+  chapterTitle: string;
+  narrative: string;
+  improvements: string[];
+  timeline: string;
+  investment: string;
+  confidence: string;
+}
+
+export interface SiteToday extends PhaseChapterFields {
+  /** @deprecated Use narrative — kept for placeholder fallbacks. */
+  summary?: string;
   description?: string;
   stats?: Stat[];
   observations?: Observation[];
   photo?: string;
 }
 
-export interface SitePhaseContent {
-  northStar: string;
-  paragraphs: string[];
+export interface SitePhaseContent extends PhaseChapterFields {
+  /** @deprecated Use chapterTitle — kept for placeholder fallbacks. */
+  northStar?: string;
+  /** Extended copy after the opening narrative. */
+  paragraphs?: string[];
   conceptImages?: string[];
+}
+
+export interface SmallWin {
+  id: string;
+  title: string;
+  description?: string;
 }
 
 export interface SiteCommunity {
@@ -75,13 +94,14 @@ export interface OpportunitySite {
   name: string;
   areaId: string;
   accent: string;
-  geometry: AreaGeometry;
   today: SiteToday;
   trySoon: SitePhaseContent;
   grow: SitePhaseContent;
   longTerm: SitePhaseContent;
   precedents: Precedent[];
   community: SiteCommunity;
+  /** Low-cost actions that can start immediately — reinforces incremental change. */
+  smallWins?: SmallWin[];
   /** When true, content is a stub awaiting editorial pass. */
   isPlaceholder?: boolean;
 }
@@ -90,14 +110,41 @@ export const TIMELINE_PHASES: {
   id: TimelinePhase;
   label: string;
   shortLabel: string;
+  subtitle: string;
+  confidenceLevel: 1 | 2 | 3 | 4;
 }[] = [
-  { id: "today", label: "Today", shortLabel: "Today" },
-  { id: "try-soon", label: "Try Soon", shortLabel: "Try Soon" },
-  { id: "grow", label: "Grow What Works", shortLabel: "Grow" },
-  { id: "long-term", label: "Long Term", shortLabel: "Long Term" },
+  {
+    id: "today",
+    label: "Today",
+    shortLabel: "Today",
+    subtitle: "As it is",
+    confidenceLevel: 1,
+  },
+  {
+    id: "try-soon",
+    label: "Try Soon",
+    shortLabel: "Try",
+    subtitle: "Quick experiments",
+    confidenceLevel: 2,
+  },
+  {
+    id: "grow",
+    label: "Grow What Works",
+    shortLabel: "Grow",
+    subtitle: "Build on success",
+    confidenceLevel: 3,
+  },
+  {
+    id: "long-term",
+    label: "Long Term",
+    shortLabel: "Long",
+    subtitle: "Full transformation",
+    confidenceLevel: 4,
+  },
 ];
 
 export const SITE_SECTIONS = {
+  smallWins: "Start Tomorrow",
   precedents: "Around the World",
   community: "Imagine With Us",
 } as const;

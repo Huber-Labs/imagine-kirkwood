@@ -7,16 +7,25 @@ import type {
 
 function placeholderPhase(name: string): SitePhaseContent {
   return {
-    northStar: `${name} — coming soon`,
-    paragraphs: [
+    chapterTitle: `${name} — coming soon`,
+    narrative:
       "This opportunity site is part of the Kirkwood exhibition. Full stories will arrive in a future sprint.",
-    ],
+    improvements: [],
+    timeline: "—",
+    investment: "—",
+    confidence: "Story in development",
+    paragraphs: [],
   };
 }
 
 function placeholderToday(name: string): SiteToday {
   return {
-    summary: `${name} today — story in development.`,
+    chapterTitle: name,
+    narrative: `${name} today — story in development.`,
+    improvements: [],
+    timeline: "Now",
+    investment: "—",
+    confidence: "Story in development",
     observations: [],
   };
 }
@@ -26,14 +35,12 @@ function createPlaceholderSite(
   name: string,
   areaId: string,
   accent: string,
-  geometry: OpportunitySite["geometry"],
 ): OpportunitySite {
   return {
     id,
     name,
     areaId,
     accent,
-    geometry,
     isPlaceholder: true,
     today: placeholderToday(name),
     trySoon: placeholderPhase(name),
@@ -49,29 +56,35 @@ function createPlaceholderSite(
 
 export const opportunitySites: OpportunitySite[] = [
   createPlaceholderSite(
-    "welcome-corner",
-    "Welcome Corner",
+    "dining-district",
+    "Dining District",
     "indiana-gateway",
-    "#5B8C5A",
-    {
-      points: "72,268 148,258 158,328 148,352 62,342 58,288",
-      labelX: 108,
-      labelY: 312,
-    },
+    "#C4A35A",
+  ),
+  createPlaceholderSite(
+    "library-plaza",
+    "Library Plaza",
+    "theater-row",
+    "#7B6BA8",
   ),
   {
     id: "peoples-park",
     name: "People's Park",
     areaId: "theater-row",
     accent: "#7B6BA8",
-    geometry: {
-      points: "218,268 298,262 308,318 298,358 212,352 208,298",
-      labelX: 258,
-      labelY: 318,
-    },
     today: {
-      summary:
+      chapterTitle: "A Place to Pass Through",
+      narrative:
         "A small downtown park where students, buskers, and neighbors cross paths — but it rarely feels like a destination.",
+      improvements: [
+        "Comfortable places to sit and linger",
+        "Shade for hot summer afternoons",
+        "A reason to stay beyond cutting through",
+        "Connection to show-night energy on Kirkwood",
+      ],
+      timeline: "Now",
+      investment: "No cost — observe and listen",
+      confidence: "What we see today",
       description:
         "People's Park sits at the heart of Kirkwood's gathering district. It hosts occasional events and daily foot traffic, yet lacks shade, seating, and a clear reason to stay.",
       photo: "/images/opportunities/peoples-park/today/street.jpg",
@@ -92,9 +105,20 @@ export const opportunitySites: OpportunitySite[] = [
       ],
     },
     trySoon: {
-      northStar: "The Pop-Up Lawn",
-      paragraphs: [
+      chapterTitle: "The Pop-Up Lawn",
+      narrative:
         "Imagine movable chairs, string lights, and a temporary stage — a low-cost way to test what draws people to stay.",
+      improvements: [
+        "Movable chairs and café tables",
+        "String lights for evening warmth",
+        "Pop-up stage for acoustic sets",
+        "Weekend food cart permits",
+        "Chalk art and temporary street paint",
+      ],
+      timeline: "Weeks to months",
+      investment: "Pocket change — mostly borrowed and rented",
+      confidence: "Worth trying soon",
+      paragraphs: [
         "Food carts, acoustic sets, and open mic nights could activate the park on weekends without permanent construction.",
       ],
       conceptImages: [
@@ -102,23 +126,77 @@ export const opportunitySites: OpportunitySite[] = [
       ],
     },
     grow: {
-      northStar: "The Event Lawn",
-      paragraphs: [
+      chapterTitle: "The Event Lawn",
+      narrative:
         "With modest investment, People's Park becomes a flexible event lawn — shade trees, permanent power, and accessible seating.",
+      improvements: [
+        "Young shade trees with room to mature",
+        "Permanent power for events and markets",
+        "Accessible seating and gathering edges",
+        "Improved lighting for evening use",
+        "Flexible lawn for markets and art fairs",
+      ],
+      timeline: "1–3 years",
+      investment: "Modest budget — phased over seasons",
+      confidence: "Proven in peer cities",
+      paragraphs: [
         "Farmers market stalls, art fairs, and community gatherings find a natural home steps from Kirkwood's theaters.",
       ],
       conceptImages: ["/images/opportunities/peoples-park/grow/hero.webp"],
     },
     longTerm: {
-      northStar: "Bloomington's Front Porch",
-      paragraphs: [
+      chapterTitle: "Bloomington's Front Porch",
+      narrative:
         "A designed amphitheater, tree canopy, and generous plaza transform People's Park into the city's outdoor living room.",
+      improvements: [
+        "Amphitheater facing the Buskirk-Chumley",
+        "Mature tree canopy across the lawn",
+        "Generous plaza for daily gathering",
+        "Integrated stormwater and native plantings",
+        "Year-round programming infrastructure",
+      ],
+      timeline: "5+ years",
+      investment: "Major investment — a civic landmark",
+      confidence: "A shared community vision",
+      paragraphs: [
         "Performances spill from the Buskirk-Chumley onto the lawn. Neighbors gather on summer evenings. The park becomes the heart of downtown life.",
       ],
       conceptImages: [
         "/images/opportunities/peoples-park/long-term/hero.webp",
       ],
     },
+    smallWins: [
+      {
+        id: "win-pp-1",
+        title: "Temporary seating",
+        description:
+          "Roll out movable chairs on Friday afternoons — see if people stay.",
+      },
+      {
+        id: "win-pp-2",
+        title: "Shade umbrellas",
+        description:
+          "Partner with a nearby café to loan umbrellas on sunny days.",
+      },
+      {
+        id: "win-pp-3",
+        title: "Weekend music",
+        description:
+          "Invite a busker or acoustic duo for Saturday afternoons.",
+      },
+      {
+        id: "win-pp-4",
+        title: "Chalk and street paint",
+        description:
+          "A one-day community art event to claim the space together.",
+      },
+      {
+        id: "win-pp-5",
+        title: "Food carts",
+        description:
+          "Pilot a single cart on show nights — low risk, high energy.",
+      },
+    ],
     precedents: [
       {
         id: "prec-pp-1",
@@ -171,44 +249,18 @@ export const opportunitySites: OpportunitySite[] = [
     "Restaurant Alley",
     "parklet-promenade",
     "#C4A35A",
-    {
-      points: "378,268 468,262 478,328 468,362 372,358 368,298",
-      labelX: 422,
-      labelY: 318,
-    },
   ),
   createPlaceholderSite(
     "crossing-plaza",
     "Crossing Plaza",
     "mid-block-crossing",
     "#4A90A4",
-    {
-      points: "538,268 628,262 638,318 628,352 532,348 528,298",
-      labelX: 582,
-      labelY: 312,
-    },
   ),
   createPlaceholderSite(
-    "civic-porch",
-    "Civic Porch",
+    "village-courtyard",
+    "Village Courtyard",
     "courthouse-edge",
     "#8B6914",
-    {
-      points: "698,278 788,282 798,328 788,362 692,358 688,302",
-      labelX: 742,
-      labelY: 322,
-    },
-  ),
-  createPlaceholderSite(
-    "market-square",
-    "Market Square",
-    "walnut-square",
-    "#B85C5C",
-    {
-      points: "848,288 938,292 948,338 938,368 842,362 838,308",
-      labelX: 892,
-      labelY: 332,
-    },
   ),
 ];
 
@@ -241,5 +293,5 @@ export function getPhaseContent(
 export function isSiteToday(
   content: SiteToday | SitePhaseContent,
 ): content is SiteToday {
-  return "summary" in content && !("northStar" in content);
+  return !("paragraphs" in content);
 }

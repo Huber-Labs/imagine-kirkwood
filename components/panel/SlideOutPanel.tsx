@@ -61,7 +61,7 @@ export function SlideOutPanel({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white/90 backdrop-blur-md transition-[background-color,transform,color] duration-300 hover:bg-black/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 active:scale-95 md:top-6 md:right-6"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-foreground/[0.06] text-foreground/70 transition-[background-color,transform,color] duration-300 hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 active:scale-95 sm:right-5 sm:top-5 md:top-6 md:right-6"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path

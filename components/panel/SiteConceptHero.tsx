@@ -38,8 +38,8 @@ export function SiteConceptHero({
       style={{ "--hero-accent": accent } as React.CSSProperties}
     >
       <div
-        className={`concept-hero__frame relative aspect-video w-full overflow-hidden bg-[color-mix(in_srgb,var(--hero-accent)_6%,var(--background))] ${
-          embedded ? "md:aspect-[16/9]" : "md:aspect-[16/10]"
+        className={`concept-hero__frame relative aspect-[4/3] max-h-[34vh] w-full overflow-hidden bg-[color-mix(in_srgb,var(--hero-accent)_6%,var(--background))] sm:max-h-none sm:aspect-[16/10] ${
+          embedded ? "" : "md:aspect-[16/10]"
         }`}
       >
         <div className="concept-hero__track h-full w-full">
@@ -48,14 +48,14 @@ export function SiteConceptHero({
               <img
                 src={CONCEPT_PLACEHOLDER_PATH}
                 alt={`Concept rendering for ${siteName}`}
-                className="h-full w-full object-cover transition-opacity duration-700 ease-out"
+                className="h-full w-full object-cover object-[center_40%] transition-opacity duration-700 ease-out"
                 onLoad={() => setImageLoaded(true)}
               />
             ) : (
               <img
                 src={src}
                 alt={`Concept rendering for ${siteName}`}
-                className={`h-full w-full object-cover transition-opacity duration-700 ease-out ${
+                className={`h-full w-full object-cover object-[center_40%] transition-opacity duration-700 ease-out ${
                   imageLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setImageLoaded(true)}

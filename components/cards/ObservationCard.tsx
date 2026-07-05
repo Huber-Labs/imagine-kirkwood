@@ -12,7 +12,7 @@ export function ObservationCard({
   if (variant === "editorial") {
     return (
       <article className="border-l border-[color-mix(in_srgb,var(--foreground)_12%,var(--border))] pl-5">
-        <p className="text-[0.9375rem] leading-[1.75] text-foreground/75">
+        <p className="text-[0.875rem] leading-[1.65] text-foreground/72 sm:text-[0.9375rem] sm:leading-[1.7]">
           {observation.text}
         </p>
         {observation.author && (
