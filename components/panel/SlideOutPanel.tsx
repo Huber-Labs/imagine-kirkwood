@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
-import { AreaDetail } from "@/components/panel/AreaDetail";
-import type { InnovationArea } from "@/lib/types";
+import { SiteDetail } from "@/components/panel/SiteDetail";
+import type { OpportunitySite, TimelinePhase } from "@/lib/types";
 
 interface SlideOutPanelProps {
-  area: InnovationArea | null;
+  site: OpportunitySite | null;
+  activePhase: TimelinePhase;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
+export function SlideOutPanel({
+  site,
+  activePhase,
+  isOpen,
+  onClose,
+}: SlideOutPanelProps) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -27,7 +33,7 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
     };
   }, [isOpen, onClose]);
 
-  if (!area) return null;
+  if (!site) return null;
 
   return (
     <>
@@ -43,7 +49,7 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
       <aside
         role="dialog"
         aria-modal="true"
-        aria-label={`${area.name} details`}
+        aria-label={`${site.name} details`}
         className={`fixed z-50 flex flex-col overflow-y-auto bg-background shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 max-h-[94vh] rounded-t-[1.25rem] md:inset-x-auto md:inset-y-0 md:right-0 md:max-h-none md:w-[var(--panel-width)] md:rounded-none ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
@@ -66,7 +72,11 @@ export function SlideOutPanel({ area, isOpen, onClose }: SlideOutPanelProps) {
             />
           </svg>
         </button>
-        <AreaDetail key={area.id} area={area} />
+        <SiteDetail
+          key={`${site.id}-${activePhase}`}
+          site={site}
+          activePhase={activePhase}
+        />
       </aside>
     </>
   );

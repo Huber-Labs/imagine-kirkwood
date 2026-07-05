@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { InnovationAreaShape } from "@/components/map/InnovationArea";
+import { InnovationAreaOverlay } from "@/components/map/InnovationAreaOverlay";
+import { OpportunitySiteShape } from "@/components/map/OpportunitySiteShape";
 import { innovationAreas } from "@/lib/data/innovation-areas";
+import { opportunitySites } from "@/lib/data/opportunity-sites";
 import {
   AERIAL_EDITORIAL,
   AERIAL_IMAGE_FALLBACK,
@@ -11,13 +13,19 @@ import {
   corridorLabels,
   corridorTitle,
 } from "@/lib/map/aerial";
+import type { TimelinePhase } from "@/lib/types";
 
 interface AerialMapProps {
-  selectedAreaId: string | null;
-  onSelectArea: (id: string) => void;
+  selectedSiteId: string | null;
+  activePhase: TimelinePhase;
+  onSelectSite: (id: string) => void;
 }
 
-export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
+export function AerialMap({
+  selectedSiteId,
+  activePhase,
+  onSelectSite,
+}: AerialMapProps) {
   const [imageSrc, setImageSrc] = useState(AERIAL_IMAGE_PATH);
   const {
     brightness,
@@ -29,12 +37,16 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
     titleOpacity,
   } = AERIAL_EDITORIAL;
 
+  const highlightedAreaId = selectedSiteId
+    ? opportunitySites.find((s) => s.id === selectedSiteId)?.areaId
+    : null;
+
   return (
     <svg
       viewBox={MAP_VIEWBOX}
       className="h-full w-full touch-manipulation"
       role="img"
-      aria-label="Aerial view of Kirkwood Avenue with six innovation areas"
+      aria-label="Aerial view of Kirkwood Avenue with opportunity sites"
     >
       <defs>
         <filter
@@ -164,11 +176,20 @@ export function AerialMap({ selectedAreaId, onSelectArea }: AerialMapProps) {
       ))}
 
       {innovationAreas.map((area) => (
-        <InnovationAreaShape
+        <InnovationAreaOverlay
           key={area.id}
           area={area}
-          isSelected={selectedAreaId === area.id}
-          onSelect={onSelectArea}
+          isHighlighted={highlightedAreaId === area.id}
+        />
+      ))}
+
+      {opportunitySites.map((site) => (
+        <OpportunitySiteShape
+          key={site.id}
+          site={site}
+          isSelected={selectedSiteId === site.id}
+          activePhase={activePhase}
+          onSelect={onSelectSite}
         />
       ))}
     </svg>

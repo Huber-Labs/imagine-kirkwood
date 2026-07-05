@@ -9,7 +9,7 @@ export function MapChrome() {
           Kirkwood Avenue
         </h1>
         <p className="map-chrome-body mt-0.5 text-xs sm:mt-1 sm:text-sm">
-          Six blocks · Indiana Avenue to Walnut Street
+          Six opportunity sites along Kirkwood Avenue
         </p>
       </div>
       <div
@@ -28,8 +28,8 @@ export function MapChrome() {
 
 export function MapAttribution() {
   return (
-    <p className="pointer-events-none absolute bottom-3 left-3 z-10 max-w-[55%] text-[11px] leading-snug text-white/70 sm:bottom-6 sm:left-6 sm:max-w-none sm:text-xs">
-      Tap an innovation area to explore
+    <p className="pointer-events-none absolute bottom-28 left-3 z-10 max-w-[55%] text-[11px] leading-snug text-white/70 sm:bottom-32 sm:left-6 sm:max-w-none sm:text-xs">
+      Tap an opportunity site to explore
     </p>
   );
 }

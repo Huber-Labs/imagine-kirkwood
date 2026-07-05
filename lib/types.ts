@@ -1,4 +1,5 @@
-export type InnovationPhase = "test" | "next" | "vision";
+/** Timeline phases for the global phase scrubber. */
+export type TimelinePhase = "today" | "try-soon" | "grow" | "long-term";
 
 export type AreaCategory =
   | "gateway"
@@ -8,8 +9,6 @@ export type AreaCategory =
   | "mobility"
   | "civic";
 
-export type PanelTab = "today" | "ideas" | "inspiration" | "participate";
-
 export interface Stat {
   label: string;
   value: string;
@@ -17,35 +16,14 @@ export interface Stat {
 
 export interface AreaGeometry {
   points: string;
-  /** Optional label anchor when centroid isn't ideal for organic shapes. */
   labelX?: number;
   labelY?: number;
-}
-
-export interface Idea {
-  id: string;
-  title: string;
-  description: string;
 }
 
 export interface Observation {
   id: string;
   text: string;
   author?: string;
-}
-
-export interface ResearchItem {
-  id: string;
-  title: string;
-  summary: string;
-  source?: string;
-}
-
-export interface Proposal {
-  id: string;
-  title: string;
-  summary: string;
-  status?: "draft" | "under-review" | "approved";
 }
 
 export interface Precedent {
@@ -55,50 +33,74 @@ export interface Precedent {
   image?: string;
 }
 
-export interface AreaVision {
-  northStar: string;
-  paragraphs: string[];
-  /** Explicit paths override the default /images/concepts/{id}/concept-01.webp */
-  conceptImages?: string[];
+export interface Idea {
+  id: string;
+  title: string;
+  description: string;
 }
 
+/** Contextual block overlay — not a primary click target. */
 export interface InnovationArea {
   id: string;
   block: string;
   name: string;
   category: AreaCategory;
-  phase: InnovationPhase;
   accent: string;
   geometry: AreaGeometry;
-  vision: AreaVision;
-  today: {
-    summary: string;
-    description: string;
-    stats: Stat[];
-    observations?: Observation[];
-    photo?: string;
-  };
-  ideas: Idea[];
-  precedents: Precedent[];
-  imagineWithUs: {
-    prompt: string;
-    examples: string[];
-  };
+  chapterIntro: string;
 }
 
-export const STORY_SECTIONS = {
-  today: "Today",
-  imagine: "Imagine",
-  aroundTheWorld: "Around the World",
-  imagineWithUs: "Imagine With Us",
-  learnMore: "Learn More",
-} as const;
+export interface SiteToday {
+  summary: string;
+  description?: string;
+  stats?: Stat[];
+  observations?: Observation[];
+  photo?: string;
+}
 
-export const PHASE_LABELS: Record<InnovationPhase, string> = {
-  test: "Test Tomorrow",
-  next: "Next Five Years",
-  vision: "Long-Term Vision",
-};
+export interface SitePhaseContent {
+  northStar: string;
+  paragraphs: string[];
+  conceptImages?: string[];
+}
+
+export interface SiteCommunity {
+  prompt: string;
+  examples: string[];
+  ideas?: Idea[];
+}
+
+export interface OpportunitySite {
+  id: string;
+  name: string;
+  areaId: string;
+  accent: string;
+  geometry: AreaGeometry;
+  today: SiteToday;
+  trySoon: SitePhaseContent;
+  grow: SitePhaseContent;
+  longTerm: SitePhaseContent;
+  precedents: Precedent[];
+  community: SiteCommunity;
+  /** When true, content is a stub awaiting editorial pass. */
+  isPlaceholder?: boolean;
+}
+
+export const TIMELINE_PHASES: {
+  id: TimelinePhase;
+  label: string;
+  shortLabel: string;
+}[] = [
+  { id: "today", label: "Today", shortLabel: "Today" },
+  { id: "try-soon", label: "Try Soon", shortLabel: "Try Soon" },
+  { id: "grow", label: "Grow What Works", shortLabel: "Grow" },
+  { id: "long-term", label: "Long Term", shortLabel: "Long Term" },
+];
+
+export const SITE_SECTIONS = {
+  precedents: "Around the World",
+  community: "Imagine With Us",
+} as const;
 
 export const CATEGORY_LABELS: Record<AreaCategory, string> = {
   gateway: "Gateway",
@@ -108,10 +110,3 @@ export const CATEGORY_LABELS: Record<AreaCategory, string> = {
   mobility: "Mobility",
   civic: "Civic",
 };
-
-export const PANEL_TABS: { id: PanelTab; label: string }[] = [
-  { id: "today", label: "Today" },
-  { id: "ideas", label: "Ideas" },
-  { id: "inspiration", label: "Inspiration" },
-  { id: "participate", label: "Participate" },
-];

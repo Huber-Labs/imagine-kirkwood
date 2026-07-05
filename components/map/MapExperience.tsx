@@ -5,24 +5,31 @@ import Link from "next/link";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
 import { MapLegend } from "@/components/map/MapLegend";
+import { PhaseScrubber } from "@/components/map/PhaseScrubber";
 import { SlideOutPanel } from "@/components/panel/SlideOutPanel";
-import { getInnovationAreaById } from "@/lib/data/innovation-areas";
+import { getOpportunitySiteById } from "@/lib/data/opportunity-sites";
+import type { TimelinePhase } from "@/lib/types";
 
 export function MapExperience() {
-  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
+  const [activePhase, setActivePhase] = useState<TimelinePhase>("today");
   const [panelOpen, setPanelOpen] = useState(false);
 
-  const selectedArea = selectedAreaId
-    ? getInnovationAreaById(selectedAreaId) ?? null
+  const selectedSite = selectedSiteId
+    ? getOpportunitySiteById(selectedSiteId) ?? null
     : null;
 
-  const handleSelectArea = useCallback((id: string) => {
-    setSelectedAreaId(id);
+  const handleSelectSite = useCallback((id: string) => {
+    setSelectedSiteId(id);
     setPanelOpen(true);
   }, []);
 
   const handleClosePanel = useCallback(() => {
     setPanelOpen(false);
+  }, []);
+
+  const handlePhaseChange = useCallback((phase: TimelinePhase) => {
+    setActivePhase(phase);
   }, []);
 
   return (
@@ -45,10 +52,11 @@ export function MapExperience() {
         </Link>
       </div>
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pb-24">
         <AerialMap
-          selectedAreaId={selectedAreaId}
-          onSelectArea={handleSelectArea}
+          selectedSiteId={selectedSiteId}
+          activePhase={activePhase}
+          onSelectSite={handleSelectSite}
         />
       </div>
 
@@ -56,9 +64,15 @@ export function MapExperience() {
       <MapAttribution />
       <MapLegend />
 
+      <PhaseScrubber
+        activePhase={activePhase}
+        onPhaseChange={handlePhaseChange}
+      />
+
       <SlideOutPanel
-        area={selectedArea}
-        isOpen={panelOpen && selectedArea !== null}
+        site={selectedSite}
+        activePhase={activePhase}
+        isOpen={panelOpen && selectedSite !== null}
         onClose={handleClosePanel}
       />
     </div>

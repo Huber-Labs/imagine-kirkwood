@@ -3,7 +3,7 @@
 import { useState } from "react";
 import {
   getPrecedentImagePath,
-  getTodayPhotoPath,
+  getSitePhotoPath,
   PHOTO_PLACEHOLDER_PATH,
 } from "@/lib/images";
 
@@ -37,25 +37,25 @@ export function StoryPhoto({ src, alt, className = "" }: StoryPhotoProps) {
 }
 
 interface TodayPhotoProps {
-  areaId: string;
-  areaName: string;
+  siteId: string;
+  siteName: string;
   photoPath?: string;
 }
 
-export function TodayPhoto({ areaId, areaName, photoPath }: TodayPhotoProps) {
-  const src = photoPath ?? getTodayPhotoPath(areaId);
+export function TodayPhoto({ siteId, siteName, photoPath }: TodayPhotoProps) {
+  const src = photoPath ?? getSitePhotoPath(siteId);
 
   return (
     <StoryPhoto
       src={src}
-      alt={`${areaName} today`}
+      alt={`${siteName} today`}
       className="aspect-[3/2] w-full"
     />
   );
 }
 
 interface PrecedentCardProps {
-  areaId: string;
+  siteId: string;
   precedent: {
     id: string;
     place: string;
@@ -64,9 +64,9 @@ interface PrecedentCardProps {
   };
 }
 
-export function PrecedentCard({ areaId, precedent }: PrecedentCardProps) {
+export function PrecedentCard({ siteId, precedent }: PrecedentCardProps) {
   const src =
-    precedent.image ?? getPrecedentImagePath(areaId, precedent.id);
+    precedent.image ?? getPrecedentImagePath(siteId, precedent.id);
 
   return (
     <article className="space-y-4">
