@@ -83,6 +83,14 @@ export interface SmallWin {
   description?: string;
 }
 
+export interface PlaceIdea {
+  id: string;
+  title: string;
+  description?: string;
+  phase?: Exclude<TimelinePhase, "today">;
+  seedVotes?: number;
+}
+
 export interface SiteCommunity {
   prompt: string;
   examples: string[];
@@ -98,9 +106,13 @@ export interface OpportunitySite {
   trySoon: SitePhaseContent;
   grow: SitePhaseContent;
   longTerm: SitePhaseContent;
-  precedents: Precedent[];
-  community: SiteCommunity;
-  /** Low-cost actions that can start immediately — reinforces incremental change. */
+  /** Ideas visitors can support for this place. */
+  ideas: PlaceIdea[];
+  /** @deprecated No longer rendered — kept for migration. */
+  precedents?: Precedent[];
+  /** @deprecated No longer rendered — kept for migration. */
+  community?: SiteCommunity;
+  /** @deprecated No longer rendered — kept for migration. */
   smallWins?: SmallWin[];
   /** When true, content is a stub awaiting editorial pass. */
   isPlaceholder?: boolean;
@@ -144,6 +156,7 @@ export const TIMELINE_PHASES: {
 ];
 
 export const SITE_SECTIONS = {
+  ideas: "Ideas for this place",
   smallWins: "Start Tomorrow",
   precedents: "Around the World",
   community: "Imagine With Us",

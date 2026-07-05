@@ -74,6 +74,7 @@ export function MapExperience() {
         activePhase={activePhase}
         isOpen={panelOpen && selectedSite !== null}
         onClose={handleClosePanel}
+        onPhaseChange={handlePhaseChange}
       />
     </div>
   );

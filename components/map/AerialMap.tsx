@@ -184,6 +184,29 @@ export function AerialMap({
         </filter>
 
         <filter
+          id="street-label-halo"
+          x="-30%"
+          y="-30%"
+          width="160%"
+          height="160%"
+        >
+          <feDropShadow
+            dx="0"
+            dy="0"
+            stdDeviation="3.5"
+            floodColor="#141310"
+            floodOpacity="0.85"
+          />
+          <feDropShadow
+            dx="0"
+            dy="1"
+            stdDeviation="1.5"
+            floodColor="#000"
+            floodOpacity="0.4"
+          />
+        </filter>
+
+        <filter
           id="phase-glow-try-soon"
           x="-80%"
           y="-80%"
@@ -277,8 +300,9 @@ export function AerialMap({
       <text
         fill={`rgba(${labelColor},${KIRKWOOD_STREET_LABEL.opacity})`}
         fontSize={KIRKWOOD_STREET_LABEL.fontSize}
+        fontWeight={600}
         letterSpacing={KIRKWOOD_STREET_LABEL.letterSpacing}
-        filter="url(#label-shadow)"
+        filter="url(#street-label-halo)"
         style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
       >
         <textPath

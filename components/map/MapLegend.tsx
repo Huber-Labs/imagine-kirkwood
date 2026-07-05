@@ -1,4 +1,5 @@
 import { opportunitySites } from "@/lib/data/opportunity-sites";
+import { IU_CRIMSON } from "@/lib/map/exhibit-treatment";
 
 function LegendContent() {
   return (
@@ -9,13 +10,13 @@ function LegendContent() {
           className="map-chrome-body flex items-center gap-2 text-xs"
         >
           <span
-            className={`h-2 w-2 shrink-0 rounded-full ring-1 ring-white/25 ${
-              site.isPlaceholder ? "bg-white/25" : "bg-white/85"
+            className={`h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white/40 ${
+              site.isPlaceholder ? "bg-white/25" : ""
             }`}
             style={
               site.isPlaceholder
                 ? undefined
-                : { backgroundColor: site.accent, boxShadow: `0 0 8px ${site.accent}55` }
+                : { backgroundColor: IU_CRIMSON }
             }
           />
           {site.name}

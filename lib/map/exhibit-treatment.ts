@@ -50,10 +50,13 @@ export const EXHIBIT_PAPER_TINT = {
   opacity: 0.06,
 } as const;
 
+/** Indiana University crimson — opportunity place markers. */
+export const IU_CRIMSON = "#990000";
+
 /** Kirkwood Avenue label traced along the street centerline. */
 export const KIRKWOOD_STREET_LABEL = {
   path: "M 72 300 L 928 300",
-  fontSize: 8.5,
-  letterSpacing: "0.32em",
-  opacity: 0.62,
+  fontSize: 10.5,
+  letterSpacing: "0.22em",
+  opacity: 0.92,
 } as const;

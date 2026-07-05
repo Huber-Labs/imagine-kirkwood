@@ -9,6 +9,7 @@ interface SlideOutPanelProps {
   activePhase: TimelinePhase;
   isOpen: boolean;
   onClose: () => void;
+  onPhaseChange: (phase: TimelinePhase) => void;
 }
 
 export function SlideOutPanel({
@@ -16,6 +17,7 @@ export function SlideOutPanel({
   activePhase,
   isOpen,
   onClose,
+  onPhaseChange,
 }: SlideOutPanelProps) {
   useEffect(() => {
     if (!isOpen) return;
@@ -76,6 +78,7 @@ export function SlideOutPanel({
           key={`${site.id}-${activePhase}`}
           site={site}
           activePhase={activePhase}
+          onPhaseChange={onPhaseChange}
         />
       </aside>
     </>
