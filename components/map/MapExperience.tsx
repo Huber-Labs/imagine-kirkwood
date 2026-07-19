@@ -8,7 +8,6 @@ import { SignInSheet } from "@/components/auth/SignInSheet";
 import { AuthorModeShell } from "@/components/author/AuthorModeShell";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
-import { MapLegend } from "@/components/map/MapLegend";
 import { SlideOutPanel } from "@/components/panel/SlideOutPanel";
 import {
   getDefaultFuture,
@@ -173,7 +172,6 @@ export function MapExperience() {
 
       <MapChrome />
       <MapAttribution />
-      {!authorMode && <MapLegend />}
 
       {!authorMode && (
         <SlideOutPanel
