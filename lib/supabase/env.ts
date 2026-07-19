@@ -1,17 +1,27 @@
+function trimEnv(value: string | undefined) {
+  return value?.trim() || undefined;
+}
+
 export function getSupabaseEnv():
   | { url: string; anonKey: string; serviceRoleKey: string | undefined }
   | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const anonKey = trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
   if (!url || !anonKey) {
+    return null;
+  }
+
+  try {
+    new URL(url);
+  } catch {
     return null;
   }
 
   return {
     url,
     anonKey,
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    serviceRoleKey: trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY),
   };
 }
 
