@@ -127,9 +127,9 @@ export const TIMELINE_PHASES: {
 }[] = [
   {
     id: "today",
-    label: "Today",
+    label: "Today — Protect What Works",
     shortLabel: "Today",
-    subtitle: "As it is",
+    subtitle: "Preserve what we love",
     confidenceLevel: 1,
   },
   {
