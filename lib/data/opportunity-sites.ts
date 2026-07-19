@@ -22,7 +22,33 @@ function createPlaceholderSite(
   name: string,
   areaId: string,
   accent: string,
+  heroImage?: string,
 ): OpportunitySite {
+  const futures: PlaceFuture[] = heroImage
+    ? [
+        {
+          id: `${id}-vision`,
+          title: name,
+          description: `A concept for what ${name} could become.`,
+          image: heroImage,
+          alt: `Concept rendering — ${name}`,
+          qualities: [],
+          status: "published",
+        },
+      ]
+    : [
+        comingSoonFuture(
+          `${id}-shared-street`,
+          "Shared street vision",
+          "A fuller story for this place is on the way.",
+        ),
+        comingSoonFuture(
+          `${id}-gathering-place`,
+          "Gathering place vision",
+          "More possible futures will appear here soon.",
+        ),
+      ];
+
   return {
     id,
     name,
@@ -33,18 +59,7 @@ function createPlaceholderSite(
       today: `${name} today — story in development.`,
       whatIf: `What could ${name} become?`,
     },
-    futures: [
-      comingSoonFuture(
-        `${id}-shared-street`,
-        "Shared street vision",
-        "A fuller story for this place is on the way.",
-      ),
-      comingSoonFuture(
-        `${id}-gathering-place`,
-        "Gathering place vision",
-        "More possible futures will appear here soon.",
-      ),
-    ],
+    futures,
   };
 }
 
@@ -54,18 +69,21 @@ export const opportunitySites: OpportunitySite[] = [
     "Dining District",
     "indiana-gateway",
     "#C4A35A",
+    "/images/opportunities/dining-district/hero.png",
   ),
   createPlaceholderSite(
     "library-plaza",
     "Library Plaza",
     "theater-row",
     "#7B6BA8",
+    "/images/opportunities/library-plaza/hero.png",
   ),
   createPlaceholderSite(
     "bank-alley",
     "Bank Alley",
     "theater-row",
     "#7B6BA8",
+    "/images/opportunities/bank-alley/hero.png",
   ),
   {
     id: "peoples-park",
@@ -140,8 +158,8 @@ export const opportunitySites: OpportunitySite[] = [
           "A quieter, greener retreat designed around reading, conversation, native planting, and restoration.",
         shareHook:
           "A calmer corner of downtown — a reading garden for People's Park.",
-        image: CONCEPT_PLACEHOLDER_PATH,
-        alt: "Reading Garden concept — rendering coming soon",
+        image: "/images/opportunities/peoples-park/hero.png",
+        alt: "Concept rendering — a reading garden for People's Park",
         qualities: ["reading", "trees", "shade", "rain-gardens", "families"],
         perfectFor: [
           "Reading",
@@ -149,7 +167,7 @@ export const opportunitySites: OpportunitySite[] = [
           "Native planting",
           "Restoration",
         ],
-        status: "coming-soon",
+        status: "published",
       },
     ],
   },
@@ -158,18 +176,21 @@ export const opportunitySites: OpportunitySite[] = [
     "Restaurant Alley",
     "parklet-promenade",
     "#C4A35A",
+    "/images/opportunities/restaurant-alley/hero.png",
   ),
   createPlaceholderSite(
     "crossing-plaza",
     "Crossing Plaza",
     "mid-block-crossing",
     "#4A90A4",
+    "/images/opportunities/crossing-plaza/hero.png",
   ),
   createPlaceholderSite(
     "village-courtyard",
     "Village Courtyard",
     "courthouse-edge",
     "#8B6914",
+    "/images/opportunities/village-courtyard/hero.png",
   ),
 ];
 
