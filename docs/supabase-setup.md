@@ -1,8 +1,6 @@
-# Supabase setup — Optional (Civic Portfolio, future)
+# Supabase setup — Civic Points + email login
 
-> **Local exhibition development does not require Supabase.** The homepage and `/explore` atlas run entirely from static content in `lib/data/`. Only configure Supabase when implementing **Phase 4 — Civic Portfolio** (or Phase 3 accounts).
-
-The migrations below define the long-term Civic Portfolio schema. They remain valid reference material — do not delete — but **do not wire UI or require env vars** until the exhibition and lightweight engagement phases prove value.
+> **Local exhibition development does not require Supabase.** The homepage and `/explore` atlas run from static content in `lib/data/`. Configure Supabase when you want email login, Civic Points allocation, and admin totals.
 
 ---
 
@@ -54,6 +52,7 @@ In the Supabase **SQL Editor**, run in order:
 
 1. [`supabase/migrations/001_civic_portfolio.sql`](../supabase/migrations/001_civic_portfolio.sql)
 2. [`supabase/migrations/002_seed_catalog.sql`](../supabase/migrations/002_seed_catalog.sql)
+3. [`supabase/migrations/003_sync_v1_catalog.sql`](../supabase/migrations/003_sync_v1_catalog.sql)
 
 Or with the Supabase CLI:
 

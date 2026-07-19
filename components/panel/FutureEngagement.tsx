@@ -71,7 +71,8 @@ export function FutureEngagement({
   return (
     <div className="future-engagement">
       <p className="future-engagement__hint">
-        Tap to save what resonates — stored on this device only.
+        Quick reactions stay on this device. Sign in above to allocate Civic
+        Points that help leaders see community priorities.
       </p>
       <div className="future-engagement__actions">
         <button

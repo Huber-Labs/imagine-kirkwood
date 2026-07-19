@@ -1,8 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { AuthStatus } from "@/components/auth/AuthStatus";
+import { SignInSheet } from "@/components/auth/SignInSheet";
 import { AuthorModeShell } from "@/components/author/AuthorModeShell";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
@@ -93,8 +95,33 @@ export function MapExperience() {
 
   const handleAuthorSelectBlocked = useCallback(() => {}, []);
 
+  const [authError, setAuthError] = useState(
+    () => searchParams.get("auth") === "error",
+  );
+
+  const exploreReturnPath = useMemo(() => {
+    if (!selectedSiteId) return "/explore";
+    const params = new URLSearchParams({ site: selectedSiteId });
+    if (focusedConceptId) {
+      params.set("concept", focusedConceptId);
+    }
+    return `/explore?${params.toString()}`;
+  }, [selectedSiteId, focusedConceptId]);
+
+  useEffect(() => {
+    if (!authError) return;
+    window.history.replaceState(null, "", exploreReturnPath);
+    const timer = window.setTimeout(() => setAuthError(false), 6000);
+    return () => window.clearTimeout(timer);
+  }, [authError, exploreReturnPath]);
+
   return (
     <div className="map-scene relative h-full w-full overflow-hidden bg-[#141310]">
+      {authError && (
+        <div className="auth-error-banner" role="alert">
+          Sign-in link expired or failed. Please try again.
+        </div>
+      )}
       <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:left-6 sm:top-6">
         <Link
           href="/"
@@ -112,6 +139,12 @@ export function MapExperience() {
           Back to exhibition
         </Link>
       </div>
+
+      {!authorMode && (
+        <div className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:right-6 sm:top-6">
+          <AuthStatus />
+        </div>
+      )}
 
       <div
         className={
@@ -150,6 +183,8 @@ export function MapExperience() {
           onClose={handleClosePanel}
         />
       )}
+
+      {!authorMode && <SignInSheet returnPath={exploreReturnPath} />}
     </div>
   );
 }

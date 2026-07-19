@@ -1,5 +1,6 @@
 "use client";
 
+import { CivicPointsBar } from "@/components/panel/CivicPointsStepper";
 import { FutureExhibition } from "@/components/panel/FutureExhibition";
 import type { OpportunitySite } from "@/lib/types";
 
@@ -24,9 +25,13 @@ export function SiteDetail({ site, focusedConceptId }: SiteDetailProps) {
         </header>
       )}
 
+      <div className="px-5 sm:px-8">
+        <CivicPointsBar />
+      </div>
+
       <div
         className={`px-5 pb-24 sm:px-8 sm:pb-20 ${
-          focusedConceptId ? "space-y-12 pt-8 sm:space-y-14 sm:pt-10" : "pt-0"
+          focusedConceptId ? "space-y-12 pt-8 sm:space-y-14 sm:pt-10" : "pt-4"
         }`}
       >
         <FutureExhibition site={site} focusedConceptId={focusedConceptId} />

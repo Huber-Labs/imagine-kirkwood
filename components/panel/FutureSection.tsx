@@ -1,6 +1,7 @@
 "use client";
 
 import { getPerfectForLabels } from "@/lib/concepts/qualities";
+import { CivicPointsStepper } from "@/components/panel/CivicPointsStepper";
 import { FutureEngagement } from "@/components/panel/FutureEngagement";
 import { FutureHero } from "@/components/panel/FutureHero";
 import type { OpportunitySite, PlaceFuture } from "@/lib/types";
@@ -50,6 +51,12 @@ export function FutureSection({
             alt={future.alt}
             isComingSoon={isComingSoon}
           />
+        </div>
+      )}
+
+      {!isComingSoon && (
+        <div className="pt-4 sm:pt-5">
+          <CivicPointsStepper siteId={site.id} futureId={future.id} />
         </div>
       )}
 

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { MapExperience } from "@/components/map/MapExperience";
+import { ParticipateProvider } from "@/components/participate/ParticipateProvider";
 
 function ExploreFallback() {
   return (
@@ -13,7 +14,9 @@ export default function ExplorePage() {
   return (
     <main className="map-scene h-dvh w-full overflow-hidden bg-[#141310]">
       <Suspense fallback={<ExploreFallback />}>
-        <MapExperience />
+        <ParticipateProvider>
+          <MapExperience />
+        </ParticipateProvider>
       </Suspense>
     </main>
   );

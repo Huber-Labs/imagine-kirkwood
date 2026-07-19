@@ -1194,3 +1194,243 @@ body {
     transform: none !important;
   }
 }
+
+/* ── Civic Points + auth ── */
+
+.auth-error-banner {
+  position: fixed;
+  left: 50%;
+  top: max(3.5rem, calc(env(safe-area-inset-top) + 2.5rem));
+  z-index: 60;
+  width: min(24rem, calc(100vw - 2rem));
+  transform: translateX(-50%);
+  padding: 0.75rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(20, 19, 16, 0.94);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.8125rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.civic-points-bar,
+.civic-points-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.civic-points-bar--prompt,
+.civic-points-stepper--prompt {
+  border-top: none;
+  padding-top: 0;
+}
+
+.civic-points-bar__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.civic-points-bar__balance,
+.civic-points-stepper__value {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.civic-points-bar__copy,
+.civic-points-stepper__hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--foreground) 62%, transparent);
+}
+
+.civic-points-bar__cta,
+.civic-points-bar__save,
+.civic-points-stepper__sign-in,
+.civic-points-stepper__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.civic-points-bar__save {
+  align-self: flex-start;
+  border-color: color-mix(in srgb, var(--hero-accent, #990000) 35%, transparent);
+  background: color-mix(in srgb, var(--hero-accent, #990000) 8%, transparent);
+}
+
+.civic-points-bar__notice,
+.civic-points-bar__message,
+.civic-points-stepper__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.civic-points-stepper__error {
+  color: #b45309;
+}
+
+.civic-points-stepper__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.civic-points-stepper__button {
+  width: 2.25rem;
+  padding: 0;
+}
+
+.civic-points-stepper__button:disabled,
+.civic-points-bar__save:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.civic-points-stepper__max {
+  margin-left: 0.125rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--foreground) 45%, transparent);
+}
+
+.sign-in-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sign-in-sheet__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.sign-in-sheet__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 28rem);
+  padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: var(--background);
+  box-shadow: var(--panel-shadow);
+}
+
+@media (min-width: 640px) {
+  .sign-in-sheet {
+    align-items: center;
+    padding: 1.5rem;
+  }
+
+  .sign-in-sheet__panel {
+    border-radius: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+.sign-in-sheet__close {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sign-in-sheet__title {
+  margin: 0 2rem 0.5rem 0;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.sign-in-sheet__copy {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+}
+
+.sign-in-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sign-in-form__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.sign-in-form__input {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.sign-in-form__submit {
+  min-height: 2.75rem;
+  border: none;
+  border-radius: 9999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sign-in-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.sign-in-form__message {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+}
+
+.sign-in-form__message--error {
+  color: #b45309;
+}
