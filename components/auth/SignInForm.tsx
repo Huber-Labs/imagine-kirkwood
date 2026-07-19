@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useParticipate } from "@/components/participate/ParticipateProvider";
 
 interface SignInFormProps {
   onSent?: () => void;
 }
 
 export function SignInForm({ onSent }: SignInFormProps) {
+  const { isConfigured, getSupabaseClient } = useParticipate();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
@@ -19,7 +20,15 @@ export function SignInForm({ onSent }: SignInFormProps) {
     setStatus("sending");
     setMessage(null);
 
-    const supabase = createClient();
+    if (!isConfigured) {
+      setStatus("error");
+      setMessage(
+        "Participation is not configured yet. Add Supabase env vars in Vercel (Production) and redeploy.",
+      );
+      return;
+    }
+
+    const supabase = getSupabaseClient();
     const origin = window.location.origin;
     const redirectTo = `${origin}/auth/callback`;
 

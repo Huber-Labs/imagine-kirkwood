@@ -44,7 +44,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 - **Anon key** — safe for browser (RLS enforced).
 - **Service role key** — server only (admin aggregates in Phase 5). Never expose to the client.
 
-On Vercel, add the same variables to the project environment.
+On Vercel, add the same variables to the project **Production** environment (Settings → Environment Variables). You do not need the Vercel Supabase marketplace integration — manual copy/paste from Supabase → Project Settings → API is enough. After adding or changing variables, trigger a **Redeploy** so the build picks them up.
 
 ## 4. Run migrations
 

@@ -27,7 +27,7 @@ export async function createClient() {
 export async function createServiceRoleClient() {
   const env = requireSupabaseEnv();
   if (!env.serviceRoleKey) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured.");
+    return null;
   }
 
   const { createClient: createSupabaseClient } = await import(

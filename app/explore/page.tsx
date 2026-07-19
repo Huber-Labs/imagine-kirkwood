@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { MapExperience } from "@/components/map/MapExperience";
 import { ParticipateProvider } from "@/components/participate/ParticipateProvider";
+import { getSupabasePublicConfig } from "@/lib/supabase/env";
+
+export const dynamic = "force-dynamic";
 
 function ExploreFallback() {
   return (
@@ -11,10 +14,12 @@ function ExploreFallback() {
 }
 
 export default function ExplorePage() {
+  const supabaseConfig = getSupabasePublicConfig();
+
   return (
     <main className="map-scene h-dvh w-full overflow-hidden bg-[#141310]">
       <Suspense fallback={<ExploreFallback />}>
-        <ParticipateProvider>
+        <ParticipateProvider supabaseConfig={supabaseConfig}>
           <MapExperience />
         </ParticipateProvider>
       </Suspense>

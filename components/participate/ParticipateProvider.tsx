@@ -9,14 +9,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { User } from "@supabase/supabase-js";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import {
   fetchInvestmentCatalog,
   fetchPortfolioState,
 } from "@/lib/portfolio/actions";
 import { buildCatalogIndex } from "@/lib/portfolio/catalog";
 import type { CatalogInvestment, PortfolioState } from "@/lib/portfolio/types";
+import type { SupabasePublicConfig } from "@/lib/supabase/env";
 
 interface ParticipateContextValue {
   isConfigured: boolean;
@@ -30,19 +31,41 @@ interface ParticipateContextValue {
   closeSignIn: () => void;
   refreshPortfolio: () => Promise<void>;
   signOut: () => Promise<void>;
+  getSupabaseClient: () => SupabaseClient;
 }
 
 const ParticipateContext = createContext<ParticipateContextValue | null>(null);
 
-export function ParticipateProvider({ children }: { children: ReactNode }) {
-  const isConfigured = isSupabaseConfigured();
+interface ParticipateProviderProps {
+  children: ReactNode;
+  supabaseConfig: SupabasePublicConfig | null;
+}
+
+export function ParticipateProvider({
+  children,
+  supabaseConfig,
+}: ParticipateProviderProps) {
+  const isConfigured = supabaseConfig !== null;
   const [user, setUser] = useState<User | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioState | null>(null);
   const [catalog, setCatalog] = useState<CatalogInvestment[]>([]);
   const [isLoading, setIsLoading] = useState(isConfigured);
   const [signInOpen, setSignInOpen] = useState(false);
 
+  const supabase = useMemo(
+    () =>
+      supabaseConfig ? createBrowserSupabaseClient(supabaseConfig) : null,
+    [supabaseConfig],
+  );
+
   const catalogIndex = useMemo(() => buildCatalogIndex(catalog), [catalog]);
+
+  const getSupabaseClient = useCallback(() => {
+    if (!supabase) {
+      throw new Error("Supabase is not configured.");
+    }
+    return supabase;
+  }, [supabase]);
 
   const refreshPortfolio = useCallback(async () => {
     if (!isConfigured) {
@@ -55,17 +78,17 @@ export function ParticipateProvider({ children }: { children: ReactNode }) {
   }, [isConfigured]);
 
   useEffect(() => {
-    if (!isConfigured) {
+    if (!isConfigured || !supabase) {
       return;
     }
 
+    const client = supabase;
     let cancelled = false;
 
     async function bootstrap() {
       setIsLoading(true);
-      const supabase = createClient();
       const [{ data: sessionData }, catalogRows] = await Promise.all([
-        supabase.auth.getSession(),
+        client.auth.getSession(),
         fetchInvestmentCatalog(),
       ]);
 
@@ -86,10 +109,9 @@ export function ParticipateProvider({ children }: { children: ReactNode }) {
 
     bootstrap();
 
-    const supabase = createClient();
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = client.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         await refreshPortfolio();
@@ -102,15 +124,14 @@ export function ParticipateProvider({ children }: { children: ReactNode }) {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, [isConfigured, refreshPortfolio]);
+  }, [isConfigured, refreshPortfolio, supabase]);
 
   const signOut = useCallback(async () => {
-    if (!isConfigured) return;
-    const supabase = createClient();
+    if (!supabase) return;
     await supabase.auth.signOut();
     setPortfolio(null);
     setUser(null);
-  }, [isConfigured]);
+  }, [supabase]);
 
   const value: ParticipateContextValue = {
     isConfigured,
@@ -124,6 +145,7 @@ export function ParticipateProvider({ children }: { children: ReactNode }) {
     closeSignIn: () => setSignInOpen(false),
     refreshPortfolio,
     signOut,
+    getSupabaseClient,
   };
 
   return (

@@ -202,6 +202,10 @@ export async function fetchAdminInvestmentTotals(): Promise<InvestmentTotal[]> {
   }
 
   const supabase = await createServiceRoleClient();
+  if (!supabase) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from("admin_investment_totals")
     .select("*")

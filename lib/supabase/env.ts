@@ -2,6 +2,20 @@ function trimEnv(value: string | undefined) {
   return value?.trim() || undefined;
 }
 
+export type SupabasePublicConfig = {
+  url: string;
+  anonKey: string;
+};
+
+export function getSupabasePublicConfig(): SupabasePublicConfig | null {
+  const env = getSupabaseEnv();
+  if (!env) {
+    return null;
+  }
+
+  return { url: env.url, anonKey: env.anonKey };
+}
+
 export function getSupabaseEnv():
   | { url: string; anonKey: string; serviceRoleKey: string | undefined }
   | null {
