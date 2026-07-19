@@ -54,6 +54,14 @@ export const opportunityLocations: OpportunityLocation[] = [
     labelOffset: { x: 0, y: -16 },
   },
   {
+    siteId: "bank-alley",
+    x: 50.0,
+    y: 54.9,
+    label: "Bank Alley",
+    labelAlign: "center",
+    labelOffset: { x: 0, y: 18 },
+  },
+  {
     siteId: "restaurant-alley",
     x: 65.2,
     y: 51.6,

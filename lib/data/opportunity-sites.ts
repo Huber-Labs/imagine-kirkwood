@@ -61,6 +61,12 @@ export const opportunitySites: OpportunitySite[] = [
     "theater-row",
     "#7B6BA8",
   ),
+  createPlaceholderSite(
+    "bank-alley",
+    "Bank Alley",
+    "theater-row",
+    "#7B6BA8",
+  ),
   {
     id: "peoples-park",
     name: "People's Park",
