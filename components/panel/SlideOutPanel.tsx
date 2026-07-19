@@ -42,7 +42,7 @@ export function SlideOutPanel({
           type="button"
           aria-label="Close panel"
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-500 ease-[var(--panel-ease)] md:bg-black/25"
+          className="fixed inset-x-0 top-0 z-40 h-[calc(100dvh-var(--panel-mobile-height)-env(safe-area-inset-bottom))] bg-transparent transition-opacity duration-500 ease-[var(--panel-ease)] md:inset-0 md:h-auto md:bg-black/25"
         />
       )}
 
@@ -50,7 +50,7 @@ export function SlideOutPanel({
         role="dialog"
         aria-modal="true"
         aria-label={`${site.name} details`}
-        className={`fixed z-50 flex flex-col overflow-y-auto bg-background shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 max-h-[94vh] rounded-t-[1.25rem] md:inset-x-auto md:inset-y-0 md:right-0 md:max-h-none md:w-[var(--panel-width)] md:rounded-none ${
+        className={`fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-y-auto rounded-t-[1.25rem] bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
             : "translate-y-full md:translate-y-0 md:translate-x-full"
