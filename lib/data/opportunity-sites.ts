@@ -83,21 +83,21 @@ export const opportunitySites: OpportunitySite[] = [
     "Dining District",
     "indiana-gateway",
     "#C4A35A",
-    "/images/opportunities/dining-district/hero.png",
+    "/images/opportunities/dining-district/hero.webp",
   ),
   createPlaceholderSite(
     "library-plaza",
     "Library Plaza",
     "theater-row",
     "#7B6BA8",
-    "/images/opportunities/library-plaza/hero.png",
+    "/images/opportunities/library-plaza/hero.webp",
   ),
   createPlaceholderSite(
     "bank-alley",
     "Bank Alley",
     "theater-row",
     "#7B6BA8",
-    "/images/opportunities/bank-alley/hero.png",
+    "/images/opportunities/bank-alley/hero.webp",
   ),
   {
     id: "peoples-park",
@@ -115,7 +115,7 @@ export const opportunitySites: OpportunitySite[] = [
         "reading-garden",
         "Reading Garden",
         "A quieter, greener retreat designed around reading, conversation, native planting, and restoration.",
-        "/images/opportunities/peoples-park/hero.png",
+        "/images/opportunities/peoples-park/hero.webp",
         "Concept rendering — a reading garden for People's Park",
         {
           shareHook:
@@ -136,21 +136,21 @@ export const opportunitySites: OpportunitySite[] = [
     "Restaurant Alley",
     "parklet-promenade",
     "#C4A35A",
-    "/images/opportunities/restaurant-alley/hero.png",
+    "/images/opportunities/restaurant-alley/hero.webp",
   ),
   createPlaceholderSite(
     "crossing-plaza",
     "Crossing Plaza",
     "mid-block-crossing",
     "#4A90A4",
-    "/images/opportunities/crossing-plaza/hero.png",
+    "/images/opportunities/crossing-plaza/hero.webp",
   ),
   createPlaceholderSite(
     "village-courtyard",
     "Village Courtyard",
     "courthouse-edge",
     "#8B6914",
-    "/images/opportunities/village-courtyard/hero.png",
+    "/images/opportunities/village-courtyard/hero.webp",
   ),
 ];
 

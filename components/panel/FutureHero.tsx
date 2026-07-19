@@ -20,10 +20,8 @@ export function FutureHero({
 }: FutureHeroProps) {
   const src = image || CONCEPT_PLACEHOLDER_PATH;
   const imageKey = `${src}-${isComingSoon}`;
-  const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [failedKey, setFailedKey] = useState<string | null>(null);
 
-  const imageLoaded = loadedKey === imageKey;
   const imageFailed = failedKey === imageKey;
   const showPlaceholder = imageFailed || !src || isComingSoon;
 
@@ -44,10 +42,9 @@ export function FutureHero({
             key={imageKey}
             src={src}
             alt={alt}
-            className={`h-full w-full object-cover object-[center_40%] transition-opacity duration-700 ease-out ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoad={() => setLoadedKey(imageKey)}
+            loading="eager"
+            decoding="async"
+            className="h-full w-full object-cover object-[center_40%]"
             onError={() => setFailedKey(imageKey)}
           />
         )}

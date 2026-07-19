@@ -42,9 +42,9 @@ export function FutureExhibition({
   };
 
   return (
-    <div className="future-exhibition space-y-16 sm:space-y-20">
+    <div className="future-exhibition flex flex-col gap-16 sm:gap-20">
       {!isDeepLink && (
-        <section className="place-story panel-rise space-y-4">
+        <section className="place-story panel-rise order-2 space-y-4 md:order-1">
           <p className="place-story__today font-[family-name:var(--font-instrument-serif)] text-[1.0625rem] leading-[1.55] text-foreground/82 sm:text-[1.125rem]">
             {site.story.today}
           </p>
@@ -72,7 +72,7 @@ export function FutureExhibition({
       {(!isDeepLink || otherFutures.length > 0) && (
         <div
           ref={othersRef}
-          className={`future-exhibition__stack space-y-16 sm:space-y-20${
+          className={`future-exhibition__stack order-1 space-y-16 sm:space-y-20 md:order-2${
             isDeepLink ? " future-exhibition__stack--others" : ""
           }`}
         >

@@ -15,7 +15,7 @@ export interface ExhibitionHeroStage {
 export const EXHIBITION_HERO_STAGES: ExhibitionHeroStage[] = [
   {
     id: "peoples-park-reading-garden",
-    src: "/images/opportunities/peoples-park/hero.png",
+    src: "/images/opportunities/peoples-park/hero.webp",
     alt: "Concept rendering — a reading garden for People's Park on Kirkwood Avenue",
   },
 ];

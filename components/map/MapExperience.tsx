@@ -8,10 +8,14 @@ import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
 import { MapLegend } from "@/components/map/MapLegend";
 import { SlideOutPanel } from "@/components/panel/SlideOutPanel";
-import { getOpportunitySiteById } from "@/lib/data/opportunity-sites";
+import {
+  getDefaultFuture,
+  getOpportunitySiteById,
+} from "@/lib/data/opportunity-sites";
 import { AUTHOR_MODE_URL, isAuthorModeEnabled } from "@/lib/author/mode";
 import { migrateEngagementStorage } from "@/lib/engagement/migrate";
 import { parseExploreParams } from "@/lib/engagement/explore-url";
+import { preloadConceptImage } from "@/lib/images";
 
 function readInitialExploreState(
   searchParams: ReturnType<typeof useSearchParams>,
@@ -46,6 +50,14 @@ export function MapExperience() {
   }, []);
 
   useEffect(() => {
+    if (!selectedSite) return;
+    const future = getDefaultFuture(selectedSite);
+    if (future?.image) {
+      preloadConceptImage(future.image);
+    }
+  }, [selectedSite]);
+
+  useEffect(() => {
     if (authorMode) {
       window.history.replaceState(null, "", AUTHOR_MODE_URL);
       return;
@@ -64,6 +76,11 @@ export function MapExperience() {
   }, [authorMode, selectedSiteId, focusedConceptId, panelOpen]);
 
   const handleSelectSite = useCallback((id: string) => {
+    const site = getOpportunitySiteById(id);
+    const future = site ? getDefaultFuture(site) : undefined;
+    if (future?.image) {
+      preloadConceptImage(future.image);
+    }
     setSelectedSiteId(id);
     setFocusedConceptId(null);
     setPanelOpen(true);
