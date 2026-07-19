@@ -284,7 +284,7 @@ Early content duplicated proposals in four places: per-phase `improvements[]` bu
 - **Phases** (`today`, `trySoon`, `grow`, `longTerm`) narrate *when and at what ambition* a place could evolve — hero image + one sentence.  
 - **Ideas** (`PlaceIdea[]`) describe *what* might happen — one unified list per site, optional `phase` tag, support attached to ideas not to phase renders.
 
-Current implementation: `PlaceIdea` on `OpportunitySite` with localStorage support (`lib/ideas/votes.ts`). Future: persisted idea objects, cross-site discovery, experiment linkage (Phase 2–3).
+Current implementation: `PlaceIdea` on `OpportunitySite` with localStorage reactions (`lib/engagement/`). Future: persisted wishlists, Civic Portfolio prioritization, cross-site discovery, experiment linkage (Phase 3–4).
 
 ### Reasoning
 
@@ -300,30 +300,104 @@ Aligns with *separate ideas from implementation phases* ([`product-principles.md
 
 ---
 
+## Decision 008 — Exhibition before Civic Portfolio
+
+| | |
+|---|---|
+| **Decision** | Exhibition before Civic Portfolio |
+| **Date** | Strategy realignment (2026) |
+| **Status** | Accepted |
+
+### Context
+
+Supabase Civic Portfolio schema (M1) was built while the public product still had one fully authored site and binary Support toggles with public counts. Optimizing for the end-state platform risked building participation mechanics before the exhibition became a **destination** residents want to explore.
+
+The strategic POV: **renderings are the product; data collection is secondary.** Civic Portfolio remains valuable long-term but is not Version 1.
+
+### Alternatives Considered
+
+- **Continue Civic Portfolio M2 immediately** — stepper, auth on invest, `/portfolio` route.
+- **Remove Supabase entirely** — discard future foundation.
+- **Exhibition-first, defer portfolio UI** — keep schema dormant; ship lightweight reactions and content depth first.
+
+### Decision
+
+**Defer Civic Portfolio UI** until Phase 1 exhibition depth and Phase 2 lightweight engagement prove value. Keep [`supabase/`](../supabase/) migrations and auth scaffold as future reference — do not require env vars for local exhibition work.
+
+Near-term participation: Love, Worth Trying, Save, Share (local-first) — not Civic Points or Save My Priorities.
+
+### Reasoning
+
+Aligns with new Principle 12 ([`product-principles.md`](product-principles.md)): visual experience first. Civic Portfolio is Version 4 in [`roadmap.md`](roadmap.md), not the current bet.
+
+### Implications
+
+- No M2 portfolio stepper, no `/portfolio` route, no auth gate on invest until review checkpoint passes.
+- Do not mass-rename Support in docs while interaction model evolves.
+- [`docs/supabase-setup.md`](supabase-setup.md) reframed as optional / future.
+- Proceed to accounts (V3) and Civic Portfolio (V4) only after [review checkpoint](roadmap.md#review-checkpoint-before-v3).
+
+---
+
+## Decision 009 — Multiple futures replace timeline phases in the exhibition
+
+| | |
+|---|---|
+| **Decision** | Multiple futures replace timeline phases in the exhibition |
+| **Date** | Exhibition pivot (2026) |
+| **Status** | Accepted |
+
+### Context
+
+The Opportunity Atlas organized each place around **implementation phases** — Today · Try · Grow · Long — with a global phase scrubber on the map. That model matched planning timelines, not how residents compare visions. AI renderings work best as **complete futures** ("Outdoor Living Room," "Performance Plaza"), not as steps on a capital calendar.
+
+### Alternatives Considered
+
+- **Keep phase scrubber** — refine copy and imagery within the four-tab model.
+- **Concept navigator** — tabs, numbered rails, or horizontal future picker.
+- **Vertical exhibition scroll** — story-first place intro, then stacked full-bleed futures; deep links to individual futures.
+
+### Decision
+
+**Each opportunity site presents multiple `PlaceFuture` visions in a vertical exhibition scroll.** Phases remain deprecated for the homepage hero and dormant Supabase schema only. URLs use `?concept=` (legacy `?phase=` redirects). Engagement is per-future (Love, Worth Trying, Save, Share).
+
+### Reasoning
+
+Residents engage with distinct visions more than implementation stages. The product goal is **imagination and comparison**, not capital planning. Aligns with Principles 12–13 ([`product-principles.md`](product-principles.md)): renderings first; every future is a standalone shareable story.
+
+### Implications
+
+- `OpportunitySite` uses `story` + `futures[]` — not `today` / `trySoon` / `grow` / `longTerm` / `ideas[]` in the public panel.
+- Remove map phase scrubber, in-panel phase filter, and phase glow on markers.
+- Author new content as futures with `perfectFor` / `qualities` — see [`contributing.md`](contributing.md).
+- Decision 002 phase model is **superseded for the atlas** but retained for homepage hero crossfade until redesigned.
+
+---
+
 ## Index
 
 | ID | Decision | Status |
 |----|----------|--------|
 | 001 | Innovation Areas → Opportunity Sites | Accepted |
-| 002 | Timeline phases → static proposals | Accepted |
+| 002 | Timeline phases → static proposals | Accepted (atlas UI superseded by 009) |
 | 003 | Editorial storytelling → planning documents | Accepted |
 | 004 | Opportunity Atlas → colored planning zones | Accepted |
 | 005 | Editorial spotlight map treatment | Accepted |
 | 006 | People's Park → canonical reference | Accepted |
-| 007 | Ideas independent from implementation phases | Accepted |
-| 008 | *Reserved* | — |
-| 009 | *Reserved* | — |
+| 007 | Ideas independent from implementation phases | Accepted (engagement now per-future) |
+| 008 | Exhibition before Civic Portfolio | Accepted |
+| 009 | Multiple futures → timeline phases (atlas) | Accepted |
 | 010 | *Reserved* | — |
 
 ---
 
 ## Future decisions (anticipated)
 
-These forks are not yet logged as accepted decisions. When resolved, append entries 008+.
+These forks are not yet logged as accepted decisions. When resolved, append entries 009+.
 
 | Topic | Question |
 |-------|----------|
-| **Persisted support** | How are aggregate support signals stored, displayed, and labeled relative to official planning? |
+| **Persisted wishlists** | How do local saves migrate when accounts ship (Phase 3)? |
 | **Inspiration uploads** | What moderation and UX model replaces the removed community textarea? |
 | **Precedents** | How do "learn from elsewhere" stories return without blocking the action loop? |
 | **Experiment records** | What is the data model linking ideas to real-world pilots? |
@@ -334,7 +408,7 @@ These forks are not yet logged as accepted decisions. When resolved, append entr
 
 ## How to add a decision
 
-1. Assign the next ID (008, 009, …).  
+1. Assign the next ID (009, 010, …).  
 2. Use the standard fields: **Decision**, **Date**, **Context**, **Alternatives Considered**, **Decision**, **Reasoning**, **Implications**.  
 3. Set **Status**: Accepted · Under review · Superseded.  
 4. If superseding an earlier entry, update the old decision's status and link forward.  

@@ -25,11 +25,14 @@ export function SiteConceptHero({
   embedded = true,
 }: SiteConceptHeroProps) {
   const slides = conceptImages ?? [getSiteConceptImage(siteId, activePhase)];
-  const [activeSlide] = useState(0);
-  const [imageFailed, setImageFailed] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const src = slides[0] ?? CONCEPT_PLACEHOLDER_PATH;
+  const imageKey = `${siteId}-${activePhase}-${src}`;
 
-  const src = slides[activeSlide] ?? CONCEPT_PLACEHOLDER_PATH;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const [failedKey, setFailedKey] = useState<string | null>(null);
+
+  const imageLoaded = loadedKey === imageKey;
+  const imageFailed = failedKey === imageKey;
   const showPlaceholder = imageFailed || !src;
 
   return (
@@ -43,23 +46,23 @@ export function SiteConceptHero({
         }`}
       >
         <div className="concept-hero__track h-full w-full">
-          <div className="concept-hero__slide h-full w-full">
+          <div className="concept-hero__slide panel-hero-crossfade h-full w-full">
             {showPlaceholder ? (
               <img
                 src={CONCEPT_PLACEHOLDER_PATH}
                 alt={`Concept rendering for ${siteName}`}
-                className="h-full w-full object-cover object-[center_40%] transition-opacity duration-700 ease-out"
-                onLoad={() => setImageLoaded(true)}
+                className="h-full w-full object-cover object-[center_40%]"
               />
             ) : (
               <img
+                key={imageKey}
                 src={src}
                 alt={`Concept rendering for ${siteName}`}
                 className={`h-full w-full object-cover object-[center_40%] transition-opacity duration-700 ease-out ${
                   imageLoaded ? "opacity-100" : "opacity-0"
                 }`}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageFailed(true)}
+                onLoad={() => setLoadedKey(imageKey)}
+                onError={() => setFailedKey(imageKey)}
               />
             )}
           </div>

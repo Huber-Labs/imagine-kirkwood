@@ -85,7 +85,7 @@ Consistency matters more than cleverness. Match existing names before inventing 
 
 ### CSS
 
-- Prefer **BEM-like** classes in `globals.css` for editorial components: `phase-chapter__lead`, `place-idea-row__support`
+- Prefer **BEM-like** classes in `globals.css` for editorial components: `phase-chapter__lead`, `place-idea-row__action`
 - Tailwind for layout and spacing in TSX; extract repeated editorial patterns to CSS when they stabilize
 - Panel animation tokens: `panel-rise`, `panel-eyebrow`, `exhibition-rise`
 
@@ -202,7 +202,36 @@ Image components should fail gracefully to placeholders (`onError` handlers in `
 
 ## How to add a new Opportunity Site
 
-Use **People's Park** in `lib/data/opportunity-sites.ts` as the gold standard. Work through these steps in order.
+Use **People's Park** in [`lib/data/opportunity-sites.ts`](../lib/data/opportunity-sites.ts) as the gold standard. Sites can be authored **in parallel** — no single-site gate. Work through these steps in order.
+
+### Authoring checklist (gold standard)
+
+Copy this when starting a new site:
+
+| Step | Field / asset | Requirement |
+|------|---------------|-------------|
+| Identity | `id`, `name`, `areaId`, `accent` | Place-first kebab-case id; match district accent |
+| Map | `opportunity-locations.ts` entry | Percent `x`/`y` on aerial |
+| Today | `today.chapterTitle`, `today.narrative`, `today.photo` | One sentence; `.jpg` at `…/today/street.jpg` |
+| Try Soon | `trySoon.*`, `conceptImages` | One sentence; `…/try-soon/hero.webp` |
+| Grow | `grow.*`, `conceptImages` | One sentence; `…/grow/hero.webp` |
+| Long Term | `longTerm.*`, `conceptImages` | One sentence; `…/long-term/hero.webp` |
+| Ideas | `ideas[]` | 8–12 deduplicated `PlaceIdea` rows; optional `phase` tag |
+| Legacy | `improvements: []` | Leave empty — not rendered |
+| Ship | Remove `isPlaceholder` | Only when all four phases + ideas + images exist |
+
+**Image paths** (standard layout):
+
+```
+public/images/opportunities/{site-id}/today/street.jpg
+public/images/opportunities/{site-id}/try-soon/hero.webp
+public/images/opportunities/{site-id}/grow/hero.webp
+public/images/opportunities/{site-id}/long-term/hero.webp
+```
+
+Helpers: `getSitePhotoPath(siteId)`, `getSiteConceptImage(siteId, phase)` in [`lib/concepts.ts`](../lib/concepts.ts) and [`lib/images.ts`](../lib/images.ts).
+
+Visual standards: [`image-style-guide.md`](image-style-guide.md) — optimistic realism, Bloomington character, 16:9 heroes, no text in renders.
 
 ### 1. Choose identity
 
@@ -236,22 +265,23 @@ In `lib/data/opportunity-sites.ts`, either:
 
 Full site checklist:
 
-- [ ] `today` — `chapterTitle`, **one** `narrative`, `photo` path
-- [ ] `trySoon`, `grow`, `longTerm` — `chapterTitle`, **one** `narrative`, `conceptImages`
-- [ ] `ideas[]` — ~8 deduplicated `PlaceIdea` entries with optional `phase` and `seedVotes`
-- [ ] `improvements: []` — leave empty; not rendered
-- [ ] Remove `isPlaceholder` (or set `false`) when all phases and ideas are complete
+- [ ] `story.today` — one or two sentences on why the place matters now
+- [ ] `story.whatIf` — inviting question hook
+- [ ] `futures[]` — 2–4 `PlaceFuture` entries with `id`, `title`, `description`, `image`, `alt`, `qualities`, optional `perfectFor` / `shareHook`, `status`
+- [ ] Each published future passes the **10-second standalone test** (see [`product-principles.md`](product-principles.md) Principle 13)
+- [ ] Remove `isPlaceholder` (or set `false`) when story + futures are complete
 
 ### 4. Add images
 
-Create `public/images/opportunities/{site-id}/` with today photo and three concept heroes (see below).
+Add hero images per future under `public/images/opportunities/{site-id}/` or reference existing phase folders during migration.
 
 ### 5. Verify in UI
 
 - Marker appears at the correct location on `/explore`
-- Panel shows phase filter (all phases if complete; Today only if placeholder)
-- Phase scrubber updates hero + copy
-- Ideas list renders with support buttons
+- Panel shows place story, then vertically scrolling futures
+- Love / Worth Trying / Save / Share work per future
+- Share opens a deep link: `/explore?site=…&concept=…`
+- Legacy `?phase=` URLs redirect to the mapped future
 
 ### 6. Do not (unless explicitly requested)
 
@@ -262,11 +292,13 @@ Create `public/images/opportunities/{site-id}/` with today photo and three conce
 
 ---
 
-## How to add concept imagery
+## How to add future imagery
 
-Concept images power **Try Soon**, **Grow**, and **Long Term** chapters.
+Future images power the **exhibition scroll** — one full-bleed hero per `PlaceFuture`.
 
 ### File placement
+
+Reuse existing phase folders during migration, or add site-specific paths:
 
 ```
 public/images/opportunities/{site-id}/try-soon/hero.webp
@@ -274,30 +306,32 @@ public/images/opportunities/{site-id}/grow/hero.webp
 public/images/opportunities/{site-id}/long-term/hero.webp
 ```
 
-### Wire into content
-
-Reference explicitly in `SitePhaseContent`:
+Reference explicitly on each future:
 
 ```typescript
-trySoon: {
-  chapterTitle: "…",
-  narrative: "…",
-  conceptImages: ["/images/opportunities/your-site-id/try-soon/hero.webp"],
-  // …
-},
+{
+  id: "performance-plaza",
+  title: "Performance Plaza",
+  description: "…",
+  image: "/images/opportunities/peoples-park/try-soon/hero.webp",
+  alt: "…",
+  qualities: ["performance", "music", "seating"],
+  perfectFor: ["Live music", "Outdoor films"],
+  status: "published",
+}
 ```
 
-If `conceptImages` is omitted, `SiteConceptHero` falls back to `getSiteConceptImage(siteId, phase)` — which assumes the standard path above.
+`FutureHero` falls back to `/images/concepts/placeholder.svg` on error or `coming-soon` status.
 
 ### Editorial pairing
 
-Each concept image must pair with **one narrative sentence** in the same phase. The image carries detail; the copy stays short. See People's Park for tone.
+Each image must pair with a **standalone-readable** description (~2 sentences). The image carries detail; copy stays short. See People's Park for tone.
 
 ### Quality bar
 
-- One hero per phase — not a gallery in the default panel
+- One hero per future — not a gallery in the default panel
 - 16:9 landscape, hero-safe composition (center-weighted activity)
-- Match phase ambition: Try = temporary/light, Grow = durable infrastructure, Long = civic landmark
+- Each future should feel like a complete vision — not a step on a timeline
 
 ---
 
@@ -388,7 +422,7 @@ If approved, use kebab-case ID (`mid-term`), a short scrubber label (≤4 chars)
 
 - Run `npm run build` — must pass
 - Run `npm run lint` if you touched TS/TSX
-- Spot-check `/` and `/explore` — especially mobile panel scroll and phase scrubber sync
+- Spot-check `/` and `/explore` — especially mobile panel scroll and share deep links
 - Update `docs/` when you change architecture, content model, or product behavior
 
 ### Pull requests
@@ -434,7 +468,7 @@ Before merging to `main`:
 ### After deploy
 
 - Verify `/` homepage and `/explore` atlas on production URL
-- Open People's Park (or changed site) on a phone — panel + phase scrubber
+- Open People's Park (or changed site) on a phone — scroll exhibition + per-future Share
 - If map positions changed, confirm markers align on production aerial
 
 ### Rollback
@@ -456,7 +490,7 @@ These rules keep the codebase maintainable for humans and AI agents alike.
 ### Match existing patterns
 
 - Read surrounding code before writing
-- Reuse helpers in `lib/` (`getPhaseContent`, `getSiteConceptImage`, vote helpers)
+- Reuse helpers in `lib/` (`getPhaseContent`, `getSiteConceptImage`, engagement helpers)
 - Extend types in `lib/types.ts` — don't duplicate shapes in components
 
 ### Types over comments
@@ -467,8 +501,8 @@ These rules keep the codebase maintainable for humans and AI agents alike.
 
 ### Client-side MVP first
 
-- No backend until roadmap Phase 2+ explicitly requires it
-- localStorage for support votes is intentional (`lib/ideas/votes.ts`)
+- No backend until roadmap Phase 3+ (accounts) or Phase 4 (Civic Portfolio) explicitly requires it
+- Lightweight reactions use localStorage (`lib/engagement/`) — no public counts
 - Label participatory features honestly ("saved on this device only")
 
 ### Next.js specifics

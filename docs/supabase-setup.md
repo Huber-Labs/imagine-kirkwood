@@ -1,4 +1,22 @@
-# Supabase setup — Civic Portfolio (Milestone 1)
+# Supabase setup — Optional (Civic Portfolio, future)
+
+> **Local exhibition development does not require Supabase.** The homepage and `/explore` atlas run entirely from static content in `lib/data/`. Only configure Supabase when implementing **Phase 4 — Civic Portfolio** (or Phase 3 accounts).
+
+The migrations below define the long-term Civic Portfolio schema. They remain valid reference material — do not delete — but **do not wire UI or require env vars** until the exhibition and lightweight engagement phases prove value.
+
+---
+
+## When to use this guide
+
+| Phase | Supabase needed? |
+|-------|------------------|
+| Visual Exhibition | No |
+| Lightweight Reactions | No (localStorage) |
+| Accounts + Wishlists | Yes — auth + simpler tables *(future)* |
+| Civic Portfolio | Yes — run migrations below |
+| Planning Insights | Yes — admin role via `profiles.is_admin` |
+
+---
 
 ## 1. Create a Supabase project
 
@@ -26,7 +44,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 ```
 
 - **Anon key** — safe for browser (RLS enforced).
-- **Service role key** — server only (admin aggregates in Milestone 4). Never expose to the client.
+- **Service role key** — server only (admin aggregates in Phase 5). Never expose to the client.
 
 On Vercel, add the same variables to the project environment.
 
@@ -57,7 +75,7 @@ where email = 'you@example.com';
 ## 6. Verify
 
 - `npm run dev` — site loads without auth (anonymous browse).
-- `/auth/callback` route exists (OAuth completes in Milestone 2).
+- `/auth/callback` route exists (OAuth completes when accounts ship).
 - Table Editor shows `places`, `investments`, `portfolios`, `portfolio_investments`.
 
 ## Schema overview

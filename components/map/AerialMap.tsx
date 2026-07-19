@@ -20,11 +20,9 @@ import {
   PEDESTRIAN_SPOTLIGHTS,
   SPOTLIGHT_FEATHER,
 } from "@/lib/map/exhibit-treatment";
-import type { TimelinePhase } from "@/lib/types";
 
 interface AerialMapProps {
   selectedSiteId: string | null;
-  activePhase: TimelinePhase;
   onSelectSite: (id: string) => void;
 }
 
@@ -103,7 +101,6 @@ function SpotlightShapes({ fill }: { fill: "white" | "black" }) {
 
 export function AerialMap({
   selectedSiteId,
-  activePhase,
   onSelectSite,
 }: AerialMapProps) {
   const [imageSrc, setImageSrc] = useState(AERIAL_IMAGE_PATH);
@@ -206,48 +203,6 @@ export function AerialMap({
           />
         </filter>
 
-        <filter
-          id="phase-glow-try-soon"
-          x="-80%"
-          y="-80%"
-          width="260%"
-          height="260%"
-        >
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
-        <filter
-          id="phase-glow-grow"
-          x="-100%"
-          y="-100%"
-          width="300%"
-          height="300%"
-        >
-          <feGaussianBlur stdDeviation="10" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
-        <filter
-          id="phase-glow-long-term"
-          x="-120%"
-          y="-120%"
-          width="340%"
-          height="340%"
-        >
-          <feGaussianBlur stdDeviation="14" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
         <path
           id="kirkwood-street-line"
           d={KIRKWOOD_STREET_LABEL.path}
@@ -341,7 +296,6 @@ export function AerialMap({
             key={site.id}
             site={site}
             isSelected={selectedSiteId === site.id}
-            activePhase={activePhase}
             onSelect={onSelectSite}
           />
         ))}

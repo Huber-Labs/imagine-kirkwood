@@ -2,7 +2,9 @@
 
 Imagine Kirkwood is not simply a website about Kirkwood Avenue.
 
-It is a platform that helps communities **imagine, prototype, and align** around better public places — the parks, plazas, sidewalks, and corners where everyday life actually happens. Not a brochure. Not a comment box. A shared process for discovering what a place could become, long before anyone pours concrete or cuts a ribbon.
+It is a **visual civic exploration platform** — a place where residents discover compelling ideas for downtown through photography, concept renderings, and short stories about what public life could become. The renderings are the product. Participation **enhances** that experience; it does not replace it.
+
+Underneath the exhibition is a longer arc: a platform that helps communities **imagine, prototype, and align** around better public places — the parks, plazas, sidewalks, and corners where everyday life actually happens. Not a brochure. Not a comment box. A shared process for discovering what a place could become, long before anyone pours concrete or cuts a ribbon.
 
 ---
 
@@ -56,7 +58,7 @@ Bring in what other places have tried — not to copy, but to inform. Every city
 
 ### Support
 
-Give people a way to signal what resonates — not as a binding vote, but as a visible pulse of community preference. Support answers a practical question: *If we could only do a few things first, which would matter most?* It reveals alignment that surveys and shouting matches both miss.
+Give people a way to signal what resonates — not as a binding vote, but as a lightweight pulse of community preference. Early on, that means simple reactions and saves while exploring renderings. Later, it can evolve into richer prioritization. The question remains practical: *What would matter most here?* It reveals alignment that surveys and shouting matches both miss.
 
 ### Experiment
 
@@ -99,6 +101,16 @@ We will know Imagine Kirkwood is working when:
 **Communities build trust through shared imagination rather than political conflict.** Neighbors still disagree — that is healthy. But they disagree about *how* to reach goals they have already named together, not about whether they share the same street at all.
 
 Success is not unanimity. It is **shared direction**: a community that knows what it is trying to create, and can move toward it with clarity, patience, and a little joy.
+
+---
+
+## Where this leads — Civic Portfolio (future)
+
+When the exhibition has depth and lightweight engagement shows what resonates, the platform can evolve toward **Civic Portfolio** — a prioritization model, not an election.
+
+Residents would answer: *If Bloomington had limited resources, where would you invest?* — allocating a small pool of **Civic Points** across ideas they want protected or built, including **Today — Protect What Works**.
+
+That mechanics layer is **Version 4**, not the current product. Schema and design work exist in the repository as a future foundation. Until then, we optimize for discovery: beautiful places, phased renderings, and low-friction ways to say *I love this* or *worth trying* — without making the site feel political.
 
 ---
 

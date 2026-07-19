@@ -1,35 +1,69 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
 import { MapLegend } from "@/components/map/MapLegend";
-import { PhaseScrubber } from "@/components/map/PhaseScrubber";
 import { SlideOutPanel } from "@/components/panel/SlideOutPanel";
 import { getOpportunitySiteById } from "@/lib/data/opportunity-sites";
-import type { TimelinePhase } from "@/lib/types";
+import { migrateEngagementStorage } from "@/lib/engagement/migrate";
+import { parseExploreParams } from "@/lib/engagement/explore-url";
+
+function readInitialExploreState(
+  searchParams: ReturnType<typeof useSearchParams>,
+) {
+  const { siteId, conceptId } = parseExploreParams(searchParams);
+  return {
+    selectedSiteId: siteId,
+    focusedConceptId: conceptId,
+    panelOpen: siteId !== null,
+  };
+}
 
 export function MapExperience() {
-  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
-  const [activePhase, setActivePhase] = useState<TimelinePhase>("today");
-  const [panelOpen, setPanelOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(
+    () => readInitialExploreState(searchParams).selectedSiteId,
+  );
+  const [focusedConceptId, setFocusedConceptId] = useState<string | null>(
+    () => readInitialExploreState(searchParams).focusedConceptId,
+  );
+  const [panelOpen, setPanelOpen] = useState(
+    () => readInitialExploreState(searchParams).panelOpen,
+  );
 
   const selectedSite = selectedSiteId
     ? getOpportunitySiteById(selectedSiteId) ?? null
     : null;
 
+  useEffect(() => {
+    migrateEngagementStorage();
+  }, []);
+
+  useEffect(() => {
+    if (panelOpen && selectedSiteId) {
+      const params = new URLSearchParams({ site: selectedSiteId });
+      if (focusedConceptId) {
+        params.set("concept", focusedConceptId);
+      }
+      window.history.replaceState(null, "", `/explore?${params.toString()}`);
+      return;
+    }
+
+    window.history.replaceState(null, "", "/explore");
+  }, [selectedSiteId, focusedConceptId, panelOpen]);
+
   const handleSelectSite = useCallback((id: string) => {
     setSelectedSiteId(id);
+    setFocusedConceptId(null);
     setPanelOpen(true);
   }, []);
 
   const handleClosePanel = useCallback(() => {
     setPanelOpen(false);
-  }, []);
-
-  const handlePhaseChange = useCallback((phase: TimelinePhase) => {
-    setActivePhase(phase);
+    setFocusedConceptId(null);
   }, []);
 
   return (
@@ -55,7 +89,6 @@ export function MapExperience() {
       <div className="absolute inset-0 pb-[7.25rem] sm:pb-24">
         <AerialMap
           selectedSiteId={selectedSiteId}
-          activePhase={activePhase}
           onSelectSite={handleSelectSite}
         />
       </div>
@@ -64,17 +97,11 @@ export function MapExperience() {
       <MapAttribution />
       <MapLegend />
 
-      <PhaseScrubber
-        activePhase={activePhase}
-        onPhaseChange={handlePhaseChange}
-      />
-
       <SlideOutPanel
         site={selectedSite}
-        activePhase={activePhase}
+        focusedConceptId={focusedConceptId}
         isOpen={panelOpen && selectedSite !== null}
         onClose={handleClosePanel}
-        onPhaseChange={handlePhaseChange}
       />
     </div>
   );

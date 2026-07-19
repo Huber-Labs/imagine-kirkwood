@@ -1,56 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { getPublishedFutureCount } from "@/lib/data/opportunity-sites";
 import { IU_CRIMSON } from "@/lib/map/exhibit-treatment";
 import {
   getLabelAnchor,
   getOpportunityLocation,
   toViewBoxPoint,
 } from "@/lib/map/opportunity-locations";
-import type { OpportunitySite, TimelinePhase } from "@/lib/types";
+import type { OpportunitySite } from "@/lib/types";
 
 interface OpportunityPlaceMarkerProps {
   site: OpportunitySite;
   isSelected: boolean;
-  activePhase: TimelinePhase;
   onSelect: (id: string) => void;
-}
-
-function getPhaseGlowRadius(
-  activePhase: TimelinePhase,
-  isSelected: boolean,
-): number | null {
-  if (!isSelected) return null;
-
-  switch (activePhase) {
-    case "today":
-      return null;
-    case "try-soon":
-      return 16;
-    case "grow":
-      return 22;
-    case "long-term":
-      return 30;
-  }
-}
-
-function getPhaseGlowOpacity(activePhase: TimelinePhase): number {
-  switch (activePhase) {
-    case "try-soon":
-      return 0.28;
-    case "grow":
-      return 0.38;
-    case "long-term":
-      return 0.48;
-    default:
-      return 0;
-  }
 }
 
 export function OpportunityPlaceMarker({
   site,
   isSelected,
-  activePhase,
   onSelect,
 }: OpportunityPlaceMarkerProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -60,9 +28,8 @@ export function OpportunityPlaceMarker({
 
   const pin = toViewBoxPoint(location);
   const label = getLabelAnchor(location, pin);
-  const glowRadius = getPhaseGlowRadius(activePhase, isSelected);
-  const glowOpacity = getPhaseGlowOpacity(activePhase);
   const isAuthored = !site.isPlaceholder;
+  const futureCount = getPublishedFutureCount(site);
 
   const pinRadius = isSelected ? 7 : isHovered ? 6.25 : 5;
   const markerColor = isAuthored ? IU_CRIMSON : "rgba(255,255,255,0.55)";
@@ -82,27 +49,18 @@ export function OpportunityPlaceMarker({
     isSelected &&
     Math.hypot(label.x - pin.x, label.y - pin.y) > pinRadius + 4;
 
+  const futuresLabel =
+    futureCount > 0
+      ? `${futureCount} possible future${futureCount === 1 ? "" : "s"}`
+      : null;
+
   return (
     <g
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`place-marker ${isSelected ? "place-marker--selected" : ""} ${isAuthored ? "place-marker--authored" : "place-marker--placeholder"}`}
       style={{ cursor: "pointer" }}
-      data-phase={activePhase}
     >
-      {glowRadius && isAuthored && (
-        <circle
-          cx={pin.x}
-          cy={pin.y}
-          r={glowRadius}
-          fill={IU_CRIMSON}
-          fillOpacity={glowOpacity}
-          filter={`url(#phase-glow-${activePhase})`}
-          pointerEvents="none"
-          className="transition-[r,fill-opacity] duration-500 ease-out"
-        />
-      )}
-
       <g
         className="place-marker__ripples"
         transform={`translate(${pin.x} ${pin.y})`}
@@ -122,7 +80,9 @@ export function OpportunityPlaceMarker({
         fill="transparent"
         role="button"
         tabIndex={0}
-        aria-label={site.name}
+        aria-label={
+          futuresLabel ? `${site.name}, ${futuresLabel}` : site.name
+        }
         aria-pressed={isSelected}
         onClick={() => onSelect(site.id)}
         onKeyDown={(event) => {
@@ -186,6 +146,21 @@ export function OpportunityPlaceMarker({
       >
         {location.label}
       </text>
+
+      {futuresLabel && isAuthored && (isSelected || isHovered) && (
+        <text
+          x={label.x}
+          y={label.y + 13}
+          textAnchor={label.textAnchor}
+          fill="rgba(255,255,255,0.62)"
+          fontSize={8}
+          letterSpacing="0.06em"
+          pointerEvents="none"
+          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
+        >
+          {futuresLabel.toUpperCase()}
+        </text>
+      )}
 
       {site.isPlaceholder && (
         <text

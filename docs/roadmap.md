@@ -1,171 +1,167 @@
 # Roadmap
 
-Imagine Kirkwood evolves in four stages — each one earning the next. This is not a backlog of tickets. It is the story of how a civic exhibition becomes a reusable platform for public life.
-
-We do not jump from renderings to city dashboards. We prove that neighbors can imagine a place together before we ask them to fund experiments — and we prove experiments on one street before we deploy to many cities.
+Imagine Kirkwood evolves in stages — each one earning the next. We do not jump from renderings to city dashboards. We prove the exhibition is a **destination** before we add accounts, portfolios, or leader analytics.
 
 For *why* we build this way, see [`vision.md`](vision.md). For *how* to judge any feature, see [`product-principles.md`](product-principles.md).
 
 ---
 
-# Phase 1 — Civic Exhibition
+# Phase 1 — Civic Exhibition *(current)*
 
 ## Purpose
 
-Help people **imagine what is possible**.
+Help people **imagine what is possible** — and keep coming back to look.
 
-The exhibition is the front door. A visitor should arrive curious, open a place on the map, see what it is like today, scrub through futures, and leave with a felt sense of what Kirkwood — or any main street — could become. No surveys. No master plans. Just possibility, told beautifully.
+The exhibition is the front door. A visitor should arrive curious, open a place on the map, scroll through possible futures, and leave with *I never thought of that* moments. No surveys. No master plans. Just possibility, told beautifully.
+
+**Exit criteria:** every mapped place presents multiple authored futures with real imagery — not participation feature count.
 
 ## Completed
 
-- **Exhibition homepage** — cinematic hero, philosophy, and a path into the atlas (`/`)
-- **Opportunity Atlas** — full-screen aerial map with place markers, legend, and slide-out panel (`/explore`)
-- **Opportunity Sites** — six named places along Kirkwood; map positions decoupled from content
-- **Editorial storytelling** — pared-back place panel: name → phases → one image → one sentence → ideas
-- **Phase timeline** — Today · Try · Grow · Long, synced across map scrubber and in-panel filter
-- **Concept imagery** — today photography and per-phase concept heroes (People's Park)
-- **Spotlight map** — editorial desaturation, feathered corridor spotlight, Kirkwood street label
-- **People's Park** — gold-standard site: four phase chapters, eight supportable ideas, full image set
+- **Exhibition homepage** — cinematic hero, philosophy, path into the atlas (`/`)
+- **Opportunity Atlas** — full-screen aerial map, place markers, slide-out exhibition panel (`/explore`)
+- **Opportunity Sites** — six named places; map positions decoupled from content
+- **Futures exhibition** — story-first panel, vertically scrolling full-bleed renderings per place
+- **Concept imagery** — People's Park complete (three published futures + one coming soon)
+- **Spotlight map** — editorial desaturation, corridor spotlight, Kirkwood label
+- **People's Park** — gold-standard reference site
+- **Per-future engagement** — Love this idea, Worth Trying, Save, Share (device-local)
+- **Shareable deep links** — `?concept=` URLs with legacy `?phase=` redirect
 
-Phase 1 also established the content model (`OpportunitySite`, `PlaceIdea`), local idea support (MVP), and the documentation foundation for contributors.
+## Upcoming (Phase 1)
 
-## Upcoming
+- **Complete all opportunity sites** — extend People's Park futures template across Dining District, Library Plaza, Restaurant Alley, Crossing Plaza, Village Courtyard
+- **Better renderings** — higher-fidelity heroes per [`image-style-guide.md`](image-style-guide.md)
+- **Homepage polish** — align homepage hero with futures model when ready
 
-- **Complete all opportunity sites** — extend the People's Park template to Dining District, Library Plaza, Restaurant Alley, Crossing Plaza, and Village Courtyard
-- **Better renderings** — higher-fidelity concept heroes aligned with [`image-style-guide.md`](image-style-guide.md)
-- **Richer precedents** — reintroduce "learn from elsewhere" as optional discovery depth, not a scroll wall before action
-
-Phase 1 is nearly complete. It succeeds when every mapped place tells a full story — not when the feature list grows.
-
----
-
-# Phase 2 — Civic Discovery
-
-## Purpose
-
-Help communities **discover alignment**.
-
-Discovery turns passive viewing into participation — carefully. The goal is not a social network or a fake election. It is a shared picture of what resonates: which ideas matter, which inspirations neighbors share, and where a community might move together before anyone breaks ground.
-
-## What this stage adds
-
-**Opportunity cards**  
-A browsable view of places beyond the map — card grid or list for share links, accessibility, and non-spatial discovery.
-
-**Support ideas**  
-*Partially shipped:* local Support / Supported toggles with device storage and editorial seed counts. Next: persisted aggregate signals with honest labeling — informing decisions, not replacing them.
-
-**Upload inspiration**  
-Photo and story submissions tied to a place — redesigned after the panel pare-back; moderation-aware, possibilities-first.
-
-**Community collections**  
-Neighbor-curated boards ("Shade ideas," "Show night energy") that complement editorial content without duplicating the ideas list.
-
-**Discussion**  
-Structured, place-scoped conversation — prompts and reactions designed for curiosity, not conflict. Not open comment wars.
-
-**Filtering**  
-Browse places and ideas by phase, theme, or district — without losing the place-first voice.
-
-**Search**  
-Find a place, an idea, or an inspiration by name — fast entry for return visitors and officials.
-
-Phase 2 succeeds when a community can signal direction together — and trust what those signals mean.
+Phase 1 succeeds when every mapped place tells a full story — not when the feature list grows.
 
 ---
 
-# Phase 3 — Civic Experiments
+# Phase 2 — Lightweight Engagement
 
 ## Purpose
 
-Turn ideas into **pilots**.
+Learn **what resonates** without friction or political tone.
 
-Experiments are where imagination meets the sidewalk. The platform documents what was tried, what changed, and what was learned — so permanent investment follows proof, not politics.
+Before accounts or civic workflows, visitors can react to ideas and renderings with low-stakes signals: Love, Worth Trying, Save, Share. Stored on-device initially. No public leaderboards.
 
 ## What this stage adds
 
-**Temporary installations**  
-Link ideas to real-world activations: movable seating weekends, pop-up stages, pilot food carts.
+**Love / Worth Trying** — quiet positive reactions on idea rows; no vote counts.
 
-**Pilot tracking**  
-Each experiment gets a living record — hypothesis, scope, dates, partners, linked place and ideas.
+**Save to wishlist** — bookmark ideas or places; view saved items locally.
 
-**Implementation status**  
-A visible pipeline: proposed → approved → in progress → complete — separating community support from official approval.
+**Share** — deep links to `/explore?site=…&concept=…` via Web Share API or copy link.
 
-**Before / after photos**  
-Visual evidence attached to pilots; update the Today chapter when something permanent lands.
+**Optional later in Phase 2** — opportunity cards grid, filtering by phase/theme, search — only if they serve discovery.
 
-**Metrics**  
-Plain-language outcomes — dwell time, attendance, new users of a space — not a raw data portal.
+## Deferred from old Phase 2
 
-**Costs**  
-Order-of-magnitude framing (pocket change → modest → major) tied to ideas and phases.
+Discussion threads, inspiration uploads, and community collections wait until the exhibition has depth and lightweight reactions show usage.
 
-**Funding**  
-Transparent view of what is funded, by whom, and what remains aspirational — no implied promises from support clicks alone.
-
-Phase 3 succeeds when at least one Kirkwood pilot is documented end-to-end: from supported idea through temporary install to measured outcome.
+Phase 2 succeeds when reactions feel natural beside renderings — not like a survey or election.
 
 ---
 
-# Phase 4 — City Platform
+# Phase 3 — Personal Collections
 
 ## Purpose
 
-**Scale beyond Kirkwood.**
-
-The pilot street proves the process. The platform carries it — to other districts, other cities, and the teams who steward public life.
+Help return visitors **pick up where they left off**.
 
 ## What this stage adds
 
-**Multiple districts**  
-Separate atlases or layers per corridor and neighborhood within a city — same product, different places.
+**User accounts** — Supabase auth (scaffold exists in repo); sign-in when saving across devices.
 
-**Multiple cities**  
-Multi-tenant deployments: Bloomington first, then communities that share the same civic discovery loop.
+**Persisted wishlists** — migrate local saves on first sign-in.
 
-**Admin dashboard**  
-Role-based tools for editors, moderators, and city staff — content, pilots, moderation, and support analytics.
+**Auth framing** — *"Save your favorites across devices"* — not portfolio or ballot language.
 
-**GIS integrations**  
-Import official boundaries, parcels, and capital plans; export aligned geometries without forcing planners into our UI paradigms.
+Phase 3 succeeds when repeat visitors can rebuild their saved ideas without re-tapping everything.
 
-**Analytics**  
-Engagement funnels, idea support trends, experiment outcomes — privacy-conscious, useful to leaders and residents alike.
+---
 
-**Public API**  
-Documented read (and selective write) access for partners, researchers, and civic developers.
+# Phase 4 — Civic Portfolio
 
-**Mobile experience**  
-Native or progressive enhancements optimized for on-street discovery — standing at People's Park, not only at a desk.
+## Purpose
 
-Phase 4 succeeds when a second city can launch an exhibition on shared infrastructure — and Bloomington runs the full loop from imagination through experiment.
+Help communities **prioritize under scarcity** — collaboratively, not politically.
+
+When content and engagement justify it, residents allocate **10 Civic Points** across catalog investments (including **Today — Protect What Works**), auto-save while building, and **Save My Priorities** with tag-driven portfolio summaries.
+
+## What this stage adds
+
+- Civic Point stepper in place panel (reuse [`supabase/migrations/`](../supabase/migrations/))
+- `/portfolio` — stars, tag summary, optional reflection, completion share
+- Admin aggregates — investment totals by place and tier
+
+See [`vision.md`](vision.md) § Where this leads. Schema M1 is in the repo; **UI wiring waits for Phase 4.**
+
+Phase 4 succeeds when prioritization feels like a natural extension of exploration — not a separate workflow.
+
+---
+
+# Phase 5 — Planning Insights
+
+## Purpose
+
+Give city leaders **honest aggregate signal** — not a mandate.
+
+## What this stage adds
+
+**Admin dashboard** — role-based tools via `profiles.is_admin`; CSV export; engagement and reaction trends.
+
+**Analytics** — privacy-conscious funnels; useful to stewards, not surveillance.
+
+**GIS / multi-city** — scale beyond Kirkwood when the pilot proves the loop.
+
+Phase 5 succeeds when leaders understand community priorities from discovery data — without residents feeling audited.
+
+---
+
+# Phase 6 — Civic Experiments *(parallel track)*
+
+Turn ideas into **pilots** on the sidewalk — temporary installations, pilot tracking, before/after photos, plain-language metrics. See prior experiment-stage docs in git history for detail; this track runs when a real Kirkwood pilot is ready to document.
 
 ---
 
 ## Long-Term Vision
 
-Imagine Kirkwood becomes a **reusable civic discovery platform** — the place where communities answer three questions together:
+Imagine Kirkwood becomes a **reusable civic discovery platform** — the place where communities answer:
 
-*What should we build?*  
-*Where should it happen?*  
-*In what order should we try?*
+*What should we build?* · *Where?* · *In what order?*
 
-Not through a single vote on a single plan, but through a rhythm the whole community can run: observe the place as it is, imagine what it could become, learn from elsewhere, support what resonates, experiment cheaply, measure honestly, and grow what works.
+Not through a single vote on a single plan, but through a rhythm: observe the place, imagine futures, learn from elsewhere, signal what resonates, experiment cheaply, measure honestly, grow what works.
 
-Kirkwood Avenue is the first chapter. The product is the book any city can write — with its own places, its own stories, its own pilots, and its own trust to earn.
-
-The long-term measure of success is not traffic or feature count. It is **shared direction**: residents who feel ownership, leaders who understand priorities, experiments that reduce risk, investments grounded in evidence, and public life that improves through imagination rather than attrition.
-
-That is the platform we are building toward.
+Kirkwood Avenue is the first chapter. The product is the book any city can write.
 
 ---
 
 ## Where we are now
 
-**Finishing Phase 1.** Entering **Phase 2.**
+**Finishing Phase 1.** Shipping **Phase 2** lightweight engagement alongside content expansion.
 
-The immediate work is editorial depth (all opportunity sites, better renderings) and discovery design (cards, persisted support, inspiration uploads) — always checked against the [Feature Evaluation Checklist](product-principles.md#feature-evaluation-checklist).
+Immediate engineering focus:
 
-Build the exhibition until it sings. Then open discovery. Then prove experiments. Then scale the platform.
+1. Better homepage and exploration UX
+2. More opportunity locations and phased renderings (parallel content)
+3. Love / Save / Share reactions (no accounts yet)
+
+**Do not build:** Civic Portfolio UI, auth gates on participation, or admin analytics until the [review checkpoint](#review-checkpoint-before-v3) passes.
+
+---
+
+## Review checkpoint (before V3)
+
+After Phase 1 polish + Phase 2 lightweight engagement ship, pause and ask:
+
+| Question | Proceed to V3 if… |
+|----------|---------------------|
+| Are people spending time in phase renderings? | Yes — dwell and return visits, not just homepage bounce |
+| Are Love / Save / Share used without feeling political? | Yes — reactions feel natural, not contentious |
+| Is there enough authored content? | Yes — multiple sites with full four-phase stories |
+
+Only then: user accounts, persisted wishlists (Phase 3), then Civic Portfolio (Phase 4), then leader analytics (Phase 5).
+
+Build the exhibition until it sings. Then open lightweight engagement. Then personal collections. Then prioritization. Then insights.

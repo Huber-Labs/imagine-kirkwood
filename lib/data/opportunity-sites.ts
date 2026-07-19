@@ -1,32 +1,19 @@
-import type {
-  OpportunitySite,
-  SitePhaseContent,
-  SiteToday,
-  TimelinePhase,
-} from "@/lib/types";
+import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
+import type { OpportunitySite, PlaceFuture } from "@/lib/types";
 
-function placeholderPhase(name: string): SitePhaseContent {
+function comingSoonFuture(
+  id: string,
+  title: string,
+  description: string,
+): PlaceFuture {
   return {
-    chapterTitle: `${name} — coming soon`,
-    narrative:
-      "This opportunity site is part of the Kirkwood exhibition. Full stories will arrive in a future sprint.",
-    improvements: [],
-    timeline: "—",
-    investment: "—",
-    confidence: "Story in development",
-    paragraphs: [],
-  };
-}
-
-function placeholderToday(name: string): SiteToday {
-  return {
-    chapterTitle: name,
-    narrative: `${name} today — story in development.`,
-    improvements: [],
-    timeline: "Now",
-    investment: "—",
-    confidence: "Story in development",
-    observations: [],
+    id,
+    title,
+    description,
+    image: CONCEPT_PLACEHOLDER_PATH,
+    alt: `${title} — rendering coming soon`,
+    qualities: [],
+    status: "coming-soon",
   };
 }
 
@@ -42,11 +29,22 @@ function createPlaceholderSite(
     areaId,
     accent,
     isPlaceholder: true,
-    today: placeholderToday(name),
-    trySoon: placeholderPhase(name),
-    grow: placeholderPhase(name),
-    longTerm: placeholderPhase(name),
-    ideas: [],
+    story: {
+      today: `${name} today — story in development.`,
+      whatIf: `What could ${name} become?`,
+    },
+    futures: [
+      comingSoonFuture(
+        `${id}-shared-street`,
+        "Shared street vision",
+        "A fuller story for this place is on the way.",
+      ),
+      comingSoonFuture(
+        `${id}-gathering-place`,
+        "Gathering place vision",
+        "More possible futures will appear here soon.",
+      ),
+    ],
   };
 }
 
@@ -68,114 +66,84 @@ export const opportunitySites: OpportunitySite[] = [
     name: "People's Park",
     areaId: "theater-row",
     accent: "#7B6BA8",
-    today: {
-      chapterTitle: "A Place to Pass Through",
-      narrative:
-        "A small downtown park where students, buskers, and neighbors cross paths — but it rarely feels like a destination.",
-      improvements: [],
-      timeline: "Now",
-      investment: "No cost — observe and listen",
-      confidence: "What we see today",
-      photo: "/images/opportunities/peoples-park/today/street.jpg",
+    story: {
+      today:
+        "Today, People's Park is mostly a place people walk through — students, buskers, and neighbors cross paths, but it rarely feels like a destination.",
+      whatIf:
+        "What if it became Bloomington's favorite place to stay?",
     },
-    trySoon: {
-      chapterTitle: "The Pop-Up Lawn",
-      narrative:
-        "Imagine movable chairs, string lights, and a temporary stage — a low-cost way to test what draws people to stay.",
-      improvements: [],
-      timeline: "Weeks to months",
-      investment: "Pocket change — mostly borrowed and rented",
-      confidence: "Worth trying soon",
-      conceptImages: [
-        "/images/opportunities/peoples-park/try-soon/hero.webp",
-      ],
-    },
-    grow: {
-      chapterTitle: "The Event Lawn",
-      narrative:
-        "With modest investment, People's Park becomes a flexible event lawn — shade trees, permanent power, and accessible seating.",
-      improvements: [],
-      timeline: "1–3 years",
-      investment: "Modest budget — phased over seasons",
-      confidence: "Proven in peer cities",
-      conceptImages: ["/images/opportunities/peoples-park/grow/hero.webp"],
-    },
-    longTerm: {
-      chapterTitle: "Bloomington's Front Porch",
-      narrative:
-        "A designed amphitheater, tree canopy, and generous plaza transform People's Park into the city's outdoor living room.",
-      improvements: [],
-      timeline: "5+ years",
-      investment: "Major investment — a civic landmark",
-      confidence: "A shared community vision",
-      conceptImages: [
-        "/images/opportunities/peoples-park/long-term/hero.webp",
-      ],
-    },
-    ideas: [
+    futures: [
       {
-        id: "idea-pp-seating",
-        title: "Temporary seating",
+        id: "outdoor-living-room",
+        title: "Outdoor Living Room",
         description:
-          "Roll out movable chairs on Friday afternoons — see if people stay.",
-        phase: "try-soon",
-        seedVotes: 18,
+          "A shaded public room for reading, meeting friends, working outdoors, and spending unhurried time downtown.",
+        shareHook:
+          "Imagine People's Park as Bloomington's outdoor living room.",
+        image: "/images/opportunities/peoples-park/long-term/hero.webp",
+        alt: "Concept rendering — People's Park as a shaded outdoor living room with seating and tree canopy",
+        qualities: ["shade", "seating", "trees", "coworking", "dining"],
+        perfectFor: [
+          "Reading",
+          "Meeting friends",
+          "Outdoor work",
+          "Lunch",
+          "Families",
+        ],
+        status: "published",
       },
       {
-        id: "idea-pp-shade-umbrellas",
-        title: "Shade umbrellas",
+        id: "performance-plaza",
+        title: "Performance Plaza",
         description:
-          "Partner with a nearby café to loan umbrellas on sunny days.",
-        phase: "try-soon",
-        seedVotes: 14,
+          "Movable chairs, string lights, and a flexible stage — a gathering place for small concerts, outdoor films, and community performances.",
+        shareHook:
+          "What if People's Park hosted the city's best small outdoor shows?",
+        image: "/images/opportunities/peoples-park/try-soon/hero.webp",
+        alt: "Concept rendering — a pop-up lawn with temporary stage and evening gathering",
+        qualities: ["performance", "music", "seating", "nightlife", "families"],
+        perfectFor: [
+          "Live music",
+          "Outdoor films",
+          "Student performances",
+          "Community events",
+        ],
+        status: "published",
       },
       {
-        id: "idea-pp-weekend-music",
-        title: "Weekend music",
+        id: "community-market",
+        title: "Community Market",
         description:
-          "Invite a busker or acoustic duo for Saturday afternoons.",
-        phase: "try-soon",
-        seedVotes: 22,
+          "A flexible event lawn with shade, power, and room for local vendors, seasonal markets, and food on show nights.",
+        shareHook: "Picture a downtown market that draws people to stay.",
+        image: "/images/opportunities/peoples-park/grow/hero.webp",
+        alt: "Concept rendering — an event lawn with markets and evening gathering",
+        qualities: ["markets", "dining", "seating", "families", "nightlife"],
+        perfectFor: [
+          "Local vendors",
+          "Seasonal markets",
+          "Food and drink",
+          "Evening gatherings",
+        ],
+        status: "published",
       },
       {
-        id: "idea-pp-pop-up-stage",
-        title: "Pop-up stage",
+        id: "reading-garden",
+        title: "Reading Garden",
         description:
-          "A simple platform for buskers, poets, and community announcements.",
-        phase: "try-soon",
-        seedVotes: 16,
-      },
-      {
-        id: "idea-pp-shade-grove",
-        title: "Shade grove",
-        description:
-          "A cluster of mature trees at the park's center — instant comfort on hot days.",
-        phase: "grow",
-        seedVotes: 24,
-      },
-      {
-        id: "idea-pp-food-carts",
-        title: "Food carts",
-        description:
-          "Pilot a single cart on show nights — low risk, high energy.",
-        phase: "try-soon",
-        seedVotes: 12,
-      },
-      {
-        id: "idea-pp-event-power",
-        title: "Event lawn power",
-        description:
-          "Permanent outlets for markets, performances, and evening gatherings.",
-        phase: "grow",
-        seedVotes: 10,
-      },
-      {
-        id: "idea-pp-amphitheater",
-        title: "Amphitheater",
-        description:
-          "A designed bowl facing the Buskirk-Chumley for performances and community events.",
-        phase: "long-term",
-        seedVotes: 20,
+          "A quieter, greener retreat designed around reading, conversation, native planting, and restoration.",
+        shareHook:
+          "A calmer corner of downtown — a reading garden for People's Park.",
+        image: CONCEPT_PLACEHOLDER_PATH,
+        alt: "Reading Garden concept — rendering coming soon",
+        qualities: ["reading", "trees", "shade", "rain-gardens", "families"],
+        perfectFor: [
+          "Reading",
+          "Quiet conversation",
+          "Native planting",
+          "Restoration",
+        ],
+        status: "coming-soon",
       },
     ],
   },
@@ -209,24 +177,39 @@ export function getSitesByAreaId(areaId: string): OpportunitySite[] {
   return opportunitySites.filter((site) => site.areaId === areaId);
 }
 
-export function getPhaseContent(
-  site: OpportunitySite,
-  phase: TimelinePhase,
-): SiteToday | SitePhaseContent {
-  switch (phase) {
-    case "today":
-      return site.today;
-    case "try-soon":
-      return site.trySoon;
-    case "grow":
-      return site.grow;
-    case "long-term":
-      return site.longTerm;
-  }
+export function getPublishedFutures(site: OpportunitySite): PlaceFuture[] {
+  return site.futures.filter((future) => future.status !== "draft");
 }
 
-export function isSiteToday(
-  content: SiteToday | SitePhaseContent,
-): content is SiteToday {
-  return !("paragraphs" in content);
+export function getDefaultFuture(site: OpportunitySite): PlaceFuture | undefined {
+  return getPublishedFutures(site).find((future) => future.status === "published");
+}
+
+export function getFutureById(
+  site: OpportunitySite,
+  futureId: string,
+): PlaceFuture | undefined {
+  return site.futures.find((future) => future.id === futureId);
+}
+
+export function resolveFutureId(
+  site: OpportunitySite,
+  futureId: string | null,
+): string | null {
+  if (!futureId) {
+    return getDefaultFuture(site)?.id ?? null;
+  }
+
+  const match = getFutureById(site, futureId);
+  if (match && match.status !== "draft") {
+    return match.id;
+  }
+
+  return getDefaultFuture(site)?.id ?? null;
+}
+
+export function getPublishedFutureCount(site: OpportunitySite): number {
+  return getPublishedFutures(site).filter(
+    (future) => future.status === "published",
+  ).length;
 }

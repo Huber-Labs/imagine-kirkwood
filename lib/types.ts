@@ -1,5 +1,43 @@
-/** Timeline phases for the global phase scrubber. */
+/** @deprecated Homepage hero only — exhibition uses PlaceFuture per site. */
 export type TimelinePhase = "today" | "try-soon" | "grow" | "long-term";
+
+export type FutureQuality =
+  | "shade"
+  | "seating"
+  | "trees"
+  | "dining"
+  | "music"
+  | "performance"
+  | "markets"
+  | "families"
+  | "play"
+  | "reading"
+  | "coworking"
+  | "public-art"
+  | "cycling"
+  | "rain-gardens"
+  | "nightlife"
+  | "history";
+
+export type FutureStatus = "published" | "draft" | "coming-soon";
+
+/** One complete vision for what a place could become. */
+export interface PlaceFuture {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  alt: string;
+  shareHook?: string;
+  qualities: FutureQuality[];
+  perfectFor?: string[];
+  status?: FutureStatus;
+}
+
+export interface PlaceStory {
+  today: string;
+  whatIf: string;
+}
 
 export type AreaCategory =
   | "gateway"
@@ -102,22 +140,13 @@ export interface OpportunitySite {
   name: string;
   areaId: string;
   accent: string;
-  today: SiteToday;
-  trySoon: SitePhaseContent;
-  grow: SitePhaseContent;
-  longTerm: SitePhaseContent;
-  /** Ideas visitors can support for this place. */
-  ideas: PlaceIdea[];
-  /** @deprecated No longer rendered — kept for migration. */
-  precedents?: Precedent[];
-  /** @deprecated No longer rendered — kept for migration. */
-  community?: SiteCommunity;
-  /** @deprecated No longer rendered — kept for migration. */
-  smallWins?: SmallWin[];
+  story: PlaceStory;
+  futures: PlaceFuture[];
   /** When true, content is a stub awaiting editorial pass. */
   isPlaceholder?: boolean;
 }
 
+/** @deprecated Homepage hero + dormant Supabase only. */
 export const TIMELINE_PHASES: {
   id: TimelinePhase;
   label: string;

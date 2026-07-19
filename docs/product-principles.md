@@ -217,12 +217,54 @@ For purpose and North Star, see [`vision.md`](vision.md). For how principles map
 
 ---
 
+## 12. Renderings are the product. Data collection is secondary.
+
+**Why it exists.** People come to Imagine Kirkwood to *see* what downtown could become — not to fill out forms or win arguments. Every participation feature must earn its place by deepening the visual exhibition. If it competes with renderings for attention, it waits.
+
+**Good implementations**
+
+- Full-bleed future heroes in a vertical exhibition scroll — not tabs or timeline scrubbers.
+- Shareable deep links to a single future rendering (`/explore?site=…&concept=…`).
+- Lightweight Love / Save / Share reactions below each future — quiet, device-local.
+- Content expansion (multiple futures per place) before accounts or civic workflows.
+
+**Avoid**
+
+- Participation UI that dominates the panel or map.
+- Public vote leaderboards or counts that feel like elections.
+- Requiring sign-in before viewing renderings.
+- Building Civic Portfolio or admin analytics before the exhibition is a destination.
+- Navigation chrome (phase scrubbers, concept tabs) that organizes renderings like planning software.
+
+---
+
+## 13. Every rendering is a shareable story
+
+**Why it exists.** A neighbor forwards a link — they are sharing a *vision*, not an app. The recipient should understand the idea in under ten seconds: see the image, read the title and description, grasp **Perfect for**, and react without learning the map or product structure.
+
+**Good implementations**
+
+- Each `FutureSection` works as a magazine feature — place name as a light eyebrow only.
+- Deep links scroll the shared future to the top of the panel; place essay deferred.
+- Web Share payload uses future title + hook — not phase or planner jargon.
+- **Perfect for** bullets answer "who is this good for?" in plain language.
+
+**Avoid**
+
+- Requiring context from other futures or a place timeline before comprehension.
+- Share URLs that open a map with no rendering visible.
+- UI copy that says "concept," "phase," or "tier" to residents.
+- Deep links that land mid-scroll below unrelated content.
+
+---
+
 ## Feature Evaluation Checklist
 
 Before adding a feature, ask:
 
 | Question | If **no**… |
 |----------|------------|
+| **Does this make the visual experience richer?** | Defer or redesign — renderings come first. |
 | **Does this inspire?** | Redesign for vision-first storytelling or do not ship. |
 | **Does this reduce conflict?** | Remove binary framing, debate mechanics, or adversarial copy. |
 | **Does it help residents understand a place?** | Anchor to a named site, photo, or narrative — not abstract policy. |
@@ -240,7 +282,7 @@ Use when the feature is large or architectural:
 - [ ] Are **ideas** kept distinct from **phase / implementation** content?
 - [ ] Is community enthusiasm labeled as **informing** decisions — not replacing planning?
 - [ ] Is this the **smallest** version that validates the idea?
-- [ ] Would it fit the People's Park mobile flow: **name → phase tabs → one image → one sentence → ideas with support**?
+- [ ] Would it fit the People's Park mobile flow: **name → place story → scroll futures → Love / Share on each**?
 
 ---
 

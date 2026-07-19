@@ -2,22 +2,20 @@
 
 import { useEffect } from "react";
 import { SiteDetail } from "@/components/panel/SiteDetail";
-import type { OpportunitySite, TimelinePhase } from "@/lib/types";
+import type { OpportunitySite } from "@/lib/types";
 
 interface SlideOutPanelProps {
   site: OpportunitySite | null;
-  activePhase: TimelinePhase;
+  focusedConceptId: string | null;
   isOpen: boolean;
   onClose: () => void;
-  onPhaseChange: (phase: TimelinePhase) => void;
 }
 
 export function SlideOutPanel({
   site,
-  activePhase,
+  focusedConceptId,
   isOpen,
   onClose,
-  onPhaseChange,
 }: SlideOutPanelProps) {
   useEffect(() => {
     if (!isOpen) return;
@@ -75,10 +73,9 @@ export function SlideOutPanel({
           </svg>
         </button>
         <SiteDetail
-          key={`${site.id}-${activePhase}`}
+          key={`${site.id}-${focusedConceptId ?? "browse"}`}
           site={site}
-          activePhase={activePhase}
-          onPhaseChange={onPhaseChange}
+          focusedConceptId={focusedConceptId}
         />
       </aside>
     </>

@@ -1,12 +1,10 @@
 # Imagine Kirkwood
 
-An interactive civic design experience for Bloomington's Kirkwood Avenue corridor.
+A visual civic exploration platform for Bloomington's Kirkwood Avenue — photography, concept renderings, and short stories about what downtown could become.
 
-## Product Principle
+> **Renderings are the product. Data collection is secondary.**
 
-> **People find it easier to react to concrete examples than to imagine from a blank page.**
-
-Instead of asking "What should Kirkwood become?", Imagine Kirkwood helps people explore examples, compare possibilities, and contribute inspiration — a more approachable model than a typical public survey.
+For purpose and direction, see [`docs/vision.md`](docs/vision.md).
 
 ## Getting Started
 
@@ -15,16 +13,26 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Supabase is **optional** for local exhibition work — see [`docs/supabase-setup.md`](docs/supabase-setup.md) for future Civic Portfolio setup.
 
-## MVP Scope
+## What's live
 
-- Minimal landing page with one question and a map CTA
-- Stylized SVG plan-view map of six Kirkwood Avenue blocks
-- Six clickable **Innovation Areas** with phase labels (Test Tomorrow / Next Five Years / Long-Term Vision)
-- Tabbed slide-out panel: Today, Ideas, Inspiration, Participate
-- **Share Inspiration** as the primary contribution path
-- Mock data only — no auth, AI, database, or voting
+- **Exhibition homepage** (`/`) — cinematic hero, philosophy, path into the atlas
+- **Opportunity Atlas** (`/explore`) — editorial map with six places, slide-out exhibition panel
+- **Multiple futures per place** — story-first intro, then vertically scrolling full-bleed renderings
+- **People's Park** — gold-standard reference site with four possible futures
+- **Lightweight engagement** — Love this idea, Worth Trying, Save, and Share per future (device-local)
+- **Shareable deep links** — `/explore?site=peoples-park&concept=outdoor-living-room`
+
+## Roadmap (summary)
+
+1. **Visual Exhibition** — expand sites, renderings, and exploration UX *(current)*
+2. **Lightweight Reactions** — learn what resonates without friction
+3. **Accounts + Wishlists** — save favorites across devices
+4. **Civic Portfolio** — scarce Civic Points prioritization *(future)*
+5. **Planning Insights** — leader-facing analytics *(future)*
+
+See [`docs/roadmap.md`](docs/roadmap.md) for the full story.
 
 ## Tech Stack
 
