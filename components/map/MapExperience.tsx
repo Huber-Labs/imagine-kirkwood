@@ -17,13 +17,6 @@ import { AUTHOR_MODE_URL, isAuthorModeEnabled } from "@/lib/author/mode";
 import { migrateEngagementStorage } from "@/lib/engagement/migrate";
 import { parseExploreParams } from "@/lib/engagement/explore-url";
 import { preloadConceptImage } from "@/lib/images";
-import {
-  getSiteSlideDirection,
-  type SiteSlideDirection,
-} from "@/lib/map/opportunity-locations";
-import { useIsMobileExplore } from "@/lib/map/use-mobile-explore";
-
-const DEFAULT_MOBILE_SITE_ID = "dining-district";
 
 function readInitialExploreState(
   searchParams: ReturnType<typeof useSearchParams>,
@@ -39,9 +32,6 @@ function readInitialExploreState(
 export function MapExperience() {
   const searchParams = useSearchParams();
   const authorMode = isAuthorModeEnabled(searchParams);
-  const isMobile = useIsMobileExplore();
-  const urlSiteId = parseExploreParams(searchParams).siteId;
-
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(
     () => (authorMode ? null : readInitialExploreState(searchParams).selectedSiteId),
   );
@@ -51,26 +41,9 @@ export function MapExperience() {
   const [panelOpen, setPanelOpen] = useState(
     () => (authorMode ? false : readInitialExploreState(searchParams).panelOpen),
   );
-  const [mobileDefaultDismissed, setMobileDefaultDismissed] = useState(false);
-  const [slideDirection, setSlideDirection] = useState<SiteSlideDirection | null>(
-    null,
-  );
 
-  const implicitMobileSiteId =
-    !authorMode &&
-    !urlSiteId &&
-    isMobile &&
-    !mobileDefaultDismissed &&
-    selectedSiteId === null
-      ? DEFAULT_MOBILE_SITE_ID
-      : null;
-
-  const activeSiteId = selectedSiteId ?? implicitMobileSiteId;
-  const activePanelOpen =
-    panelOpen || (implicitMobileSiteId !== null && !mobileDefaultDismissed);
-
-  const activeSite = activeSiteId
-    ? getOpportunitySiteById(activeSiteId) ?? null
+  const selectedSite = selectedSiteId
+    ? getOpportunitySiteById(selectedSiteId) ?? null
     : null;
 
   useEffect(() => {
@@ -78,12 +51,12 @@ export function MapExperience() {
   }, []);
 
   useEffect(() => {
-    if (!activeSite) return;
-    const future = getDefaultFuture(activeSite);
+    if (!selectedSite) return;
+    const future = getDefaultFuture(selectedSite);
     if (future?.image) {
       preloadConceptImage(future.image);
     }
-  }, [activeSite]);
+  }, [selectedSite]);
 
   useEffect(() => {
     if (authorMode) {
@@ -91,8 +64,8 @@ export function MapExperience() {
       return;
     }
 
-    if (activePanelOpen && activeSiteId) {
-      const params = new URLSearchParams({ site: activeSiteId });
+    if (panelOpen && selectedSiteId) {
+      const params = new URLSearchParams({ site: selectedSiteId });
       if (focusedConceptId) {
         params.set("concept", focusedConceptId);
       }
@@ -101,38 +74,22 @@ export function MapExperience() {
     }
 
     window.history.replaceState(null, "", "/explore");
-  }, [authorMode, activeSiteId, focusedConceptId, activePanelOpen]);
+  }, [authorMode, selectedSiteId, focusedConceptId, panelOpen]);
 
-  const handleSelectSite = useCallback(
-    (id: string) => {
-      const site = getOpportunitySiteById(id);
-      const future = site ? getDefaultFuture(site) : undefined;
-      if (future?.image) {
-        preloadConceptImage(future.image);
-      }
-
-      const currentSiteId = selectedSiteId ?? implicitMobileSiteId;
-
-      if (activePanelOpen && currentSiteId && currentSiteId !== id) {
-        setSlideDirection(getSiteSlideDirection(currentSiteId, id));
-      } else {
-        setSlideDirection(null);
-      }
-
-      setMobileDefaultDismissed(false);
-      setSelectedSiteId(id);
-      setFocusedConceptId(null);
-      setPanelOpen(true);
-    },
-    [activePanelOpen, implicitMobileSiteId, selectedSiteId],
-  );
+  const handleSelectSite = useCallback((id: string) => {
+    const site = getOpportunitySiteById(id);
+    const future = site ? getDefaultFuture(site) : undefined;
+    if (future?.image) {
+      preloadConceptImage(future.image);
+    }
+    setSelectedSiteId(id);
+    setFocusedConceptId(null);
+    setPanelOpen(true);
+  }, []);
 
   const handleClosePanel = useCallback(() => {
-    setSlideDirection(null);
     setPanelOpen(false);
     setFocusedConceptId(null);
-    setSelectedSiteId(null);
-    setMobileDefaultDismissed(true);
   }, []);
 
   const handleAuthorSelectBlocked = useCallback(() => {}, []);
@@ -142,13 +99,13 @@ export function MapExperience() {
   );
 
   const exploreReturnPath = useMemo(() => {
-    if (!activeSiteId) return "/explore";
-    const params = new URLSearchParams({ site: activeSiteId });
+    if (!selectedSiteId) return "/explore";
+    const params = new URLSearchParams({ site: selectedSiteId });
     if (focusedConceptId) {
       params.set("concept", focusedConceptId);
     }
     return `/explore?${params.toString()}`;
-  }, [activeSiteId, focusedConceptId]);
+  }, [selectedSiteId, focusedConceptId]);
 
   useEffect(() => {
     if (!authError) return;
@@ -206,7 +163,7 @@ export function MapExperience() {
             <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
           ) : (
             <AerialMap
-              selectedSiteId={activeSiteId}
+              selectedSiteId={selectedSiteId}
               onSelectSite={handleSelectSite}
             />
           )}
@@ -218,11 +175,9 @@ export function MapExperience() {
 
       {!authorMode && (
         <SlideOutPanel
-          site={activeSite}
+          site={selectedSite}
           focusedConceptId={focusedConceptId}
-          isOpen={activePanelOpen && activeSite !== null}
-          slideDirection={slideDirection}
-          onSlideDirectionComplete={() => setSlideDirection(null)}
+          isOpen={panelOpen && selectedSite !== null}
           onClose={handleClosePanel}
         />
       )}

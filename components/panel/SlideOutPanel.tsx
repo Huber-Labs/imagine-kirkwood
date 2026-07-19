@@ -2,15 +2,12 @@
 
 import { useEffect } from "react";
 import { SiteDetail } from "@/components/panel/SiteDetail";
-import type { SiteSlideDirection } from "@/lib/map/opportunity-locations";
 import type { OpportunitySite } from "@/lib/types";
 
 interface SlideOutPanelProps {
   site: OpportunitySite | null;
   focusedConceptId: string | null;
   isOpen: boolean;
-  slideDirection?: SiteSlideDirection | null;
-  onSlideDirectionComplete?: () => void;
   onClose: () => void;
 }
 
@@ -18,8 +15,6 @@ export function SlideOutPanel({
   site,
   focusedConceptId,
   isOpen,
-  slideDirection = null,
-  onSlideDirectionComplete,
   onClose,
 }: SlideOutPanelProps) {
   useEffect(() => {
@@ -38,22 +33,7 @@ export function SlideOutPanel({
     };
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    if (!slideDirection || !onSlideDirectionComplete) return;
-
-    const timer = window.setTimeout(onSlideDirectionComplete, 480);
-    return () => window.clearTimeout(timer);
-  }, [slideDirection, site?.id, onSlideDirectionComplete]);
-
   if (!site) return null;
-
-  const contentClassName = [
-    "slide-out-panel__content min-h-0 flex-1",
-    slideDirection === "left" ? "slide-out-panel__content--in-left" : "",
-    slideDirection === "right" ? "slide-out-panel__content--in-right" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   return (
     <>
@@ -70,7 +50,7 @@ export function SlideOutPanel({
         role="dialog"
         aria-modal="true"
         aria-label={`${site.name} details`}
-        className={`slide-out-panel fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-hidden rounded-t-[1.25rem] bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:overflow-y-auto md:rounded-none md:pb-0 ${
+        className={`fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-y-auto rounded-t-[1.25rem] bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
             : "translate-y-full md:translate-y-0 md:translate-x-full"
@@ -92,13 +72,11 @@ export function SlideOutPanel({
             />
           </svg>
         </button>
-        <div className={contentClassName}>
-          <SiteDetail
-            key={`${site.id}-${focusedConceptId ?? "browse"}`}
-            site={site}
-            focusedConceptId={focusedConceptId}
-          />
-        </div>
+        <SiteDetail
+          key={`${site.id}-${focusedConceptId ?? "browse"}`}
+          site={site}
+          focusedConceptId={focusedConceptId}
+        />
       </aside>
     </>
   );
