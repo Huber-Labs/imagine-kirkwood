@@ -144,12 +144,6 @@ body {
   animation: exhibition-rise 0.85s var(--panel-ease) both;
 }
 
-.exhibition-rise--1 { animation-delay: 0.15s; }
-.exhibition-rise--2 { animation-delay: 0.25s; }
-.exhibition-rise--3 { animation-delay: 0.35s; }
-.exhibition-rise--4 { animation-delay: 0.45s; }
-.exhibition-rise--5 { animation-delay: 0.55s; }
-
 .exhibition-hero__slide {
   transition: opacity 1.2s var(--panel-ease);
 }
@@ -184,14 +178,6 @@ body {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgb(255 255 255 / 0.6);
-}
-
-.exhibition-hero__caption {
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgb(255 255 255 / 0.55);
 }
 
 .story-photo {

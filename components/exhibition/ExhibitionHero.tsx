@@ -46,14 +46,12 @@ export function ExhibitionHero() {
     return () => window.clearInterval(interval);
   }, [prefersReducedMotion]);
 
-  const activeStage = EXHIBITION_HERO_STAGES[activeIndex];
-
   return (
     <section
       className="relative flex min-h-dvh flex-col justify-center overflow-hidden"
       aria-label="Imagine Kirkwood exhibition entrance"
     >
-      <div className="absolute inset-0" aria-hidden="true">
+      <div className="absolute inset-0">
         {EXHIBITION_HERO_STAGES.map((stage, index) => {
           const isActive = index === activeIndex;
           const src = failedSrcs.has(stage.src) ? CONCEPT_PLACEHOLDER_PATH : stage.src;
@@ -64,10 +62,11 @@ export function ExhibitionHero() {
               className={`exhibition-hero__slide absolute inset-0 ${
                 isActive ? "exhibition-hero__slide--active opacity-100" : "opacity-0"
               } ${isActive && !prefersReducedMotion ? "exhibition-hero__slide--ken-burns" : ""}`}
+              aria-hidden={!isActive}
             >
               <img
                 src={src}
-                alt=""
+                alt={isActive ? stage.alt : ""}
                 className="h-full w-full object-cover object-center"
                 onError={() => {
                   setFailedSrcs((prev) => new Set(prev).add(stage.src));
@@ -76,37 +75,24 @@ export function ExhibitionHero() {
             </div>
           );
         })}
-        <div className="exhibition-hero__overlay absolute inset-0" />
+        <div className="exhibition-hero__overlay absolute inset-0" aria-hidden="true" />
       </div>
 
-      <div className="exhibition-rise relative mx-auto w-full max-w-2xl px-8 pt-[12vh] pb-28 text-center sm:text-left md:pb-32">
-        <p className="exhibition-hero__eyebrow mb-5">A community vision for downtown Bloomington</p>
+      <div className="exhibition-rise relative mx-auto w-full max-w-2xl px-8 pt-[12vh] pb-12 text-center sm:text-left md:pb-16">
+        <p className="exhibition-hero__eyebrow mb-5">
+          A visual exhibition for downtown Bloomington
+        </p>
         <h1 className="font-[family-name:var(--font-instrument-serif)] text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-white md:text-[4.5rem]">
           What could Kirkwood become?
         </h1>
         <p className="mx-auto mt-5 max-w-md text-[1rem] leading-[1.65] text-white/75 sm:mx-0 md:text-[1.0625rem] md:leading-[1.7]">
-          Explore how small experiments could grow into a more welcoming, walkable,
-          and vibrant downtown.
+          Explore imagined futures for streets, parks, plazas, and gathering places
+          along Kirkwood Avenue.
         </p>
-        <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:items-start sm:gap-4">
-          <Button href="/explore">Walk Through Tomorrow</Button>
-          <Button
-            href="/explore"
-            variant="ghost"
-            className="border-white/35 text-white hover:bg-white/10 focus-visible:ring-white/40 focus-visible:ring-offset-black/50"
-          >
-            Explore the Map
-          </Button>
+        <div className="mt-8 flex justify-center sm:mt-10 sm:justify-start">
+          <Button href="/explore">Explore the Map</Button>
         </div>
       </div>
-
-      <p
-        className="exhibition-hero__caption exhibition-rise exhibition-rise--2 absolute inset-x-0 bottom-8 text-center"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {activeStage.label}
-      </p>
     </section>
   );
 }

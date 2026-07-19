@@ -1,6 +1,4 @@
 import { ExhibitionHero } from "@/components/exhibition/ExhibitionHero";
-import { ExploreTransition } from "@/components/exhibition/ExploreTransition";
-import { PhilosophySection } from "@/components/exhibition/PhilosophySection";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 
 export default function Home() {
@@ -9,8 +7,6 @@ export default function Home() {
       <SiteHeader variant="exhibition" />
       <main>
         <ExhibitionHero />
-        <PhilosophySection />
-        <ExploreTransition />
       </main>
     </div>
   );
