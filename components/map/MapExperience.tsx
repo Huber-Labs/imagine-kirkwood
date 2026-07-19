@@ -3,11 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { AuthorModeShell } from "@/components/author/AuthorModeShell";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
 import { MapLegend } from "@/components/map/MapLegend";
 import { SlideOutPanel } from "@/components/panel/SlideOutPanel";
 import { getOpportunitySiteById } from "@/lib/data/opportunity-sites";
+import { AUTHOR_MODE_URL, isAuthorModeEnabled } from "@/lib/author/mode";
 import { migrateEngagementStorage } from "@/lib/engagement/migrate";
 import { parseExploreParams } from "@/lib/engagement/explore-url";
 
@@ -24,14 +26,15 @@ function readInitialExploreState(
 
 export function MapExperience() {
   const searchParams = useSearchParams();
+  const authorMode = isAuthorModeEnabled(searchParams);
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(
-    () => readInitialExploreState(searchParams).selectedSiteId,
+    () => (authorMode ? null : readInitialExploreState(searchParams).selectedSiteId),
   );
   const [focusedConceptId, setFocusedConceptId] = useState<string | null>(
-    () => readInitialExploreState(searchParams).focusedConceptId,
+    () => (authorMode ? null : readInitialExploreState(searchParams).focusedConceptId),
   );
   const [panelOpen, setPanelOpen] = useState(
-    () => readInitialExploreState(searchParams).panelOpen,
+    () => (authorMode ? false : readInitialExploreState(searchParams).panelOpen),
   );
 
   const selectedSite = selectedSiteId
@@ -43,6 +46,11 @@ export function MapExperience() {
   }, []);
 
   useEffect(() => {
+    if (authorMode) {
+      window.history.replaceState(null, "", AUTHOR_MODE_URL);
+      return;
+    }
+
     if (panelOpen && selectedSiteId) {
       const params = new URLSearchParams({ site: selectedSiteId });
       if (focusedConceptId) {
@@ -53,7 +61,7 @@ export function MapExperience() {
     }
 
     window.history.replaceState(null, "", "/explore");
-  }, [selectedSiteId, focusedConceptId, panelOpen]);
+  }, [authorMode, selectedSiteId, focusedConceptId, panelOpen]);
 
   const handleSelectSite = useCallback((id: string) => {
     setSelectedSiteId(id);
@@ -65,6 +73,8 @@ export function MapExperience() {
     setPanelOpen(false);
     setFocusedConceptId(null);
   }, []);
+
+  const handleAuthorSelectBlocked = useCallback(() => {}, []);
 
   return (
     <div className="map-scene relative h-full w-full overflow-hidden bg-[#141310]">
@@ -87,22 +97,28 @@ export function MapExperience() {
       </div>
 
       <div className="absolute inset-0 pb-[7.25rem] sm:pb-24">
-        <AerialMap
-          selectedSiteId={selectedSiteId}
-          onSelectSite={handleSelectSite}
-        />
+        {authorMode ? (
+          <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
+        ) : (
+          <AerialMap
+            selectedSiteId={selectedSiteId}
+            onSelectSite={handleSelectSite}
+          />
+        )}
       </div>
 
       <MapChrome />
       <MapAttribution />
-      <MapLegend />
+      {!authorMode && <MapLegend />}
 
-      <SlideOutPanel
-        site={selectedSite}
-        focusedConceptId={focusedConceptId}
-        isOpen={panelOpen && selectedSite !== null}
-        onClose={handleClosePanel}
-      />
+      {!authorMode && (
+        <SlideOutPanel
+          site={selectedSite}
+          focusedConceptId={focusedConceptId}
+          isOpen={panelOpen && selectedSite !== null}
+          onClose={handleClosePanel}
+        />
+      )}
     </div>
   );
 }

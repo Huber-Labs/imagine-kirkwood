@@ -1,6 +1,16 @@
 /** Aerial map configuration — SVG overlay coordinates match this viewBox. */
 export const MAP_VIEWBOX = "0 0 1000 600";
 
+/** Required raster dimensions — 1000×600 (5:3). Markers align to viewBox edges. */
+export const AERIAL_ASPECT_WIDTH = 1000;
+export const AERIAL_ASPECT_HEIGHT = 600;
+
+/**
+ * Fit the full aerial inside the viewBox without internal cropping.
+ * Requires the PNG to match the 5:3 viewBox aspect ratio.
+ */
+export const AERIAL_PRESERVE_ASPECT_RATIO = "xMidYMid meet";
+
 /** Primary aerial photograph. */
 export const AERIAL_IMAGE_PATH = "/images/aerials/kirkwood-aerial.png";
 

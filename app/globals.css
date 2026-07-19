@@ -867,6 +867,201 @@ body {
   color: color-mix(in srgb, var(--foreground) 42%, transparent);
 }
 
+/* ── Author Mode (dev / preview only) ── */
+
+.author-mode-toolbar-wrap {
+  position: fixed;
+  left: 50%;
+  top: max(4.5rem, calc(env(safe-area-inset-top) + 3.5rem));
+  z-index: 30;
+  width: min(42rem, calc(100vw - 1.5rem));
+  transform: translateX(-50%);
+}
+
+.author-mode-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(20, 19, 16, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.author-mode-toolbar__button {
+  min-height: 2rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.author-mode-toolbar__button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.author-mode-toolbar__button--active {
+  border-color: rgba(255, 224, 138, 0.55);
+  background: rgba(255, 224, 138, 0.12);
+  color: #ffe08a;
+}
+
+.author-mode-map--scout {
+  cursor: crosshair;
+}
+
+.author-mode-panel {
+  position: fixed;
+  right: 0.75rem;
+  top: max(4.5rem, calc(env(safe-area-inset-top) + 3.5rem));
+  z-index: 30;
+  width: min(18rem, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 8rem);
+  overflow: auto;
+  padding: 0.875rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(20, 19, 16, 0.92);
+  color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.author-mode-panel__banner {
+  margin: 0 0 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffe08a;
+}
+
+.author-mode-panel__hint,
+.author-mode-panel__commit,
+.author-mode-panel__feedback {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.author-mode-panel__form {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.author-mode-panel__field {
+  display: grid;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.author-mode-panel__field span {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.author-mode-panel__field input,
+.author-mode-panel__field select,
+.author-mode-panel__field textarea {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.92);
+  font: inherit;
+  line-height: 1.4;
+}
+
+.author-mode-panel__field textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.author-mode-panel__warning {
+  font-size: 0.6875rem;
+  color: #fbbf24;
+}
+
+.author-mode-panel__readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 0.75rem;
+  margin: 0;
+}
+
+.author-mode-panel__readout div {
+  min-width: 0;
+}
+
+.author-mode-panel__readout dt {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.author-mode-panel__readout dd {
+  margin: 0.125rem 0 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.92);
+  word-break: break-word;
+}
+
+.author-mode-panel__listing {
+  margin: 0 0 0.75rem;
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.6875rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.author-mode-panel__commit code {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 640px) {
+  .author-mode-toolbar-wrap {
+    left: 0.5rem;
+    right: 0.5rem;
+    top: max(3.75rem, calc(env(safe-area-inset-top) + 2.75rem));
+    width: auto;
+    transform: none;
+  }
+
+  .author-mode-toolbar {
+    border-radius: 0.875rem;
+    justify-content: flex-start;
+    padding-left: 4.75rem;
+  }
+
+  .author-mode-panel {
+    right: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    top: auto;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    max-height: min(42dvh, 22rem);
+  }
+}
+
 /* ── Small wins ── */
 
 .small-wins__item {

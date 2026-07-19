@@ -256,6 +256,8 @@ In `lib/map/opportunity-locations.ts`, append an `OpportunityLocation`:
 
 Tune `x` / `y` against the aerial (west → east along Kirkwood). Markers are percent-based so they scale with the viewBox.
 
+**Author Mode (dev / preview):** set `NEXT_PUBLIC_ENABLE_AUTHOR_MODE=true` or `NEXT_PUBLIC_ENABLE_MAP_CALIBRATION=true` locally or on a Vercel preview, then open `/explore?author=true`. Legacy `/explore?calibrate=true` still works and normalizes to `?author=true`. Use the toolbar to scout new places, drag pins to reposition them, and copy map entries or place stubs into source files. Paste map coordinates into this file and place stubs into `lib/data/opportunity-sites.ts`. Delete only applies to newly scouted draft places — committed places cannot be removed from the UI. Leave the flag off in public production.
+
 ### 3. Add site content
 
 In `lib/data/opportunity-sites.ts`, either:

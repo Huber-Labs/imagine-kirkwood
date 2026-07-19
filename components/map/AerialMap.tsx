@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OpportunityPlaceMarker } from "@/components/map/OpportunityPlaceMarker";
-import { opportunitySites } from "@/lib/data/opportunity-sites";
 import {
   AERIAL_EDITORIAL,
   AERIAL_IMAGE_FALLBACK,
   AERIAL_IMAGE_PATH,
+  AERIAL_PRESERVE_ASPECT_RATIO,
   MAP_VIEWBOX,
   corridorLabels,
 } from "@/lib/map/aerial";
+import { getOpportunitySiteById, opportunitySites } from "@/lib/data/opportunity-sites";
+import type { AuthorPlace } from "@/lib/author/types";
+import {
+  clientPointToViewBox,
+  type MapPosition,
+  viewBoxToPercent,
+} from "@/lib/map/calibration";
 import {
   EXHIBIT_BASE_FILTER,
   EXHIBIT_OUTER_DIM,
@@ -24,6 +31,13 @@ import {
 interface AerialMapProps {
   selectedSiteId: string | null;
   onSelectSite: (id: string) => void;
+  authorMode?: boolean;
+  draftPlaces?: AuthorPlace[];
+  activePlaceId?: string | null;
+  scoutToolActive?: boolean;
+  onPlaceSelect?: (siteId: string) => void;
+  onPlaceMove?: (siteId: string, mapPosition: MapPosition) => void;
+  onMapScout?: (mapPosition: MapPosition) => void;
 }
 
 function buildEditorialFilter(
@@ -102,8 +116,17 @@ function SpotlightShapes({ fill }: { fill: "white" | "black" }) {
 export function AerialMap({
   selectedSiteId,
   onSelectSite,
+  authorMode = false,
+  draftPlaces,
+  activePlaceId = null,
+  scoutToolActive = false,
+  onPlaceSelect,
+  onPlaceMove,
+  onMapScout,
 }: AerialMapProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
   const [imageSrc, setImageSrc] = useState(AERIAL_IMAGE_PATH);
+  const [draggingSiteId, setDraggingSiteId] = useState<string | null>(null);
   const { vignette, labelColor, labelOpacity } = AERIAL_EDITORIAL;
 
   const handleImageError = () => {
@@ -112,10 +135,84 @@ export function AerialMap({
     }
   };
 
+  const updateDraftFromPointer = useCallback(
+    (siteId: string, clientX: number, clientY: number) => {
+      if (!svgRef.current || !onPlaceMove) return;
+
+      const viewBoxPoint = clientPointToViewBox(
+        svgRef.current,
+        clientX,
+        clientY,
+      );
+      if (!viewBoxPoint) return;
+
+      onPlaceMove(siteId, viewBoxToPercent(viewBoxPoint.x, viewBoxPoint.y));
+    },
+    [onPlaceMove],
+  );
+
+  const handlePointerMove = useCallback(
+    (event: PointerEvent) => {
+      if (!draggingSiteId) return;
+      updateDraftFromPointer(draggingSiteId, event.clientX, event.clientY);
+    },
+    [draggingSiteId, updateDraftFromPointer],
+  );
+
+  const handlePointerUp = useCallback(() => {
+    setDraggingSiteId(null);
+  }, []);
+
+  useEffect(() => {
+    if (!draggingSiteId) return;
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [draggingSiteId, handlePointerMove, handlePointerUp]);
+
+  const handleAuthorPointerDown = useCallback(
+    (siteId: string, event: React.PointerEvent<SVGCircleElement>) => {
+      if (!authorMode) return;
+
+      event.preventDefault();
+      onPlaceSelect?.(siteId);
+      setDraggingSiteId(siteId);
+      event.currentTarget.setPointerCapture(event.pointerId);
+      updateDraftFromPointer(siteId, event.clientX, event.clientY);
+    },
+    [authorMode, onPlaceSelect, updateDraftFromPointer],
+  );
+
+  const handleScoutBackgroundClick = useCallback(
+    (event: React.PointerEvent<SVGRectElement>) => {
+      if (!authorMode || !scoutToolActive || !onMapScout || !svgRef.current) {
+        return;
+      }
+
+      const viewBoxPoint = clientPointToViewBox(
+        svgRef.current,
+        event.clientX,
+        event.clientY,
+      );
+      if (!viewBoxPoint) return;
+
+      onMapScout(viewBoxToPercent(viewBoxPoint.x, viewBoxPoint.y));
+    },
+    [authorMode, scoutToolActive, onMapScout],
+  );
+
+  const placesToRender = authorMode ? (draftPlaces ?? []) : [];
+
   return (
     <svg
+      ref={svgRef}
       viewBox={MAP_VIEWBOX}
-      className="h-full w-full touch-manipulation"
+      className={`h-full w-full touch-manipulation${scoutToolActive ? " author-mode-map--scout" : ""}`}
       role="img"
       aria-label="Editorial map of downtown Kirkwood with named opportunity places"
     >
@@ -216,7 +313,7 @@ export function AerialMap({
         y={0}
         width={1000}
         height={600}
-        preserveAspectRatio="xMidYMid slice"
+        preserveAspectRatio={AERIAL_PRESERVE_ASPECT_RATIO}
         crossOrigin="anonymous"
         filter="url(#exhibit-base)"
         onError={handleImageError}
@@ -228,7 +325,7 @@ export function AerialMap({
         y={0}
         width={1000}
         height={600}
-        preserveAspectRatio="xMidYMid slice"
+        preserveAspectRatio={AERIAL_PRESERVE_ASPECT_RATIO}
         crossOrigin="anonymous"
         filter="url(#exhibit-spotlight)"
         mask="url(#study-spotlight-mask)"
@@ -285,20 +382,44 @@ export function AerialMap({
         </text>
       ))}
 
-      {[...opportunitySites]
-        .sort((a, b) => {
-          if (a.id === selectedSiteId) return 1;
-          if (b.id === selectedSiteId) return -1;
-          return 0;
-        })
-        .map((site) => (
-          <OpportunityPlaceMarker
-            key={site.id}
-            site={site}
-            isSelected={selectedSiteId === site.id}
-            onSelect={onSelectSite}
-          />
-        ))}
+      {authorMode
+        ? placesToRender.map((place) => (
+            <OpportunityPlaceMarker
+              key={place.siteId}
+              site={getOpportunitySiteById(place.siteId) ?? null}
+              authorPlace={place}
+              isSelected={activePlaceId === place.siteId}
+              onSelect={(id) => onPlaceSelect?.(id)}
+              authorMode
+              onAuthorPointerDown={handleAuthorPointerDown}
+            />
+          ))
+        : [...opportunitySites]
+            .sort((a, b) => {
+              if (a.id === selectedSiteId) return 1;
+              if (b.id === selectedSiteId) return -1;
+              return 0;
+            })
+            .map((site) => (
+              <OpportunityPlaceMarker
+                key={site.id}
+                site={site}
+                isSelected={selectedSiteId === site.id}
+                onSelect={onSelectSite}
+              />
+            ))}
+
+      {authorMode && scoutToolActive && (
+        <rect
+          x={0}
+          y={0}
+          width={1000}
+          height={600}
+          fill="transparent"
+          style={{ cursor: "crosshair" }}
+          onPointerDown={handleScoutBackgroundClick}
+        />
+      )}
     </svg>
   );
 }

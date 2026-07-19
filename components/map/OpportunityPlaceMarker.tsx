@@ -1,52 +1,104 @@
 "use client";
 
 import { useState } from "react";
+import { toOpportunityLocationFields } from "@/lib/author/session";
+import type { AuthorPlace } from "@/lib/author/types";
 import { getPublishedFutureCount } from "@/lib/data/opportunity-sites";
+import { percentToViewBox } from "@/lib/map/calibration";
 import { IU_CRIMSON } from "@/lib/map/exhibit-treatment";
 import {
   getLabelAnchor,
   getOpportunityLocation,
-  toViewBoxPoint,
+  type OpportunityLocation,
 } from "@/lib/map/opportunity-locations";
 import type { OpportunitySite } from "@/lib/types";
 
+const SCOUTED_PIN_COLOR = "#4A90D9";
+const COMMITTED_AUTHOR_PIN = "rgba(255,255,255,0.92)";
+
 interface OpportunityPlaceMarkerProps {
-  site: OpportunitySite;
+  site?: OpportunitySite | null;
+  authorPlace?: AuthorPlace;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  locationOverride?: OpportunityLocation;
+  authorMode?: boolean;
+  onAuthorPointerDown?: (
+    siteId: string,
+    event: React.PointerEvent<SVGCircleElement>,
+  ) => void;
+}
+
+function resolveLocation(
+  site: OpportunitySite | null | undefined,
+  authorPlace: AuthorPlace | undefined,
+  locationOverride?: OpportunityLocation,
+): OpportunityLocation | null {
+  if (locationOverride) return locationOverride;
+  if (authorPlace) {
+    const fields = toOpportunityLocationFields(authorPlace);
+    return {
+      siteId: fields.siteId,
+      x: fields.x,
+      y: fields.y,
+      label: fields.label,
+      labelAlign: fields.labelAlign,
+      labelOffset: fields.labelOffset,
+    };
+  }
+  if (site) return getOpportunityLocation(site.id) ?? null;
+  return null;
 }
 
 export function OpportunityPlaceMarker({
-  site,
+  site = null,
+  authorPlace,
   isSelected,
   onSelect,
+  locationOverride,
+  authorMode = false,
+  onAuthorPointerDown,
 }: OpportunityPlaceMarkerProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const location = getOpportunityLocation(site.id);
+  const location = resolveLocation(site, authorPlace, locationOverride);
+  const placeId = authorPlace?.siteId ?? site?.id;
 
-  if (!location) return null;
+  if (!location || !placeId) return null;
 
-  const pin = toViewBoxPoint(location);
+  const pin = percentToViewBox({ x: location.x, y: location.y });
   const label = getLabelAnchor(location, pin);
-  const isAuthored = !site.isPlaceholder;
-  const futureCount = getPublishedFutureCount(site);
+  const isScouted = authorMode && authorPlace?.origin === "scouted";
+  const isAuthored = site ? !site.isPlaceholder : false;
+  const futureCount = site ? getPublishedFutureCount(site) : 0;
+  const displayName = authorPlace?.title ?? site?.name ?? location.label;
 
   const pinRadius = isSelected ? 7 : isHovered ? 6.25 : 5;
-  const markerColor = isAuthored ? IU_CRIMSON : "rgba(255,255,255,0.55)";
-  const pinFill = isSelected || isHovered || isAuthored ? markerColor : "transparent";
-  const pinStroke = "rgba(255,255,255,0.96)";
-  const pinStrokeWidth = isSelected ? 2.25 : isHovered ? 2 : 1.75;
+
+  let pinFill: string;
+  if (authorMode) {
+    pinFill = isScouted ? SCOUTED_PIN_COLOR : COMMITTED_AUTHOR_PIN;
+  } else {
+    const markerColor = isAuthored ? IU_CRIMSON : "rgba(255,255,255,0.55)";
+    pinFill =
+      isSelected || isHovered || isAuthored ? markerColor : "transparent";
+  }
+
+  const pinStroke =
+    isSelected && authorMode ? "#FFE08A" : "rgba(255,255,255,0.96)";
+  const pinStrokeWidth =
+    isSelected && authorMode ? 3 : isSelected ? 2.25 : isHovered ? 2 : 1.75;
 
   const labelOpacity = isSelected
     ? 1
     : isHovered
       ? 0.96
-      : site.isPlaceholder
+      : site?.isPlaceholder
         ? 0.42
         : 0.88;
 
   const showConnector =
     isSelected &&
+    !authorMode &&
     Math.hypot(label.x - pin.x, label.y - pin.y) > pinRadius + 4;
 
   const futuresLabel =
@@ -58,8 +110,8 @@ export function OpportunityPlaceMarker({
     <g
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`place-marker ${isSelected ? "place-marker--selected" : ""} ${isAuthored ? "place-marker--authored" : "place-marker--placeholder"}`}
-      style={{ cursor: "pointer" }}
+      className={`place-marker ${isSelected ? "place-marker--selected" : ""} ${isAuthored ? "place-marker--authored" : "place-marker--placeholder"}${isScouted ? " place-marker--scouted" : ""}`}
+      style={{ cursor: authorMode ? "grab" : "pointer" }}
     >
       <g
         className="place-marker__ripples"
@@ -76,19 +128,31 @@ export function OpportunityPlaceMarker({
       <circle
         cx={pin.x}
         cy={pin.y}
-        r={22}
+        r={authorMode ? 26 : 22}
         fill="transparent"
         role="button"
         tabIndex={0}
         aria-label={
-          futuresLabel ? `${site.name}, ${futuresLabel}` : site.name
+          futuresLabel ? `${displayName}, ${futuresLabel}` : displayName
         }
         aria-pressed={isSelected}
-        onClick={() => onSelect(site.id)}
+        onClick={() => {
+          if (authorMode) {
+            onSelect(placeId);
+            return;
+          }
+          onSelect(placeId);
+        }}
+        onPointerDown={(event) => {
+          if (!authorMode) return;
+          event.stopPropagation();
+          onAuthorPointerDown?.(placeId, event);
+        }}
         onKeyDown={(event) => {
+          if (authorMode) return;
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            onSelect(site.id);
+            onSelect(placeId);
           }
         }}
       />
@@ -123,12 +187,28 @@ export function OpportunityPlaceMarker({
         cy={pin.y}
         r={pinRadius}
         fill={pinFill}
-        fillOpacity={isAuthored ? 1 : 0.35}
+        fillOpacity={authorMode && !isScouted ? 0.95 : isAuthored || authorMode ? 1 : 0.35}
         stroke={pinStroke}
         strokeWidth={pinStrokeWidth}
         pointerEvents="none"
         className="transition-[r,fill,stroke-width] duration-300 ease-out"
       />
+
+      {authorMode && isSelected && (
+        <text
+          x={pin.x}
+          y={pin.y - 16}
+          textAnchor="middle"
+          fill="#FFE08A"
+          fontSize={8}
+          fontWeight={600}
+          letterSpacing="0.08em"
+          pointerEvents="none"
+          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
+        >
+          AUTHOR
+        </text>
+      )}
 
       <text
         x={label.x}
@@ -147,7 +227,7 @@ export function OpportunityPlaceMarker({
         {location.label}
       </text>
 
-      {futuresLabel && isAuthored && (isSelected || isHovered) && (
+      {futuresLabel && isAuthored && (isSelected || isHovered) && !authorMode && (
         <text
           x={label.x}
           y={label.y + 13}
@@ -162,7 +242,7 @@ export function OpportunityPlaceMarker({
         </text>
       )}
 
-      {site.isPlaceholder && (
+      {site?.isPlaceholder && !authorMode && (
         <text
           x={label.x}
           y={label.y + 13}
@@ -174,6 +254,21 @@ export function OpportunityPlaceMarker({
           style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
         >
           SOON
+        </text>
+      )}
+
+      {isScouted && (
+        <text
+          x={label.x}
+          y={label.y + 13}
+          textAnchor={label.textAnchor}
+          fill="rgba(147,197,253,0.85)"
+          fontSize={8}
+          letterSpacing="0.08em"
+          pointerEvents="none"
+          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
+        >
+          SCOUTED
         </text>
       )}
     </g>
