@@ -30,15 +30,6 @@ export const AERIAL_EDITORIAL = {
   titleOpacity: 0.62,
 };
 
-/** Cross-street labels — subdued so places read first. */
-export const corridorLabels = [
-  { x: 115, y: 228, label: "Indiana Ave", anchor: "middle" as const },
-  { x: 268, y: 224, label: "Dunn St", anchor: "middle" as const },
-  { x: 432, y: 222, label: "Grant St", anchor: "middle" as const },
-  { x: 592, y: 224, label: "College Ave", anchor: "middle" as const },
-  { x: 752, y: 228, label: "Walnut St", anchor: "middle" as const },
-];
-
 /** @deprecated Use KIRKWOOD_STREET_LABEL textPath in AerialMap. */
 export const corridorTitle = {
   x: 500,

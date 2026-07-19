@@ -8,7 +8,6 @@ import {
   AERIAL_IMAGE_PATH,
   AERIAL_PRESERVE_ASPECT_RATIO,
   MAP_VIEWBOX,
-  corridorLabels,
 } from "@/lib/map/aerial";
 import { getOpportunitySiteById, opportunitySites } from "@/lib/data/opportunity-sites";
 import type { AuthorPlace } from "@/lib/author/types";
@@ -126,7 +125,7 @@ export function AerialMap({
   const svgRef = useRef<SVGSVGElement>(null);
   const [imageSrc, setImageSrc] = useState(AERIAL_IMAGE_PATH);
   const [draggingSiteId, setDraggingSiteId] = useState<string | null>(null);
-  const { vignette, labelColor, labelOpacity } = AERIAL_EDITORIAL;
+  const { vignette } = AERIAL_EDITORIAL;
 
   const handleImageError = () => {
     if (imageSrc !== AERIAL_IMAGE_FALLBACK) {
@@ -318,22 +317,6 @@ export function AerialMap({
       />
 
       <rect width={1000} height={600} fill="url(#editorial-vignette)" />
-
-      {corridorLabels.map((street) => (
-        <text
-          key={street.label}
-          x={street.x}
-          y={street.y}
-          textAnchor={street.anchor}
-          fill={`rgba(${labelColor},${labelOpacity})`}
-          fontSize={8}
-          letterSpacing="0.06em"
-          filter="url(#label-shadow)"
-          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
-        >
-          {street.label}
-        </text>
-      ))}
 
       {authorMode
         ? placesToRender.map((place) => (
