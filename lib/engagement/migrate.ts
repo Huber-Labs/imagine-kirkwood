@@ -5,14 +5,14 @@ const MIGRATION_FLAG = "imagine-kirkwood:engagement-migrated:v2";
 
 /** Best-effort map from v1 idea IDs to v2 future IDs (People's Park). */
 const IDEA_TO_FUTURE: Record<string, string> = {
-  "idea-pp-seating": "performance-plaza",
-  "idea-pp-shade-umbrellas": "performance-plaza",
-  "idea-pp-weekend-music": "performance-plaza",
-  "idea-pp-pop-up-stage": "performance-plaza",
-  "idea-pp-food-carts": "performance-plaza",
-  "idea-pp-shade-grove": "community-market",
-  "idea-pp-event-power": "community-market",
-  "idea-pp-amphitheater": "outdoor-living-room",
+  "idea-pp-seating": "reading-garden",
+  "idea-pp-shade-umbrellas": "reading-garden",
+  "idea-pp-weekend-music": "reading-garden",
+  "idea-pp-pop-up-stage": "reading-garden",
+  "idea-pp-food-carts": "reading-garden",
+  "idea-pp-shade-grove": "reading-garden",
+  "idea-pp-event-power": "reading-garden",
+  "idea-pp-amphitheater": "reading-garden",
 };
 
 function phaseFallbackFuture(phase: TimelinePhase | undefined): string | null {

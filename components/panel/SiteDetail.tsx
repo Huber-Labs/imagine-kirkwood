@@ -22,8 +22,7 @@ export function SiteDetail({ site, focusedConceptId }: SiteDetailProps) {
             </h2>
             {site.isPlaceholder && (
               <p className="mt-2 text-sm text-[var(--panel-muted)]">
-                Story in development — explore People&apos;s Park for a complete
-                example.
+                Place story in development.
               </p>
             )}
           </div>

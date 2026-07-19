@@ -1,6 +1,27 @@
 import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
 import type { OpportunitySite, PlaceFuture } from "@/lib/types";
 
+/** V1 release: one published concept render per opportunity site. */
+function createSiteFuture(
+  id: string,
+  title: string,
+  description: string,
+  image: string,
+  alt: string,
+  options: Partial<PlaceFuture> = {},
+): PlaceFuture {
+  return {
+    id,
+    title,
+    description,
+    image,
+    alt,
+    qualities: [],
+    status: "published",
+    ...options,
+  };
+}
+
 function comingSoonFuture(
   id: string,
   title: string,
@@ -26,26 +47,19 @@ function createPlaceholderSite(
 ): OpportunitySite {
   const futures: PlaceFuture[] = heroImage
     ? [
-        {
-          id: `${id}-vision`,
-          title: name,
-          description: `A concept for what ${name} could become.`,
-          image: heroImage,
-          alt: `Concept rendering — ${name}`,
-          qualities: [],
-          status: "published",
-        },
+        createSiteFuture(
+          `${id}-vision`,
+          name,
+          `A concept for what ${name} could become.`,
+          heroImage,
+          `Concept rendering — ${name}`,
+        ),
       ]
     : [
         comingSoonFuture(
-          `${id}-shared-street`,
-          "Shared street vision",
-          "A fuller story for this place is on the way.",
-        ),
-        comingSoonFuture(
-          `${id}-gathering-place`,
-          "Gathering place vision",
-          "More possible futures will appear here soon.",
+          `${id}-vision`,
+          name,
+          "A concept rendering for this place is on the way.",
         ),
       ];
 
@@ -97,78 +111,24 @@ export const opportunitySites: OpportunitySite[] = [
         "What if it became Bloomington's favorite place to stay?",
     },
     futures: [
-      {
-        id: "outdoor-living-room",
-        title: "Outdoor Living Room",
-        description:
-          "A shaded public room for reading, meeting friends, working outdoors, and spending unhurried time downtown.",
-        shareHook:
-          "Imagine People's Park as Bloomington's outdoor living room.",
-        image: "/images/opportunities/peoples-park/long-term/hero.webp",
-        alt: "Concept rendering — People's Park as a shaded outdoor living room with seating and tree canopy",
-        qualities: ["shade", "seating", "trees", "coworking", "dining"],
-        perfectFor: [
-          "Reading",
-          "Meeting friends",
-          "Outdoor work",
-          "Lunch",
-          "Families",
-        ],
-        status: "published",
-      },
-      {
-        id: "performance-plaza",
-        title: "Performance Plaza",
-        description:
-          "Movable chairs, string lights, and a flexible stage — a gathering place for small concerts, outdoor films, and community performances.",
-        shareHook:
-          "What if People's Park hosted the city's best small outdoor shows?",
-        image: "/images/opportunities/peoples-park/try-soon/hero.webp",
-        alt: "Concept rendering — a pop-up lawn with temporary stage and evening gathering",
-        qualities: ["performance", "music", "seating", "nightlife", "families"],
-        perfectFor: [
-          "Live music",
-          "Outdoor films",
-          "Student performances",
-          "Community events",
-        ],
-        status: "published",
-      },
-      {
-        id: "community-market",
-        title: "Community Market",
-        description:
-          "A flexible event lawn with shade, power, and room for local vendors, seasonal markets, and food on show nights.",
-        shareHook: "Picture a downtown market that draws people to stay.",
-        image: "/images/opportunities/peoples-park/grow/hero.webp",
-        alt: "Concept rendering — an event lawn with markets and evening gathering",
-        qualities: ["markets", "dining", "seating", "families", "nightlife"],
-        perfectFor: [
-          "Local vendors",
-          "Seasonal markets",
-          "Food and drink",
-          "Evening gatherings",
-        ],
-        status: "published",
-      },
-      {
-        id: "reading-garden",
-        title: "Reading Garden",
-        description:
-          "A quieter, greener retreat designed around reading, conversation, native planting, and restoration.",
-        shareHook:
-          "A calmer corner of downtown — a reading garden for People's Park.",
-        image: "/images/opportunities/peoples-park/hero.png",
-        alt: "Concept rendering — a reading garden for People's Park",
-        qualities: ["reading", "trees", "shade", "rain-gardens", "families"],
-        perfectFor: [
-          "Reading",
-          "Quiet conversation",
-          "Native planting",
-          "Restoration",
-        ],
-        status: "published",
-      },
+      createSiteFuture(
+        "reading-garden",
+        "Reading Garden",
+        "A quieter, greener retreat designed around reading, conversation, native planting, and restoration.",
+        "/images/opportunities/peoples-park/hero.png",
+        "Concept rendering — a reading garden for People's Park",
+        {
+          shareHook:
+            "A calmer corner of downtown — a reading garden for People's Park.",
+          qualities: ["reading", "trees", "shade", "rain-gardens", "families"],
+          perfectFor: [
+            "Reading",
+            "Quiet conversation",
+            "Native planting",
+            "Restoration",
+          ],
+        },
+      ),
     ],
   },
   createPlaceholderSite(

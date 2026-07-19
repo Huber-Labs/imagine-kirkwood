@@ -102,8 +102,8 @@ export function OpportunityPlaceMarker({
     Math.hypot(label.x - pin.x, label.y - pin.y) > pinRadius + 4;
 
   const futuresLabel =
-    futureCount > 0
-      ? `${futureCount} possible future${futureCount === 1 ? "" : "s"}`
+    futureCount > 1
+      ? `${futureCount} possible futures`
       : null;
 
   return (

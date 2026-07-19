@@ -86,8 +86,8 @@ export function ExhibitionHero() {
           What could Kirkwood become?
         </h1>
         <p className="mx-auto mt-5 max-w-md text-[1rem] leading-[1.65] text-white/75 sm:mx-0 md:text-[1.0625rem] md:leading-[1.7]">
-          Explore imagined futures for streets, parks, plazas, and gathering places
-          along Kirkwood Avenue.
+          One concept for each place along Kirkwood Avenue — streets, parks,
+          plazas, and gathering spaces.
         </p>
         <div className="mt-8 flex justify-center sm:mt-10 sm:justify-start">
           <Button href="/explore">Explore the Map</Button>

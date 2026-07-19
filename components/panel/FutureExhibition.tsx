@@ -54,7 +54,7 @@ export function FutureExhibition({
         </section>
       )}
 
-      {!isDeepLink && futures.length > 0 && (
+      {!isDeepLink && futures.length > 1 && (
         <p className="future-exhibition__intro panel-eyebrow panel-rise panel-rise--1">
           Explore different futures
         </p>
@@ -84,7 +84,7 @@ export function FutureExhibition({
 
       {futures.length === 0 && (
         <p className="text-[0.9375rem] leading-relaxed text-foreground/55">
-          Possible futures for this place are on the way.
+          A concept for this place is on the way.
         </p>
       )}
     </div>

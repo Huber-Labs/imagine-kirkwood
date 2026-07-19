@@ -17,12 +17,12 @@ Open [http://localhost:3000](http://localhost:3000). Supabase is **optional** fo
 
 ## What's live
 
-- **Exhibition homepage** (`/`) — cinematic hero, philosophy, path into the atlas
-- **Opportunity Atlas** (`/explore`) — editorial map with six places, slide-out exhibition panel
-- **Multiple futures per place** — story-first intro, then vertically scrolling full-bleed renderings
-- **People's Park** — gold-standard reference site with four possible futures
-- **Lightweight engagement** — Love this idea, Worth Trying, Save, and Share per future (device-local)
-- **Shareable deep links** — `/explore?site=peoples-park&concept=outdoor-living-room`
+- **Exhibition homepage** (`/`) — hero entrance into the atlas
+- **Opportunity Atlas** (`/explore`) — editorial map with seven places and slide-out concept panels
+- **One concept per place** — place story plus a single full-bleed rendering for v1
+- **People's Park** — reference site with the Reading Garden concept render
+- **Lightweight engagement** — Love this idea, Worth Trying, Save, and Share per concept (device-local)
+- **Shareable deep links** — `/explore?site=peoples-park&concept=reading-garden`
 
 ## Roadmap (summary)
 

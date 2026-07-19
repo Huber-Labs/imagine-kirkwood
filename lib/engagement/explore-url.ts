@@ -7,10 +7,10 @@ import type { TimelinePhase } from "@/lib/types";
 
 /** Legacy phase URLs → future IDs (People's Park migration). */
 export const LEGACY_PHASE_TO_FUTURE: Record<TimelinePhase, string> = {
-  today: "outdoor-living-room",
-  "try-soon": "performance-plaza",
-  grow: "community-market",
-  "long-term": "outdoor-living-room",
+  today: "reading-garden",
+  "try-soon": "reading-garden",
+  grow: "reading-garden",
+  "long-term": "reading-garden",
 };
 
 const PHASE_IDS = new Set<TimelinePhase>([
