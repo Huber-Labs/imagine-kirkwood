@@ -23,6 +23,53 @@ interface AuthorPlacePanelProps {
   onRenamePlace: (oldSiteId: string, newSiteId: string) => void;
 }
 
+function AuthorPanelIntro() {
+  return (
+    <div className="author-mode-panel__intro">
+      <p className="author-mode-panel__hint">
+        Developer tool. Changes are temporary until copied into the project files.
+      </p>
+      <ul className="author-mode-panel__hint-list">
+        <li>Copy Coordinates updates an existing map location.</li>
+        <li>Copy Site Record copies a starter entry for a new opportunity.</li>
+        <li>Export All Coordinates copies every calibrated location at once.</li>
+      </ul>
+    </div>
+  );
+}
+
+function AuthorPanelDestinations() {
+  return (
+    <div className="author-mode-panel__destinations">
+      <div className="author-mode-panel__destination">
+        <span className="author-mode-panel__destination-label">Coordinates</span>
+        <span className="author-mode-panel__destination-arrow">→</span>
+        <code>lib/map/opportunity-locations.ts</code>
+      </div>
+      <div className="author-mode-panel__destination">
+        <span className="author-mode-panel__destination-label">Site Records</span>
+        <span className="author-mode-panel__destination-arrow">→</span>
+        <code>lib/data/opportunity-sites.ts</code>
+      </div>
+    </div>
+  );
+}
+
+function AuthorPanelWorkflow() {
+  return (
+    <div className="author-mode-panel__workflow">
+      <p className="author-mode-panel__workflow-title">Typical workflow</p>
+      <ol className="author-mode-panel__workflow-list">
+        <li>Add New Place</li>
+        <li>Drag to correct position</li>
+        <li>Fill in title &amp; category</li>
+        <li>Copy Coordinates</li>
+        <li>Copy Site Record (new places only)</li>
+      </ol>
+    </div>
+  );
+}
+
 export function AuthorPlacePanel({
   places,
   activeSiteId,
@@ -37,7 +84,12 @@ export function AuthorPlacePanel({
     return (
       <aside className="author-mode-panel" aria-label="Author mode place editor">
         <p className="author-mode-panel__banner">Author Mode</p>
-        <p className="author-mode-panel__hint">Select or scout a place to edit.</p>
+        <p className="author-mode-panel__hint">
+          Select a place or add a new one to edit.
+        </p>
+        <AuthorPanelIntro />
+        <AuthorPanelDestinations />
+        <AuthorPanelWorkflow />
       </aside>
     );
   }
@@ -51,9 +103,7 @@ export function AuthorPlacePanel({
   return (
     <aside className="author-mode-panel" aria-label="Author mode place editor">
       <p className="author-mode-panel__banner">Author Mode</p>
-      <p className="author-mode-panel__hint">
-        Session-only edits. Copy map entries and place stubs into source files.
-      </p>
+      <AuthorPanelIntro />
 
       <form
         className="author-mode-panel__form"
@@ -144,11 +194,8 @@ export function AuthorPlacePanel({
           .join("\n")}
       </pre>
 
-      <p className="author-mode-panel__commit">
-        Map entries → <code>lib/map/opportunity-locations.ts</code>
-        <br />
-        Place stubs → <code>lib/data/opportunity-sites.ts</code>
-      </p>
+      <AuthorPanelDestinations />
+      <AuthorPanelWorkflow />
     </aside>
   );
 }
@@ -182,16 +229,16 @@ export function useAuthorPlacePanelActions(
 
   const copyMapEntry = useCallback(async () => {
     if (!activePlace) return;
-    await copyText(formatMapEntry(activePlace), "Map entry copied");
+    await copyText(formatMapEntry(activePlace), "Coordinates copied");
   }, [activePlace, copyText]);
 
   const copyPlaceStub = useCallback(async () => {
     if (!activePlace || activePlace.origin !== "scouted") return;
-    await copyText(formatPlaceStub(activePlace), "Place stub copied");
+    await copyText(formatPlaceStub(activePlace), "Site record copied");
   }, [activePlace, copyText]);
 
   const copyAllMapEntries = useCallback(async () => {
-    await copyText(formatAllMapEntries(places), "All map entries copied");
+    await copyText(formatAllMapEntries(places), "All coordinates copied");
   }, [places, copyText]);
 
   return {
