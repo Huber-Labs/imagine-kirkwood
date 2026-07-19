@@ -150,7 +150,7 @@ export function MapExperience() {
         className={
           authorMode
             ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
-            : "absolute inset-x-0 top-0 z-0 h-[clamp(8rem,30dvh,12.5rem)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
+            : "absolute inset-x-0 top-0 z-0 h-[var(--map-mobile-height)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
         }
       >
         <div

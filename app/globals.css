@@ -14,7 +14,8 @@
   --map-street: #d4d2cb;
   --map-kirkwood: #c8c5bc;
   --panel-width: 520px;
-  --panel-mobile-height: 58dvh;
+  --map-mobile-height: clamp(8rem, 30dvh, 12.5rem);
+  --panel-mobile-height: calc(100dvh - var(--map-mobile-height));
   --panel-shadow: 0 32px 64px -16px rgb(0 0 0 / 0.14);
   --panel-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --panel-muted: #8a8a84;

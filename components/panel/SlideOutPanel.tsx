@@ -42,7 +42,7 @@ export function SlideOutPanel({
           type="button"
           aria-label="Close panel"
           onClick={onClose}
-          className="fixed inset-x-0 top-0 z-40 h-[calc(100dvh-var(--panel-mobile-height)-env(safe-area-inset-bottom))] bg-transparent transition-opacity duration-500 ease-[var(--panel-ease)] md:inset-0 md:h-auto md:bg-black/25"
+          className="fixed inset-x-0 top-0 z-40 h-[var(--map-mobile-height)] bg-transparent transition-opacity duration-500 ease-[var(--panel-ease)] md:inset-0 md:h-auto md:bg-black/25"
         />
       )}
 
