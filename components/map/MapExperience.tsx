@@ -97,6 +97,7 @@ export function MapExperience() {
   const [authError, setAuthError] = useState(
     () => searchParams.get("auth") === "error",
   );
+  const authErrorReason = searchParams.get("reason");
 
   const exploreReturnPath = useMemo(() => {
     if (!selectedSiteId) return "/explore";
@@ -118,7 +119,9 @@ export function MapExperience() {
     <div className="map-scene relative h-full w-full overflow-hidden bg-[#141310]">
       {authError && (
         <div className="auth-error-banner" role="alert">
-          Sign-in link expired or failed. Please try again.
+          {authErrorReason
+            ? `Sign-in failed: ${authErrorReason}`
+            : "Sign-in link expired or failed. Open the link in the same browser where you requested it."}
         </div>
       )}
       <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:left-6 sm:top-6">
@@ -182,7 +185,7 @@ export function MapExperience() {
         />
       )}
 
-      {!authorMode && <SignInSheet returnPath={exploreReturnPath} />}
+      {!authorMode && <SignInSheet />}
     </div>
   );
 }

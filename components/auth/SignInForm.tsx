@@ -4,11 +4,10 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 interface SignInFormProps {
-  returnPath?: string;
   onSent?: () => void;
 }
 
-export function SignInForm({ returnPath = "/explore", onSent }: SignInFormProps) {
+export function SignInForm({ onSent }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
@@ -22,8 +21,7 @@ export function SignInForm({ returnPath = "/explore", onSent }: SignInFormProps)
 
     const supabase = createClient();
     const origin = window.location.origin;
-    const next = encodeURIComponent(returnPath);
-    const redirectTo = `${origin}/auth/callback?next=${next}`;
+    const redirectTo = `${origin}/auth/callback`;
 
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
@@ -37,7 +35,9 @@ export function SignInForm({ returnPath = "/explore", onSent }: SignInFormProps)
     }
 
     setStatus("sent");
-    setMessage("Check your email for a sign-in link.");
+    setMessage(
+      "Check your email for a sign-in link. Open it in this same browser.",
+    );
     onSent?.();
   }
 

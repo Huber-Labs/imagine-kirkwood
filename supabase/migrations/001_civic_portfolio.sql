@@ -30,34 +30,8 @@ create type public.portfolio_status as enum (
 );
 
 -- ---------------------------------------------------------------------------
--- Helpers
+-- Helpers (no table dependencies)
 -- ---------------------------------------------------------------------------
-
-create or replace function public.is_admin()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select coalesce(
-    (select p.is_admin from public.profiles p where p.id = auth.uid()),
-    false
-  );
-$$;
-
-create or replace function public.participation_is_open()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select coalesce(
-    (select ps.is_open from public.participation_settings ps where ps.id = 1),
-    true
-  );
-$$;
 
 create or replace function public.set_updated_at()
 returns trigger
@@ -129,6 +103,36 @@ create table public.portfolio_investments (
   updated_at timestamptz not null default now(),
   unique (user_id, investment_id)
 );
+
+-- ---------------------------------------------------------------------------
+-- Helpers (depend on tables above)
+-- ---------------------------------------------------------------------------
+
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce(
+    (select p.is_admin from public.profiles p where p.id = auth.uid()),
+    false
+  );
+$$;
+
+create or replace function public.participation_is_open()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce(
+    (select ps.is_open from public.participation_settings ps where ps.id = 1),
+    true
+  );
+$$;
 
 -- ---------------------------------------------------------------------------
 -- 10 Civic Points cap (authoritative)

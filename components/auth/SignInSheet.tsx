@@ -3,11 +3,7 @@
 import { SignInForm } from "@/components/auth/SignInForm";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 
-interface SignInSheetProps {
-  returnPath?: string;
-}
-
-export function SignInSheet({ returnPath = "/explore" }: SignInSheetProps) {
+export function SignInSheet() {
   const { signInOpen, closeSignIn } = useParticipate();
 
   if (!signInOpen) return null;
@@ -41,7 +37,7 @@ export function SignInSheet({ returnPath = "/explore" }: SignInSheetProps) {
           Allocate your Civic Points across ideas you want protected or built.
           We&apos;ll email you a magic link — no password needed.
         </p>
-        <SignInForm returnPath={returnPath} />
+        <SignInForm />
       </div>
     </div>
   );
