@@ -23,7 +23,6 @@ import {
   EXHIBIT_PAPER_TINT,
   EXHIBIT_SPOTLIGHT_FILTER,
   KIRKWOOD_CORRIDOR,
-  KIRKWOOD_STREET_LABEL,
   PEDESTRIAN_SPOTLIGHTS,
   SPOTLIGHT_FEATHER,
 } from "@/lib/map/exhibit-treatment";
@@ -276,35 +275,6 @@ export function AerialMap({
             floodOpacity="0.55"
           />
         </filter>
-
-        <filter
-          id="street-label-halo"
-          x="-30%"
-          y="-30%"
-          width="160%"
-          height="160%"
-        >
-          <feDropShadow
-            dx="0"
-            dy="0"
-            stdDeviation="3.5"
-            floodColor="#141310"
-            floodOpacity="0.85"
-          />
-          <feDropShadow
-            dx="0"
-            dy="1"
-            stdDeviation="1.5"
-            floodColor="#000"
-            floodOpacity="0.4"
-          />
-        </filter>
-
-        <path
-          id="kirkwood-street-line"
-          d={KIRKWOOD_STREET_LABEL.path}
-          fill="none"
-        />
       </defs>
 
       <image
@@ -348,23 +318,6 @@ export function AerialMap({
       />
 
       <rect width={1000} height={600} fill="url(#editorial-vignette)" />
-
-      <text
-        fill={`rgba(${labelColor},${KIRKWOOD_STREET_LABEL.opacity})`}
-        fontSize={KIRKWOOD_STREET_LABEL.fontSize}
-        fontWeight={600}
-        letterSpacing={KIRKWOOD_STREET_LABEL.letterSpacing}
-        filter="url(#street-label-halo)"
-        style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
-      >
-        <textPath
-          href="#kirkwood-street-line"
-          startOffset="50%"
-          textAnchor="middle"
-        >
-          KIRKWOOD AVENUE
-        </textPath>
-      </text>
 
       {corridorLabels.map((street) => (
         <text
