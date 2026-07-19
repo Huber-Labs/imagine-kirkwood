@@ -103,6 +103,18 @@ export function getOpportunityLocation(
   return opportunityLocations.find((location) => location.siteId === siteId);
 }
 
+export type SiteSlideDirection = "left" | "right";
+
+/** Panel swipe direction when moving between places (matches map west ↔ east). */
+export function getSiteSlideDirection(
+  fromSiteId: string,
+  toSiteId: string,
+): SiteSlideDirection {
+  const fromX = getOpportunityLocation(fromSiteId)?.x ?? 0;
+  const toX = getOpportunityLocation(toSiteId)?.x ?? 0;
+  return toX < fromX ? "left" : "right";
+}
+
 export function getLabelAnchor(
   location: OpportunityLocation,
   pin: { x: number; y: number },
