@@ -145,6 +145,50 @@ body {
 .exhibition-rise--4 { animation-delay: 0.45s; }
 .exhibition-rise--5 { animation-delay: 0.55s; }
 
+.exhibition-hero__slide {
+  transition: opacity 1.2s var(--panel-ease);
+}
+
+.exhibition-hero__slide--ken-burns img {
+  animation: exhibition-hero-ken-burns var(--exhibition-hero-duration, 6s) var(--panel-ease) forwards;
+  transform: scale(1);
+}
+
+@keyframes exhibition-hero-ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.03);
+  }
+}
+
+.exhibition-hero__overlay {
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.78) 0%,
+    rgb(0 0 0 / 0.45) 38%,
+    rgb(0 0 0 / 0.15) 72%,
+    rgb(0 0 0 / 0.08) 100%
+  );
+}
+
+.exhibition-hero__eyebrow {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.6);
+}
+
+.exhibition-hero__caption {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.55);
+}
+
 .story-photo {
   border-radius: 2px;
 }
@@ -649,5 +693,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .exhibition-hero__slide--ken-burns img {
+    transform: none !important;
   }
 }

@@ -1,55 +1,112 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
+import {
+  EXHIBITION_HERO_INTERVAL_MS,
+  EXHIBITION_HERO_STAGES,
+} from "@/lib/exhibition/hero-stages";
 
-const EXHIBITION_HERO_IMAGE = "/images/exhibition/hero.webp";
-const HERO_FALLBACK = "/images/concepts/placeholder.svg";
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReducedMotion(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  return prefersReducedMotion;
+}
 
 export function ExhibitionHero() {
-  const scrollToPhilosophy = () => {
-    document.getElementById("philosophy")?.scrollIntoView({
-      behavior: "smooth",
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [failedSrcs, setFailedSrcs] = useState<Set<string>>(() => new Set());
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    EXHIBITION_HERO_STAGES.forEach((stage) => {
+      const img = new window.Image();
+      img.src = stage.src;
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || EXHIBITION_HERO_STAGES.length <= 1) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % EXHIBITION_HERO_STAGES.length);
+    }, EXHIBITION_HERO_INTERVAL_MS);
+
+    return () => window.clearInterval(interval);
+  }, [prefersReducedMotion]);
+
+  const activeStage = EXHIBITION_HERO_STAGES[activeIndex];
 
   return (
-    <section className="relative flex min-h-dvh flex-col justify-end overflow-hidden">
-      <div className="absolute inset-0">
-        <img
-          src={EXHIBITION_HERO_IMAGE}
-          alt=""
-          aria-hidden="true"
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            e.currentTarget.src = HERO_FALLBACK;
-          }}
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/55 to-black/25"
-          aria-hidden="true"
-        />
+    <section
+      className="relative flex min-h-dvh flex-col justify-center overflow-hidden"
+      aria-label="Imagine Kirkwood exhibition entrance"
+    >
+      <div className="absolute inset-0" aria-hidden="true">
+        {EXHIBITION_HERO_STAGES.map((stage, index) => {
+          const isActive = index === activeIndex;
+          const src = failedSrcs.has(stage.src) ? CONCEPT_PLACEHOLDER_PATH : stage.src;
+
+          return (
+            <div
+              key={stage.id}
+              className={`exhibition-hero__slide absolute inset-0 ${
+                isActive ? "exhibition-hero__slide--active opacity-100" : "opacity-0"
+              } ${isActive && !prefersReducedMotion ? "exhibition-hero__slide--ken-burns" : ""}`}
+            >
+              <img
+                src={src}
+                alt=""
+                className="h-full w-full object-cover object-center"
+                onError={() => {
+                  setFailedSrcs((prev) => new Set(prev).add(stage.src));
+                }}
+              />
+            </div>
+          );
+        })}
+        <div className="exhibition-hero__overlay absolute inset-0" />
       </div>
 
-      <div className="exhibition-rise relative mx-auto w-full max-w-3xl px-8 pb-24 pt-32 text-center md:pb-32 md:pt-40">
-        <h1 className="font-[family-name:var(--font-instrument-serif)] text-[2.75rem] leading-[1.05] tracking-[-0.02em] text-foreground md:text-[3.75rem]">
+      <div className="exhibition-rise relative mx-auto w-full max-w-2xl px-8 pt-[12vh] pb-28 text-center sm:text-left md:pb-32">
+        <p className="exhibition-hero__eyebrow mb-5">A community vision for downtown Bloomington</p>
+        <h1 className="font-[family-name:var(--font-instrument-serif)] text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-white md:text-[4.5rem]">
           What could Kirkwood become?
         </h1>
-        <p className="mx-auto mt-6 max-w-xl text-[1.0625rem] leading-[1.7] text-foreground/70 md:text-lg">
-          Imagine the future of Bloomington&apos;s main street through interactive
-          stories, inspiration from around the world, and ideas from your
-          community.
+        <p className="mx-auto mt-5 max-w-md text-[1rem] leading-[1.65] text-white/75 sm:mx-0 md:text-[1.0625rem] md:leading-[1.7]">
+          Explore how small experiments could grow into a more welcoming, walkable,
+          and vibrant downtown.
         </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button href="/explore">Begin Exploring</Button>
-          <button
-            type="button"
-            onClick={scrollToPhilosophy}
-            className="text-sm tracking-wide text-foreground/55 transition-colors hover:text-foreground"
+        <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:items-start sm:gap-4">
+          <Button href="/explore">Walk Through Tomorrow</Button>
+          <Button
+            href="/explore"
+            variant="ghost"
+            className="border-white/35 text-white hover:bg-white/10 focus-visible:ring-white/40 focus-visible:ring-offset-black/50"
           >
-            Scroll
-          </button>
+            Explore the Map
+          </Button>
         </div>
       </div>
+
+      <p
+        className="exhibition-hero__caption exhibition-rise exhibition-rise--2 absolute inset-x-0 bottom-8 text-center"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {activeStage.label}
+      </p>
     </section>
   );
 }

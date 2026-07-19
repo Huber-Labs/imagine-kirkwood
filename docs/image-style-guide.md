@@ -117,6 +117,17 @@ The scene should feel like a Gehl Architects or Urban Land Institute civic visua
 
 Wide 16:9 landscape composition. No text labels. No futuristic sci-fi elements. No generic downtown skyscrapers.
 
+## Exhibition homepage hero
+
+Corridor-wide transformation stages for the homepage crossfade (one image per phase):
+
+- `public/images/exhibition/today.webp`
+- `public/images/exhibition/try-soon.webp`
+- `public/images/exhibition/grow.webp`
+- `public/images/exhibition/long-term.webp`
+
+Until those exist, the hero uses People's Park phase assets via `lib/exhibition/hero-stages.ts`. Same visual direction as above — Kirkwood Avenue character, not a single-site close-up when corridor renders are ready.
+
 ## Example Prompt
 
 Create a realistic urban design concept rendering of the 300 block of Kirkwood Avenue in Bloomington, Indiana.
