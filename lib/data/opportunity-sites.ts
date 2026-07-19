@@ -54,7 +54,7 @@ function createPlaceholderSite(
     name,
     areaId,
     accent,
-    isPlaceholder: true,
+    ...(heroImage ? {} : { isPlaceholder: true }),
     story: {
       today: `${name} today — story in development.`,
       whatIf: `What could ${name} become?`,
