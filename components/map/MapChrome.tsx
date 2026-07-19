@@ -1,6 +1,6 @@
 export function MapChrome() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 pt-[max(3.5rem,env(safe-area-inset-top))] sm:p-6 sm:pt-16">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-10 hidden items-start justify-between gap-3 p-3 pt-16 sm:flex sm:p-6 sm:pt-16">
       <div className="map-chrome-panel max-w-[calc(100%-3rem)] rounded-2xl px-3.5 py-2.5 sm:max-w-sm sm:px-4 sm:py-3">
         <p className="map-chrome-label text-[10px] font-medium uppercase tracking-widest sm:text-xs">
           Bloomington, IN
@@ -28,7 +28,7 @@ export function MapChrome() {
 
 export function MapAttribution() {
   return (
-    <p className="pointer-events-none absolute bottom-28 left-3 z-10 max-w-[55%] text-[11px] leading-snug text-white/70 sm:bottom-32 sm:left-6 sm:max-w-none sm:text-xs">
+    <p className="pointer-events-none absolute bottom-28 left-3 z-10 hidden max-w-[55%] text-[11px] leading-snug text-white/70 sm:block sm:bottom-32 sm:left-6 sm:max-w-none sm:text-xs">
       Tap an opportunity site to explore
     </p>
   );

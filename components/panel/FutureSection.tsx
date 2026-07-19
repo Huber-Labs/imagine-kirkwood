@@ -10,6 +10,12 @@ interface FutureSectionProps {
   future: PlaceFuture;
   showExploreHint?: boolean;
   onExploreOthers?: () => void;
+  showHero?: boolean;
+  showEyebrow?: boolean;
+  placeStory?: {
+    today: string;
+    whatIf: string;
+  } | null;
 }
 
 export function FutureSection({
@@ -17,9 +23,13 @@ export function FutureSection({
   future,
   showExploreHint = false,
   onExploreOthers,
+  showHero = true,
+  showEyebrow = true,
+  placeStory = null,
 }: FutureSectionProps) {
   const isComingSoon = future.status === "coming-soon";
   const perfectFor = getPerfectForLabels(future);
+  const hideTitle = future.title === site.name;
 
   return (
     <section
@@ -27,26 +37,52 @@ export function FutureSection({
       className="future-section scroll-mt-4"
       aria-labelledby={`future-title-${future.id}`}
     >
-      <p className="future-section__eyebrow panel-eyebrow">{site.name}</p>
+      {showEyebrow && (
+        <p className="future-section__eyebrow panel-eyebrow">{site.name}</p>
+      )}
 
-      <div className="-mx-5 sm:-mx-8">
-        <FutureHero
-          siteName={site.name}
-          accent={site.accent}
-          image={future.image}
-          alt={future.alt}
-          isComingSoon={isComingSoon}
-        />
-      </div>
+      {showHero && (
+        <div className="-mx-5 sm:-mx-8">
+          <FutureHero
+            siteName={site.name}
+            accent={site.accent}
+            image={future.image}
+            alt={future.alt}
+            isComingSoon={isComingSoon}
+          />
+        </div>
+      )}
 
-      <div className="future-section__body space-y-4 pt-5 sm:space-y-5 sm:pt-6">
+      <div
+        className={`future-section__body space-y-4 sm:space-y-5 ${
+          showHero ? "pt-5 sm:pt-6" : "pt-0"
+        }`}
+      >
+        {placeStory && (
+          <section className="place-story space-y-4">
+            <p className="place-story__today font-[family-name:var(--font-instrument-serif)] text-[1.0625rem] leading-[1.55] text-foreground/82 sm:text-[1.125rem]">
+              {placeStory.today}
+            </p>
+            <p className="place-story__what-if font-[family-name:var(--font-instrument-serif)] text-[1.25rem] leading-[1.4] tracking-[-0.01em] text-foreground sm:text-[1.375rem]">
+              {placeStory.whatIf}
+            </p>
+          </section>
+        )}
+
         <header className="space-y-2">
-          <h3
-            id={`future-title-${future.id}`}
-            className="font-[family-name:var(--font-instrument-serif)] text-[1.5rem] leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[1.75rem]"
-          >
-            {future.title}
-          </h3>
+          {!hideTitle && (
+            <h3
+              id={`future-title-${future.id}`}
+              className="font-[family-name:var(--font-instrument-serif)] text-[1.5rem] leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[1.75rem]"
+            >
+              {future.title}
+            </h3>
+          )}
+          {hideTitle && (
+            <h3 id={`future-title-${future.id}`} className="sr-only">
+              {future.title}
+            </h3>
+          )}
           <p className="future-section__description text-[0.9375rem] leading-[1.65] text-foreground/78 sm:text-base sm:leading-[1.7]">
             {future.description}
           </p>

@@ -113,15 +113,29 @@ export function MapExperience() {
         </Link>
       </div>
 
-      <div className="absolute inset-0 pb-[7.25rem] sm:pb-24">
-        {authorMode ? (
-          <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
-        ) : (
-          <AerialMap
-            selectedSiteId={selectedSiteId}
-            onSelectSite={handleSelectSite}
-          />
-        )}
+      <div
+        className={
+          authorMode
+            ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
+            : "absolute inset-x-0 top-0 z-0 h-[clamp(8rem,30dvh,12.5rem)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
+        }
+      >
+        <div
+          className={
+            authorMode
+              ? "h-full w-full"
+              : "h-[250%] w-full -translate-y-[30%] md:h-full md:translate-y-0"
+          }
+        >
+          {authorMode ? (
+            <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
+          ) : (
+            <AerialMap
+              selectedSiteId={selectedSiteId}
+              onSelectSite={handleSelectSite}
+            />
+          )}
+        </div>
       </div>
 
       <MapChrome />
