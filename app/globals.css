@@ -296,8 +296,8 @@ body {
 }
 
 .place-marker--selected .place-marker__ripple {
-  animation-duration: 2.6s;
-  stroke-width: 1.75;
+  animation-duration: 2.4s;
+  stroke-width: 2;
 }
 
 .place-marker--selected .place-marker__ripple--offset {

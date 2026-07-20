@@ -72,7 +72,8 @@ export function OpportunityPlaceMarker({
   const futureCount = site ? getPublishedFutureCount(site) : 0;
   const displayName = authorPlace?.title ?? site?.name ?? location.label;
 
-  const pinRadius = isSelected ? 7 : isHovered ? 6.25 : 5;
+  const pinRadius = isSelected ? 10 : isHovered ? 6.25 : 5;
+  const hitRadius = isSelected ? 32 : authorMode ? 26 : 22;
 
   let pinFill: string;
   if (authorMode) {
@@ -86,7 +87,7 @@ export function OpportunityPlaceMarker({
   const pinStroke =
     isSelected && authorMode ? "#FFE08A" : "rgba(255,255,255,0.96)";
   const pinStrokeWidth =
-    isSelected && authorMode ? 3 : isSelected ? 2.25 : isHovered ? 2 : 1.75;
+    isSelected && authorMode ? 3.5 : isSelected ? 3 : isHovered ? 2 : 1.75;
 
   const labelOpacity = isSelected
     ? 1
@@ -128,7 +129,7 @@ export function OpportunityPlaceMarker({
       <circle
         cx={pin.x}
         cy={pin.y}
-        r={authorMode ? 26 : 22}
+        r={hitRadius}
         fill="transparent"
         role="button"
         tabIndex={0}
@@ -167,6 +168,19 @@ export function OpportunityPlaceMarker({
           strokeWidth={1}
           strokeDasharray="2 3"
           pointerEvents="none"
+        />
+      )}
+
+      {isSelected && !authorMode && (
+        <circle
+          cx={pin.x}
+          cy={pin.y}
+          r={pinRadius + 5}
+          fill="none"
+          stroke="rgba(255,255,255,0.72)"
+          strokeWidth={1.5}
+          pointerEvents="none"
+          className="transition-[r,opacity] duration-300 ease-out"
         />
       )}
 
@@ -215,7 +229,7 @@ export function OpportunityPlaceMarker({
         y={label.y}
         textAnchor={label.textAnchor}
         fill={`rgba(255,255,255,${labelOpacity})`}
-        fontSize={isSelected ? 12.5 : 11.5}
+        fontSize={isSelected ? 13.5 : 11.5}
         fontWeight={isSelected ? 600 : 500}
         filter="url(#label-shadow)"
         pointerEvents="none"
