@@ -247,6 +247,7 @@ export const opportunitySites: OpportunitySite[] = [
         "/images/opportunities/peoples-park/big-screen-nights.png",
         "Concept rendering — Big Screen Nights at People's Park",
         {
+          status: "draft",
           shareHook:
             "Big Screen Nights at People's Park — game days and movie nights on the lawn.",
           qualities: ["performance", "nightlife", "families"],
