@@ -9,7 +9,7 @@ export function MapChrome() {
           Kirkwood Avenue
         </h1>
         <p className="map-chrome-body mt-0.5 text-xs sm:mt-1 sm:text-sm">
-          Six opportunity sites along Kirkwood Avenue
+          Explore what&apos;s possible and shape the future
         </p>
       </div>
       <div
