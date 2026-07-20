@@ -46,6 +46,14 @@ export const opportunityLocations: OpportunityLocation[] = [
     labelOffset: { x: 0, y: 18 },
   },
   {
+    siteId: "shaded",
+    x: 83.9,
+    y: 52.3,
+    label: "Shaded Street",
+    labelAlign: "center",
+    labelOffset: { x: 0, y: 18 },
+  },
+  {
     siteId: "library-plaza",
     x: 45.9,
     y: 49.1,

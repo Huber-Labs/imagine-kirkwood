@@ -152,6 +152,13 @@ export const opportunitySites: OpportunitySite[] = [
     "#8B6914",
     "/images/opportunities/village-courtyard/hero.webp",
   ),
+  createPlaceholderSite(
+    "shaded",
+    "Shaded Street",
+    "theater-row",
+    "#7B6BA8",
+    "/images/opportunities/shaded/hero.webp",
+  ),
 ];
 
 export function getOpportunitySiteById(
