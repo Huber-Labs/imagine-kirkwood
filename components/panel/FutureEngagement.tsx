@@ -70,10 +70,6 @@ export function FutureEngagement({
 
   return (
     <div className="future-engagement">
-      <p className="future-engagement__hint">
-        Quick reactions stay on this device. Sign in to allocate Civic Points or
-        leave a public note about why an idea matters.
-      </p>
       <div className="future-engagement__actions">
         <button
           type="button"
