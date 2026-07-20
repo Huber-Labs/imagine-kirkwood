@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
+import { AuthStatus } from "@/components/auth/AuthStatus";
 import { MobileConceptExplorer } from "@/components/panel/MobileConceptExplorer";
 import { SiteDetail } from "@/components/panel/SiteDetail";
 import type { OpportunitySite } from "@/lib/types";
@@ -59,13 +61,36 @@ export function SlideOutPanel({
         aria-label={
           isMobileExplore ? "Explore Kirkwood concepts" : `${site.name} details`
         }
-        className={`fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-y-auto rounded-t-[1.25rem] bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
+        className={`fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-y-auto bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
+          isMobileExplore ? "rounded-none" : "rounded-t-[1.25rem]"
+        } ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
             : "translate-y-full md:translate-y-0 md:translate-x-full"
         }`}
       >
-        <div className="mx-auto mt-3 mb-0.5 h-[3px] w-8 shrink-0 rounded-full bg-foreground/10 md:hidden" />
+        {isMobileExplore ? (
+          <div className="mobile-explore-chrome flex shrink-0 items-center justify-between gap-3 px-5 pb-1 pt-[max(0.625rem,env(safe-area-inset-top))]">
+            <Link
+              href="/"
+              className="mobile-explore-chrome__back inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path
+                  d="M8.5 2.5L4 7L8.5 11.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Exhibition
+            </Link>
+            <AuthStatus variant="panel" />
+          </div>
+        ) : (
+          <div className="mx-auto mt-3 mb-0.5 h-[3px] w-8 shrink-0 rounded-full bg-foreground/10 md:hidden" />
+        )}
         {!isMobileExplore && (
           <button
             type="button"

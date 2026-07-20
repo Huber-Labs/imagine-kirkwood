@@ -22,6 +22,19 @@
   --map-limestone: #141310;
 }
 
+@media (max-width: 767px) {
+  .map-scene--mobile-focus {
+    --map-mobile-height: 0px;
+    --panel-mobile-height: 100dvh;
+    background: var(--background);
+  }
+}
+
+.mobile-explore-chrome__back {
+  min-height: 2.25rem;
+  padding-inline: 0.125rem;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -1865,6 +1878,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font: inherit;
+}
+
+.sign-in-form__input:-webkit-autofill,
+.sign-in-form__input:-webkit-autofill:hover,
+.sign-in-form__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--foreground);
+  box-shadow: 0 0 0 1000px var(--background) inset;
+  transition: background-color 9999s ease-out 0s;
 }
 
 .sign-in-form__submit {

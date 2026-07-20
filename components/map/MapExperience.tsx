@@ -157,8 +157,12 @@ export function MapExperience() {
     return () => window.clearTimeout(timer);
   }, [authError, exploreReturnPath]);
 
+  const mobileFocus = isMobile && !authorMode;
+
   return (
-    <div className="map-scene relative h-full w-full overflow-hidden bg-[#141310]">
+    <div
+      className={`map-scene relative h-full w-full overflow-hidden bg-[#141310]${mobileFocus ? " map-scene--mobile-focus" : ""}`}
+    >
       {authError && (
         <div className="auth-error-banner" role="alert">
           {authErrorReason
@@ -169,7 +173,9 @@ export function MapExperience() {
       <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:left-6 sm:top-6">
         <Link
           href="/"
-          className="map-chrome-panel map-chrome-body inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className={`map-chrome-panel map-chrome-body inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30${
+            mobileFocus ? " hidden" : ""
+          }`}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path
@@ -185,35 +191,41 @@ export function MapExperience() {
       </div>
 
       {!authorMode && (
-        <div className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:right-6 sm:top-6">
+        <div
+          className={`absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:right-6 sm:top-6${
+            mobileFocus ? " hidden" : ""
+          }`}
+        >
           <AuthStatus />
         </div>
       )}
 
-      <div
-        className={
-          authorMode
-            ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
-            : "absolute inset-x-0 top-0 z-0 h-[var(--map-mobile-height)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
-        }
-      >
+      {!mobileFocus && (
         <div
           className={
             authorMode
-              ? "h-full w-full"
-              : "h-[250%] w-full -translate-y-[30%] md:h-full md:translate-y-0"
+              ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
+              : "absolute inset-x-0 top-0 z-0 h-[var(--map-mobile-height)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
           }
         >
-          {authorMode ? (
-            <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
-          ) : (
-            <AerialMap
-              selectedSiteId={selectedSiteId}
-              onSelectSite={handleSelectSite}
-            />
-          )}
+          <div
+            className={
+              authorMode
+                ? "h-full w-full"
+                : "h-[250%] w-full -translate-y-[30%] md:h-full md:translate-y-0"
+            }
+          >
+            {authorMode ? (
+              <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
+            ) : (
+              <AerialMap
+                selectedSiteId={selectedSiteId}
+                onSelectSite={handleSelectSite}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <MapChrome />
       <MapAttribution />

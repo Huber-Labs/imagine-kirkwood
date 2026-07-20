@@ -37,7 +37,7 @@ export function SignInSheet() {
           Allocate your Civic Points across ideas you want protected or built.
           We&apos;ll email you a magic link — no password needed.
         </p>
-        <SignInForm />
+        <SignInForm autoFocus />
       </div>
     </div>
   );
