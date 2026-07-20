@@ -29,6 +29,23 @@ interface OpportunityPlaceMarkerProps {
   ) => void;
 }
 
+function getDisplayLabelAnchor(
+  location: OpportunityLocation,
+  pin: { x: number; y: number },
+  pinRadius: number,
+  authorMode: boolean,
+): { x: number; y: number; textAnchor: "start" | "middle" | "end" } {
+  if (authorMode) {
+    return getLabelAnchor(location, pin);
+  }
+
+  return {
+    x: pin.x,
+    y: pin.y - pinRadius - 16,
+    textAnchor: "middle",
+  };
+}
+
 function resolveLocation(
   site: OpportunitySite | null | undefined,
   authorPlace: AuthorPlace | undefined,
@@ -66,13 +83,13 @@ export function OpportunityPlaceMarker({
   if (!location || !placeId) return null;
 
   const pin = percentToViewBox({ x: location.x, y: location.y });
-  const label = getLabelAnchor(location, pin);
+  const pinRadius = isSelected ? 20 : isHovered ? 12.5 : 10;
+  const label = getDisplayLabelAnchor(location, pin, pinRadius, authorMode);
   const isScouted = authorMode && authorPlace?.origin === "scouted";
   const isAuthored = site ? !site.isPlaceholder : false;
   const futureCount = site ? getPublishedFutureCount(site) : 0;
   const displayName = authorPlace?.title ?? site?.name ?? location.label;
 
-  const pinRadius = isSelected ? 20 : isHovered ? 12.5 : 10;
   const hitRadius = isSelected ? 64 : authorMode ? 52 : 44;
 
   let pinFill: string;
@@ -98,8 +115,8 @@ export function OpportunityPlaceMarker({
         : 0.88;
 
   const showConnector =
+    authorMode &&
     isSelected &&
-    !authorMode &&
     Math.hypot(label.x - pin.x, label.y - pin.y) > pinRadius + 4;
 
   const futuresLabel =
