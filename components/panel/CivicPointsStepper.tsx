@@ -157,10 +157,15 @@ export function CivicPointsStepper({
       className={`civic-points-stepper${
         variant === "overlay" ? " civic-points-stepper--overlay" : ""
       }`}
-      aria-label={variant === "overlay" ? "Invest Civic Points" : undefined}
+      aria-label={variant === "overlay" ? "Vote with Civic Points" : undefined}
       onClick={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
     >
+      {variant === "overlay" && (
+        <p className="civic-points-stepper__overlay-label" aria-hidden="true">
+          Vote
+        </p>
+      )}
       {variant !== "overlay" && (
         <p className="civic-points-stepper__label panel-eyebrow">
           Invest Civic Points
