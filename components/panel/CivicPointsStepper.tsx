@@ -3,35 +3,18 @@
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 import { resolveInvestment } from "@/lib/portfolio/catalog";
-import { savePortfolio, setInvestmentPoints } from "@/lib/portfolio/actions";
+import { setInvestmentPoints } from "@/lib/portfolio/actions";
 import { CIVIC_POINTS_TOTAL, MAX_POINTS_PER_INVESTMENT } from "@/lib/portfolio/tags";
 
 export function CivicPointsBar() {
-  const { user, portfolio, refreshPortfolio } = useParticipate();
-  const [message, setMessage] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  const handleSave = useCallback(() => {
-    startTransition(async () => {
-      const result = await savePortfolio();
-      if (!result.ok) {
-        setMessage(result.error);
-        return;
-      }
-      setMessage("Your priorities are saved.");
-      await refreshPortfolio();
-    });
-  }, [refreshPortfolio]);
+  const { user, portfolio } = useParticipate();
 
   if (!user) {
     return null;
   }
 
-  const totalPoints = portfolio?.totalPoints ?? 0;
   const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
-  const isSaved = portfolio?.status === "saved";
   const participationOpen = portfolio?.participationOpen ?? true;
-  const canSave = !isSaved && totalPoints > 0 && participationOpen;
 
   return (
     <div className="civic-points-bar">
@@ -42,28 +25,11 @@ export function CivicPointsBar() {
         </p>
       </div>
       <p className="civic-points-bar__copy">
-        {isSaved
-          ? "Your priorities are saved. Thank you for helping the community see what matters."
-          : "Allocate up to 3 points per idea. Save when you're ready to share your priorities."}
+        Allocate up to 3 points per idea. Your choices save as you go.
       </p>
       {!participationOpen && (
         <p className="civic-points-bar__notice">
           Participation is currently closed.
-        </p>
-      )}
-      {canSave && (
-        <button
-          type="button"
-          className="civic-points-bar__save"
-          disabled={isPending}
-          onClick={handleSave}
-        >
-          {isPending ? "Saving…" : "Save my priorities"}
-        </button>
-      )}
-      {message && (
-        <p className="civic-points-bar__message" role="status">
-          {message}
         </p>
       )}
     </div>
@@ -122,9 +88,8 @@ export function CivicPointsStepper({
   );
 
   const isSignedIn = Boolean(user);
-  const isSaved = portfolio?.status === "saved";
   const participationOpen = portfolio?.participationOpen ?? true;
-  const readOnly = isSignedIn && (isSaved || !participationOpen);
+  const readOnly = isSignedIn && !participationOpen;
   const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
   const maxForInvestment = investment?.pointLimit ?? MAX_POINTS_PER_INVESTMENT;
   const displayPoints = isSignedIn ? currentPoints : 0;
@@ -192,12 +157,15 @@ export function CivicPointsStepper({
       className={`civic-points-stepper${
         variant === "overlay" ? " civic-points-stepper--overlay" : ""
       }`}
+      aria-label={variant === "overlay" ? "Invest Civic Points" : undefined}
       onClick={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
     >
-      <p className="civic-points-stepper__label panel-eyebrow">
-        {variant === "overlay" ? "Points" : "Invest Civic Points"}
-      </p>
+      {variant !== "overlay" && (
+        <p className="civic-points-stepper__label panel-eyebrow">
+          Invest Civic Points
+        </p>
+      )}
       <div className="civic-points-stepper__controls">
         <button
           type="button"

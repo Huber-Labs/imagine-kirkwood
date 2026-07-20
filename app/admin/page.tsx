@@ -38,8 +38,8 @@ export default async function AdminPage() {
               Civic Points totals
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-foreground/65">
-              Aggregate signal from saved portfolios only. Not a binding vote —
-              a pulse of what residents would protect or build under scarcity.
+              Aggregate signal from Civic Point allocations. Not a binding vote
+              — a pulse of what residents would protect or build under scarcity.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -82,7 +82,7 @@ export default async function AdminPage() {
                     className="px-4 py-8 text-center text-foreground/55"
                     colSpan={5}
                   >
-                    No saved portfolios yet.
+                    No Civic Point allocations yet.
                   </td>
                 </tr>
               )}
