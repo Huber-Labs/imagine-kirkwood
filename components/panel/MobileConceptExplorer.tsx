@@ -6,12 +6,48 @@ import { FutureSection } from "@/components/panel/FutureSection";
 import {
   findExploreSlideIndex,
   getExploreSlides,
+  resolveActiveFuture,
 } from "@/lib/engagement/explore-slides";
 
 interface MobileConceptExplorerProps {
   siteId: string;
   conceptId: string;
   onConceptChange: (siteId: string, conceptId: string) => void;
+}
+
+function ConceptSwitcher({
+  futures,
+  activeFutureId,
+  onSelect,
+}: {
+  futures: Array<{ id: string; title: string }>;
+  activeFutureId: string;
+  onSelect: (futureId: string) => void;
+}) {
+  if (futures.length <= 1) return null;
+
+  return (
+    <div
+      className="concept-switcher"
+      role="tablist"
+      aria-label="Concepts for this place"
+    >
+      {futures.map((future) => (
+        <button
+          key={future.id}
+          type="button"
+          role="tab"
+          aria-selected={future.id === activeFutureId}
+          className={`concept-switcher__option${
+            future.id === activeFutureId ? " concept-switcher__option--active" : ""
+          }`}
+          onClick={() => onSelect(future.id)}
+        >
+          {future.title}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export function MobileConceptExplorer({
@@ -28,13 +64,27 @@ export function MobileConceptExplorer({
   const [visibleIndex, setVisibleIndex] = useState(activeIndex);
   const visibleSlide = slides[visibleIndex] ?? activeSlide;
 
+  const activeFuture = useMemo(() => {
+    if (!visibleSlide) return null;
+    const isCurrentPlace = visibleSlide.siteId === siteId;
+    return resolveActiveFuture(
+      visibleSlide.site,
+      isCurrentPlace ? conceptId : null,
+    );
+  }, [conceptId, siteId, visibleSlide]);
+
   const syncActiveSlide = useCallback(
     (index: number) => {
       const slide = slides[index];
       if (!slide) return;
+
       setVisibleIndex(index);
-      if (slide.siteId === siteId && slide.conceptId === conceptId) return;
-      onConceptChange(slide.siteId, slide.conceptId);
+
+      const future = resolveActiveFuture(slide.site, null);
+      if (!future) return;
+
+      if (slide.siteId === siteId && future.id === conceptId) return;
+      onConceptChange(slide.siteId, future.id);
     },
     [conceptId, onConceptChange, siteId, slides],
   );
@@ -60,7 +110,7 @@ export function MobileConceptExplorer({
     }, 350);
 
     return () => window.clearTimeout(timer);
-  }, [activeIndex, siteId, conceptId]);
+  }, [activeIndex]);
 
   const handleTrackScroll = useCallback(() => {
     if (programmaticScrollRef.current) return;
@@ -132,14 +182,36 @@ export function MobileConceptExplorer({
     navigateToIndex(visibleIndex + 1);
   }, [navigateToIndex, visibleIndex]);
 
-  if (!activeSlide) {
+  const handleConceptSelect = useCallback(
+    (futureId: string) => {
+      if (!visibleSlide) return;
+      onConceptChange(visibleSlide.siteId, futureId);
+    },
+    [onConceptChange, visibleSlide],
+  );
+
+  if (!activeSlide || !activeFuture) {
     return null;
   }
+
+  const displayFuture =
+    visibleSlide.siteId === siteId
+      ? resolveActiveFuture(visibleSlide.site, conceptId) ?? activeFuture
+      : resolveActiveFuture(visibleSlide.site, null) ?? activeFuture;
+
+  const heroFutureBySlide = (slideIndex: number) => {
+    const slide = slides[slideIndex];
+    if (!slide) return null;
+    if (slide.siteId === siteId && slideIndex === visibleIndex) {
+      return displayFuture;
+    }
+    return resolveActiveFuture(slide.site, null);
+  };
 
   return (
     <article
       className="mobile-concept-explorer flex flex-col"
-      style={{ "--hero-accent": activeSlide.site.accent } as React.CSSProperties}
+      style={{ "--hero-accent": visibleSlide.site.accent } as React.CSSProperties}
     >
       <div className="concept-carousel">
         <div className="concept-carousel__stage">
@@ -148,26 +220,31 @@ export function MobileConceptExplorer({
             className="concept-carousel__track"
             onScroll={handleTrackScroll}
           >
-            {slides.map((slide, index) => (
-              <div
-                key={`${slide.siteId}-${slide.conceptId}`}
-                className={`concept-carousel__slide${
-                  index === visibleIndex ? " concept-carousel__slide--active" : ""
-                }`}
-                aria-hidden={index !== visibleIndex}
-              >
-                <FutureHero
-                  siteName={slide.site.name}
-                  accent={slide.site.accent}
-                  image={slide.future.image}
-                  alt={slide.future.alt}
-                  siteId={slide.siteId}
-                  futureId={slide.conceptId}
-                  showVoting
-                  immersive
-                />
-              </div>
-            ))}
+            {slides.map((slide, index) => {
+              const slideFuture = heroFutureBySlide(index);
+              if (!slideFuture) return null;
+
+              return (
+                <div
+                  key={slide.siteId}
+                  className={`concept-carousel__slide${
+                    index === visibleIndex ? " concept-carousel__slide--active" : ""
+                  }`}
+                  aria-hidden={index !== visibleIndex}
+                >
+                  <FutureHero
+                    siteName={slide.site.name}
+                    accent={slide.site.accent}
+                    image={slideFuture.image}
+                    alt={slideFuture.alt}
+                    siteId={slide.siteId}
+                    futureId={slideFuture.id}
+                    showVoting
+                    immersive
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <p
@@ -216,6 +293,13 @@ export function MobileConceptExplorer({
           )}
 
           <div className="concept-carousel__chrome">
+            {visibleSlide.futures.length > 1 && displayFuture && (
+              <ConceptSwitcher
+                futures={visibleSlide.futures}
+                activeFutureId={displayFuture.id}
+                onSelect={handleConceptSelect}
+              />
+            )}
             <div
               className="concept-carousel__dots"
               role="tablist"
@@ -223,7 +307,7 @@ export function MobileConceptExplorer({
             >
               {slides.map((slide, index) => (
                 <button
-                  key={`${slide.siteId}-${slide.conceptId}-dot`}
+                  key={`${slide.siteId}-dot`}
                   type="button"
                   role="tab"
                   aria-selected={index === visibleIndex}
@@ -240,14 +324,17 @@ export function MobileConceptExplorer({
       </div>
 
       <div className="mobile-concept-explorer__body px-5 pb-24 pt-4">
-        <FutureSection
-          key={`${activeSlide.siteId}-${activeSlide.conceptId}`}
-          site={activeSlide.site}
-          future={activeSlide.future}
-          showHero={false}
-          showEyebrow={false}
-          headline="site"
-        />
+        {displayFuture && (
+          <FutureSection
+            key={`${visibleSlide.siteId}-${displayFuture.id}`}
+            site={visibleSlide.site}
+            future={displayFuture}
+            showHero={false}
+            showEyebrow={false}
+            headline="site"
+            showConceptSubtitle={visibleSlide.futures.length > 1}
+          />
+        )}
       </div>
     </article>
   );

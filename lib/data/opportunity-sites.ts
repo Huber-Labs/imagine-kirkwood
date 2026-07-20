@@ -236,8 +236,21 @@ export const opportunitySites: OpportunitySite[] = [
         {
           shareHook:
             "An evening plaza for People's Park — music, lights, and neighbors staying put.",
-          qualities: ["reading", "trees", "shade", "rain-gardens", "families"],
+          qualities: ["music", "nightlife", "families"],
           perfectFor: ["Live music", "Evening hangs", "Neighbors"],
+        },
+      ),
+      createSiteFuture(
+        "big-screen-nights",
+        "Big Screen Nights",
+        "An inflatable screen, string lights, and lawn chairs — watch the game or a movie together under the trees.",
+        "/images/opportunities/peoples-park/big-screen-nights.png",
+        "Concept rendering — Big Screen Nights at People's Park",
+        {
+          shareHook:
+            "Big Screen Nights at People's Park — game days and movie nights on the lawn.",
+          qualities: ["performance", "nightlife", "families"],
+          perfectFor: ["Game days", "Movie nights", "Neighbors"],
         },
       ),
     ],

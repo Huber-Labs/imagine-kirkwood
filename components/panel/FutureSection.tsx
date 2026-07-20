@@ -1,6 +1,5 @@
 "use client";
 
-import { getPerfectForLabels } from "@/lib/concepts/qualities";
 import { ConceptComments } from "@/components/panel/ConceptComments";
 import { FutureEngagement } from "@/components/panel/FutureEngagement";
 import { FutureHero } from "@/components/panel/FutureHero";
@@ -18,6 +17,7 @@ interface FutureSectionProps {
     whatIf: string;
   } | null;
   headline?: "site" | "concept";
+  showConceptSubtitle?: boolean;
 }
 
 export function FutureSection({
@@ -29,13 +29,15 @@ export function FutureSection({
   showEyebrow = true,
   placeStory = null,
   headline = "concept",
+  showConceptSubtitle = false,
 }: FutureSectionProps) {
   const isComingSoon = future.status === "coming-soon";
-  const perfectFor = getPerfectForLabels(future);
   const showSiteName = headline === "site";
   const hideConceptTitle = !showSiteName && future.title === site.name;
   const headingClassName =
     "font-[family-name:var(--font-instrument-serif)] text-[1.5rem] leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[1.75rem]";
+  const conceptSubtitleClassName =
+    "future-section__concept-subtitle font-[family-name:var(--font-instrument-serif)] text-[1.125rem] leading-[1.25] tracking-[-0.015em] text-foreground/88 sm:text-[1.25rem]";
 
   return (
     <section
@@ -94,24 +96,16 @@ export function FutureSection({
               {future.title}
             </h3>
           )}
-          {showSiteName && future.title !== site.name && (
+          {showSiteName && future.title !== site.name && !showConceptSubtitle && (
             <p className="sr-only">{future.title}</p>
+          )}
+          {showSiteName && showConceptSubtitle && future.title !== site.name && (
+            <p className={conceptSubtitleClassName}>{future.title}</p>
           )}
           <p className="future-section__description text-[0.9375rem] leading-[1.65] text-foreground/78 sm:text-base sm:leading-[1.7]">
             {future.description}
           </p>
         </header>
-
-        {perfectFor.length > 0 && (
-          <div className="future-perfect-for">
-            <p className="future-perfect-for__label panel-eyebrow">Perfect for</p>
-            <ul className="future-perfect-for__list">
-              {perfectFor.map((label) => (
-                <li key={label}>{label}</li>
-              ))}
-            </ul>
-          </div>
-        )}
 
         {!isComingSoon && (
           <FutureEngagement
