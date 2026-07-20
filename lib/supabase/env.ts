@@ -22,7 +22,10 @@ function normalizeSupabaseUrl(raw: string): string | null {
     url = `h${url}`;
   }
 
-  if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) {
+  // Bare project ref, e.g. vsmxzinexcwpvqcbxree
+  if (/^[a-z0-9]{10,}$/i.test(url)) {
+    url = `https://${url}.supabase.co`;
+  } else if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) {
     url = `https://${url}`;
   }
 
@@ -37,6 +40,51 @@ function normalizeSupabaseUrl(raw: string): string | null {
     return parsed.origin;
   } catch {
     return null;
+  }
+}
+
+function describeUrlIssue(raw: string | undefined): string | null {
+  if (!raw) {
+    return "missing";
+  }
+
+  let url = raw.trim();
+
+  if (url.startsWith("ttps://")) {
+    url = `h${url}`;
+  }
+
+  if (/^[a-z0-9]{10,}$/i.test(url)) {
+    return null;
+  }
+
+  if (url.startsWith("eyJ") || url.startsWith("sb_")) {
+    return "looks_like_key_in_url_field";
+  }
+
+  if (url.startsWith("postgresql://") || url.startsWith("postgres://")) {
+    return "looks_like_database_url";
+  }
+
+  if (url.includes("supabase.com/dashboard")) {
+    return "looks_like_dashboard_url";
+  }
+
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) {
+    url = `https://${url}`;
+  }
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:") {
+      return "must_use_https";
+    }
+    if (!parsed.hostname.endsWith(".supabase.co")) {
+      return `invalid_host:${parsed.hostname}`;
+    }
+    return null;
+  } catch {
+    return "invalid_format";
   }
 }
 
@@ -90,6 +138,9 @@ export function getSupabaseEnvDiagnostics() {
     hasUrl: Boolean(rawUrl),
     hasAnonKey: Boolean(rawAnon),
     urlValid: Boolean(url),
+    urlIssue: describeUrlIssue(rawUrl),
+    urlHint:
+      "Set NEXT_PUBLIC_SUPABASE_URL to https://YOUR_PROJECT_REF.supabase.co (Supabase → Project Settings → API → Project URL)",
     hasServiceRoleKey: Boolean(trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY)),
   };
 }

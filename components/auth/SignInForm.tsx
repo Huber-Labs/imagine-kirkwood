@@ -23,7 +23,7 @@ export function SignInForm({ onSent }: SignInFormProps) {
     if (!isConfigured) {
       setStatus("error");
       setMessage(
-        "Participation is not configured on the server yet. In Vercel, confirm NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set for Production, then redeploy. Check /api/health/supabase for details.",
+        "Supabase URL is misconfigured on the server. Open /api/health/supabase, fix urlIssue for NEXT_PUBLIC_SUPABASE_URL, then redeploy.",
       );
       return;
     }
