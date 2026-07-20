@@ -1,24 +1,35 @@
+import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
+import {
+  getDefaultFuture,
+  opportunitySites,
+} from "@/lib/data/opportunity-sites";
+
 export interface ExhibitionHeroStage {
   id: string;
   src: string;
   alt: string;
 }
 
-/**
- * Homepage hero carousel slides.
- *
- * When additional corridor-wide exhibition renders exist, add slides under
- * `/images/exhibition/`. See docs/image-style-guide.md § Exhibition homepage hero.
- *
- * Expected asset spec: ~1920×1080+ landscape, 16:9, no text overlays.
- */
-export const EXHIBITION_HERO_STAGES: ExhibitionHeroStage[] = [
-  {
-    id: "peoples-park-reading-garden",
-    src: "/images/opportunities/peoples-park/hero.webp",
-    alt: "Concept rendering — a reading garden for People's Park on Kirkwood Avenue",
-  },
-];
+/** Published concept hero images from opportunity sites on the explore map. */
+export function getExhibitionHeroStages(): ExhibitionHeroStage[] {
+  return opportunitySites.flatMap((site) => {
+    if (site.isPlaceholder) return [];
+
+    const future = getDefaultFuture(site);
+    if (!future || future.status !== "published") return [];
+    if (!future.image || future.image === CONCEPT_PLACEHOLDER_PATH) return [];
+
+    return [
+      {
+        id: `${site.id}-${future.id}`,
+        src: future.image,
+        alt: future.alt,
+      },
+    ];
+  });
+}
+
+export const EXHIBITION_HERO_STAGES = getExhibitionHeroStages();
 
 /** Milliseconds between automatic slide transitions. */
-export const EXHIBITION_HERO_INTERVAL_MS = 6000;
+export const EXHIBITION_HERO_INTERVAL_MS = 8000;

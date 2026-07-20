@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Button } from "@/components/ui/Button";
 import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
 import { buildExploreUrl } from "@/lib/engagement/explore-url";
@@ -52,6 +52,11 @@ export function ExhibitionHero() {
     <section
       className="relative flex min-h-dvh flex-col justify-center overflow-hidden"
       aria-label="Imagine Kirkwood exhibition entrance"
+      style={
+        {
+          "--exhibition-hero-duration": `${EXHIBITION_HERO_INTERVAL_MS}ms`,
+        } as CSSProperties
+      }
     >
       <div className="absolute inset-0">
         {EXHIBITION_HERO_STAGES.map((stage, index) => {
