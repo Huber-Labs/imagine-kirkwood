@@ -29,7 +29,8 @@ Add these under Authentication → URL Configuration:
 | Environment | Site URL | Redirect URLs |
 |-------------|----------|---------------|
 | Local | `http://localhost:3000` | `http://localhost:3000/auth/callback` |
-| Production | `https://your-domain.vercel.app` | `https://your-domain.vercel.app/auth/callback` |
+| Production | `https://imaginekirkwood.com` | `https://imaginekirkwood.com/auth/callback` |
+| Vercel preview | `https://imagine-kirkwood.vercel.app` | `https://imagine-kirkwood.vercel.app/auth/callback` |
 
 ## 3. Environment variables
 

@@ -18,11 +18,11 @@ export default function ExplorePage() {
 
   return (
     <main className="map-scene h-dvh w-full overflow-hidden bg-[#141310]">
-      <Suspense fallback={<ExploreFallback />}>
-        <ParticipateProvider supabaseConfig={supabaseConfig}>
+      <ParticipateProvider supabaseConfig={supabaseConfig}>
+        <Suspense fallback={<ExploreFallback />}>
           <MapExperience />
-        </ParticipateProvider>
-      </Suspense>
+        </Suspense>
+      </ParticipateProvider>
     </main>
   );
 }
