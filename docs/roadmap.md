@@ -22,7 +22,7 @@ The exhibition is the front door. A visitor should arrive curious, open a place 
 - **Opportunity Atlas** — full-screen aerial map, place markers, slide-out exhibition panel (`/explore`)
 - **Opportunity Sites** — six named places; map positions decoupled from content
 - **Futures exhibition** — story-first panel, vertically scrolling full-bleed renderings per place
-- **Concept imagery** — People's Park complete (three published futures + one coming soon)
+- **Concept imagery** — all eight opportunity sites with rendering-aligned copy
 - **Spotlight map** — editorial desaturation, corridor spotlight, Kirkwood label
 - **People's Park** — gold-standard reference site
 - **Per-future engagement** — Love this idea, Worth Trying, Save, Share (device-local)
@@ -30,7 +30,7 @@ The exhibition is the front door. A visitor should arrive curious, open a place 
 
 ## Upcoming (Phase 1)
 
-- **Complete all opportunity sites** — extend People's Park futures template across Dining District, Library Plaza, Food Truck Alley, Crossing Plaza, Village Courtyard
+- **Complete all opportunity sites** — extend People's Park futures template with additional futures per place
 - **Better renderings** — higher-fidelity heroes per [`image-style-guide.md`](image-style-guide.md)
 - **Homepage polish** — align homepage hero with futures model when ready
 

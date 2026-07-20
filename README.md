@@ -20,7 +20,7 @@ Open [http://localhost:3000](http://localhost:3000). Supabase is **optional** fo
 - **Exhibition homepage** (`/`) — hero entrance into the atlas
 - **Opportunity Atlas** (`/explore`) — editorial map with seven places and slide-out concept panels
 - **One concept per place** — place story plus a single full-bleed rendering for v1
-- **People's Park** — reference site with the Reading Garden concept render
+- **People's Park** — reference site with the Evening Plaza concept render
 - **Lightweight engagement** — Love this idea, Worth Trying, Save, and Share per concept (device-local)
 - **Shareable deep links** — `/explore?site=peoples-park&concept=reading-garden`
 
