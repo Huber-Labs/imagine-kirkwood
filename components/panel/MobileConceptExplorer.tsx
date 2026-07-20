@@ -100,6 +100,38 @@ export function MobileConceptExplorer({
     };
   }, []);
 
+  const navigateToIndex = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= slides.length) return;
+
+      syncActiveSlide(index);
+
+      const track = trackRef.current;
+      const target = track?.children[index] as HTMLElement | undefined;
+      if (!track || !target) return;
+
+      programmaticScrollRef.current = true;
+      target.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+
+      window.setTimeout(() => {
+        programmaticScrollRef.current = false;
+      }, 350);
+    },
+    [slides.length, syncActiveSlide],
+  );
+
+  const goToPrevious = useCallback(() => {
+    navigateToIndex(visibleIndex - 1);
+  }, [navigateToIndex, visibleIndex]);
+
+  const goToNext = useCallback(() => {
+    navigateToIndex(visibleIndex + 1);
+  }, [navigateToIndex, visibleIndex]);
+
   if (!activeSlide) {
     return null;
   }
@@ -138,17 +170,54 @@ export function MobileConceptExplorer({
             ))}
           </div>
 
+          <p
+            className="concept-carousel__counter concept-carousel__counter--top"
+            aria-live="polite"
+          >
+            {visibleIndex + 1} / {slides.length}
+          </p>
+
+          {visibleIndex > 0 && (
+            <button
+              type="button"
+              className="concept-carousel__nav concept-carousel__nav--prev"
+              aria-label="Previous place"
+              onClick={goToPrevious}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M10 3L5 8L10 13"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          )}
+
+          {visibleIndex < slides.length - 1 && (
+            <button
+              type="button"
+              className="concept-carousel__nav concept-carousel__nav--next"
+              aria-label="Next place"
+              onClick={goToNext}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M6 3L11 8L6 13"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          )}
+
           <div className="concept-carousel__chrome">
-            <div className="concept-carousel__chrome-top">
-              <p className="concept-carousel__place panel-eyebrow">
-                {visibleSlide?.site.name}
-              </p>
-              <p className="concept-carousel__counter" aria-live="polite">
-                {visibleIndex + 1} / {slides.length}
-              </p>
-            </div>
-            <p className="concept-carousel__hint panel-eyebrow">
-              Swipe to explore places
+            <p className="concept-carousel__place panel-eyebrow">
+              {visibleSlide?.site.name}
             </p>
             <div
               className="concept-carousel__dots"
@@ -165,7 +234,7 @@ export function MobileConceptExplorer({
                   className={`concept-carousel__dot${
                     index === visibleIndex ? " concept-carousel__dot--active" : ""
                   }`}
-                  onClick={() => syncActiveSlide(index)}
+                  onClick={() => navigateToIndex(index)}
                 />
               ))}
             </div>
