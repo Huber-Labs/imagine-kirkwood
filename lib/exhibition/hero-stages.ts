@@ -10,9 +10,17 @@ export interface ExhibitionHeroStage {
   alt: string;
 }
 
+/** Homepage hero opens on People's Park, then cycles other map concepts. */
+const HOMEPAGE_HERO_LEAD_SITE_ID = "peoples-park";
+
 /** Published concept hero images from opportunity sites on the explore map. */
 export function getExhibitionHeroStages(): ExhibitionHeroStage[] {
-  return opportunitySites.flatMap((site) => {
+  const orderedSites = [
+    ...opportunitySites.filter((site) => site.id === HOMEPAGE_HERO_LEAD_SITE_ID),
+    ...opportunitySites.filter((site) => site.id !== HOMEPAGE_HERO_LEAD_SITE_ID),
+  ];
+
+  return orderedSites.flatMap((site) => {
     if (site.isPlaceholder) return [];
 
     const future = getDefaultFuture(site);
