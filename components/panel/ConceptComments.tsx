@@ -139,7 +139,7 @@ export function ConceptComments({ siteId, futureId }: ConceptCommentsProps) {
             className="concept-comments__textarea"
             rows={3}
             maxLength={CONCEPT_COMMENT_MAX_LENGTH}
-            placeholder="Share why this idea resonates — what would it change for you?"
+            placeholder="Share why this idea resonates — what would you change or like to see?"
             value={draft}
             disabled={composerDisabled}
             onChange={(event) => setDraft(event.target.value)}
