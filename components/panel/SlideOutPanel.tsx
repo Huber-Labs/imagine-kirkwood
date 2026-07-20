@@ -70,7 +70,7 @@ export function SlideOutPanel({
         }`}
       >
         {isMobileExplore ? (
-          <div className="mobile-explore-chrome flex shrink-0 items-center justify-between gap-3 px-5 pb-1 pt-[max(0.625rem,env(safe-area-inset-top))]">
+          <div className="mobile-explore-chrome flex shrink-0 items-center justify-between gap-3 px-5 pb-0.5 pt-[max(0.5rem,env(safe-area-inset-top))]">
             <Link
               href="/"
               className="mobile-explore-chrome__back inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"

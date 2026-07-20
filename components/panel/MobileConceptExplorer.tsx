@@ -1,10 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CivicPointsBar } from "@/components/panel/CivicPointsStepper";
 import { FutureHero } from "@/components/panel/FutureHero";
 import { FutureSection } from "@/components/panel/FutureSection";
-import { useParticipate } from "@/components/participate/ParticipateProvider";
 import {
   findExploreSlideIndex,
   getExploreSlides,
@@ -21,7 +19,6 @@ export function MobileConceptExplorer({
   conceptId,
   onConceptChange,
 }: MobileConceptExplorerProps) {
-  const { user } = useParticipate();
   const slides = useMemo(() => getExploreSlides(), []);
   const activeIndex = findExploreSlideIndex(siteId, conceptId);
   const activeSlide = slides[activeIndex] ?? slides[0];
@@ -29,6 +26,7 @@ export function MobileConceptExplorer({
   const programmaticScrollRef = useRef(false);
   const scrollEndTimerRef = useRef<number | null>(null);
   const [visibleIndex, setVisibleIndex] = useState(activeIndex);
+  const visibleSlide = slides[visibleIndex] ?? activeSlide;
 
   const syncActiveSlide = useCallback(
     (index: number) => {
@@ -111,69 +109,66 @@ export function MobileConceptExplorer({
       className="mobile-concept-explorer flex flex-col"
       style={{ "--hero-accent": activeSlide.site.accent } as React.CSSProperties}
     >
-      {user && (
-        <div className="civic-points-dock civic-points-dock--site px-5">
-          <CivicPointsBar />
-        </div>
-      )}
-
       <div className="concept-carousel">
-        <div className="concept-carousel__header px-5">
-          <p className="concept-carousel__hint panel-eyebrow">
-            Swipe to explore places
-          </p>
-          <p className="concept-carousel__counter" aria-live="polite">
-            {visibleIndex + 1} / {slides.length}
-          </p>
-        </div>
+        <div className="concept-carousel__stage">
+          <div
+            ref={trackRef}
+            className="concept-carousel__track"
+            onScroll={handleTrackScroll}
+          >
+            {slides.map((slide, index) => (
+              <div
+                key={`${slide.siteId}-${slide.conceptId}`}
+                className={`concept-carousel__slide${
+                  index === visibleIndex ? " concept-carousel__slide--active" : ""
+                }`}
+                aria-hidden={index !== visibleIndex}
+              >
+                <FutureHero
+                  siteName={slide.site.name}
+                  accent={slide.site.accent}
+                  image={slide.future.image}
+                  alt={slide.future.alt}
+                  siteId={slide.siteId}
+                  futureId={slide.conceptId}
+                  showVoting
+                />
+              </div>
+            ))}
+          </div>
 
-        <div
-          ref={trackRef}
-          className="concept-carousel__track"
-          onScroll={handleTrackScroll}
-        >
-          {slides.map((slide, index) => (
-            <div
-              key={`${slide.siteId}-${slide.conceptId}`}
-              className={`concept-carousel__slide${
-                index === visibleIndex ? " concept-carousel__slide--active" : ""
-              }`}
-              aria-hidden={index !== visibleIndex}
-            >
+          <div className="concept-carousel__chrome">
+            <div className="concept-carousel__chrome-top">
               <p className="concept-carousel__place panel-eyebrow">
-                {slide.site.name}
+                {visibleSlide?.site.name}
               </p>
-              <FutureHero
-                siteName={slide.site.name}
-                accent={slide.site.accent}
-                image={slide.future.image}
-                alt={slide.future.alt}
-                siteId={slide.siteId}
-                futureId={slide.conceptId}
-                showVoting
-              />
+              <p className="concept-carousel__counter" aria-live="polite">
+                {visibleIndex + 1} / {slides.length}
+              </p>
             </div>
-          ))}
-        </div>
-
-        <div
-          className="concept-carousel__dots"
-          role="tablist"
-          aria-label="Places along Kirkwood"
-        >
-          {slides.map((slide, index) => (
-            <button
-              key={`${slide.siteId}-${slide.conceptId}-dot`}
-              type="button"
-              role="tab"
-              aria-selected={index === visibleIndex}
-              aria-label={slide.site.name}
-              className={`concept-carousel__dot${
-                index === visibleIndex ? " concept-carousel__dot--active" : ""
-              }`}
-              onClick={() => syncActiveSlide(index)}
-            />
-          ))}
+            <p className="concept-carousel__hint panel-eyebrow">
+              Swipe to explore places
+            </p>
+            <div
+              className="concept-carousel__dots"
+              role="tablist"
+              aria-label="Places along Kirkwood"
+            >
+              {slides.map((slide, index) => (
+                <button
+                  key={`${slide.siteId}-${slide.conceptId}-dot`}
+                  type="button"
+                  role="tab"
+                  aria-selected={index === visibleIndex}
+                  aria-label={slide.site.name}
+                  className={`concept-carousel__dot${
+                    index === visibleIndex ? " concept-carousel__dot--active" : ""
+                  }`}
+                  onClick={() => syncActiveSlide(index)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
