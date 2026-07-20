@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -14,10 +15,13 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import {
   fetchInvestmentCatalog,
   fetchPortfolioState,
+  setInvestmentPoints,
 } from "@/lib/portfolio/actions";
-import { buildCatalogIndex } from "@/lib/portfolio/catalog";
+import { buildCatalogIndex, computePortfolioState } from "@/lib/portfolio/catalog";
 import type { CatalogInvestment, PortfolioState } from "@/lib/portfolio/types";
 import type { SupabasePublicConfig } from "@/lib/supabase/env";
+
+type UpdateInvestmentPointsResult = { ok: true } | { ok: false; error: string };
 
 interface ParticipateContextValue {
   isConfigured: boolean;
@@ -30,6 +34,10 @@ interface ParticipateContextValue {
   openSignIn: () => void;
   closeSignIn: () => void;
   refreshPortfolio: () => Promise<void>;
+  updateInvestmentPoints: (
+    investmentId: string,
+    points: number,
+  ) => Promise<UpdateInvestmentPointsResult>;
   signOut: () => Promise<void>;
   getSupabaseClient: () => SupabaseClient;
 }
@@ -51,6 +59,9 @@ export function ParticipateProvider({
   const [catalog, setCatalog] = useState<CatalogInvestment[]>([]);
   const [isLoading, setIsLoading] = useState(isConfigured);
   const [signInOpen, setSignInOpen] = useState(false);
+  const writeQueuesRef = useRef(
+    new Map<string, Promise<UpdateInvestmentPointsResult>>(),
+  );
 
   const supabase = useMemo(
     () =>
@@ -76,6 +87,62 @@ export function ParticipateProvider({
     const next = await fetchPortfolioState();
     setPortfolio(next);
   }, [isConfigured]);
+
+  const updateInvestmentPoints = useCallback(
+    async (
+      investmentId: string,
+      points: number,
+    ): Promise<UpdateInvestmentPointsResult> => {
+      if (!isConfigured) {
+        return { ok: false, error: "Participation is not configured yet." };
+      }
+
+      setPortfolio((previous) => {
+        if (!previous) return previous;
+
+        const without = previous.allocations.filter(
+          (row) => row.investmentId !== investmentId,
+        );
+        const nextAllocations =
+          points === 0
+            ? without
+            : [...without, { investmentId, points }];
+
+        return {
+          ...previous,
+          ...computePortfolioState(
+            nextAllocations,
+            previous.status,
+            previous.participationOpen,
+          ),
+        };
+      });
+
+      const write = async (): Promise<UpdateInvestmentPointsResult> => {
+        const result = await setInvestmentPoints(investmentId, points);
+        if (!result.ok) {
+          const next = await fetchPortfolioState();
+          setPortfolio(next);
+        }
+        return result;
+      };
+
+      const previousWrite =
+        writeQueuesRef.current.get(investmentId) ??
+        Promise.resolve({ ok: true as const });
+      const queued = previousWrite.then(write, write);
+      writeQueuesRef.current.set(investmentId, queued);
+
+      try {
+        return await queued;
+      } finally {
+        if (writeQueuesRef.current.get(investmentId) === queued) {
+          writeQueuesRef.current.delete(investmentId);
+        }
+      }
+    },
+    [isConfigured],
+  );
 
   useEffect(() => {
     if (!isConfigured || !supabase) {
@@ -144,6 +211,7 @@ export function ParticipateProvider({
     openSignIn: () => setSignInOpen(true),
     closeSignIn: () => setSignInOpen(false),
     refreshPortfolio,
+    updateInvestmentPoints,
     signOut,
     getSupabaseClient,
   };

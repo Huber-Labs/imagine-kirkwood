@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useId, useMemo, useState, useTransition } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 import { resolveInvestment } from "@/lib/portfolio/catalog";
-import { setInvestmentPoints } from "@/lib/portfolio/actions";
 import { CIVIC_POINTS_TOTAL, MAX_POINTS_PER_INVESTMENT } from "@/lib/portfolio/tags";
 
 export function CivicPointsBar() {
@@ -48,10 +47,9 @@ function useCivicPointsAllocation(siteId: string, futureId: string) {
     portfolio,
     catalogIndex,
     openSignIn,
-    refreshPortfolio,
+    updateInvestmentPoints,
   } = useParticipate();
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
 
   const investment = useMemo(
     () => resolveInvestment(catalogIndex, siteId, futureId),
@@ -70,17 +68,15 @@ function useCivicPointsAllocation(siteId: string, futureId: string) {
     (nextPoints: number) => {
       if (!investment) return;
 
-      startTransition(async () => {
+      void (async () => {
         setError(null);
-        const result = await setInvestmentPoints(investment.id, nextPoints);
+        const result = await updateInvestmentPoints(investment.id, nextPoints);
         if (!result.ok) {
           setError(result.error);
-          return;
         }
-        await refreshPortfolio();
-      });
+      })();
     },
-    [investment, refreshPortfolio],
+    [investment, updateInvestmentPoints],
   );
 
   const isSignedIn = Boolean(user);
@@ -103,7 +99,6 @@ function useCivicPointsAllocation(siteId: string, futureId: string) {
     displayPoints,
     error,
     investment,
-    isPending,
     isSignedIn,
     maxAffordable,
     maxForInvestment,
@@ -119,7 +114,6 @@ interface OverlayAllocationProps {
   displayPoints: number;
   error: string | null;
   investment: ReturnType<typeof resolveInvestment>;
-  isPending: boolean;
   isSignedIn: boolean;
   maxAffordable: number;
   maxForInvestment: number;
@@ -166,7 +160,6 @@ function CivicPointsOverlayUI({
   displayPoints,
   error,
   investment,
-  isPending,
   isSignedIn,
   maxAffordable,
   maxForInvestment,
@@ -184,7 +177,7 @@ function CivicPointsOverlayUI({
   const isSegmentDisabled = useCallback(
     (value: number) => {
       if (!isSignedIn) return false;
-      if (readOnly || isPending || !investment) return true;
+      if (readOnly || !investment) return true;
       if (value > maxForInvestment) return true;
       if (value === currentPoints) return false;
       return value > maxAffordable;
@@ -192,7 +185,6 @@ function CivicPointsOverlayUI({
     [
       currentPoints,
       investment,
-      isPending,
       isSignedIn,
       maxAffordable,
       maxForInvestment,
@@ -206,7 +198,7 @@ function CivicPointsOverlayUI({
         requestSignIn();
         return;
       }
-      if (readOnly || isPending || !investment) return;
+      if (readOnly || !investment) return;
 
       if (currentPoints === value) {
         updatePoints(0);
@@ -220,7 +212,6 @@ function CivicPointsOverlayUI({
     [
       currentPoints,
       investment,
-      isPending,
       isSignedIn,
       maxAffordable,
       maxForInvestment,
@@ -325,7 +316,6 @@ export function CivicPointsStepper({
     if (
       !allocation.investment ||
       allocation.readOnly ||
-      allocation.isPending ||
       allocation.currentPoints <= 0
     ) {
       return;
@@ -341,7 +331,6 @@ export function CivicPointsStepper({
     if (
       !allocation.investment ||
       allocation.readOnly ||
-      allocation.isPending ||
       allocation.currentPoints >= allocation.maxForInvestment ||
       allocation.remainingPoints <= 0
     ) {
@@ -357,13 +346,11 @@ export function CivicPointsStepper({
   const decrementDisabled =
     allocation.isSignedIn &&
     (allocation.readOnly ||
-      allocation.isPending ||
       allocation.currentPoints <= 0 ||
       !allocation.investment);
   const incrementDisabled =
     allocation.isSignedIn &&
     (allocation.readOnly ||
-      allocation.isPending ||
       !allocation.investment ||
       allocation.currentPoints >= allocation.maxForInvestment ||
       allocation.remainingPoints <= 0);
