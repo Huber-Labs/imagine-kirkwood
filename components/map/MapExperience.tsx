@@ -170,12 +170,10 @@ export function MapExperience() {
             : "Sign-in link expired or failed. Open the link in the same browser where you requested it."}
         </div>
       )}
-      <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:left-6 sm:top-6">
+      <div className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 hidden sm:left-6 sm:top-6 md:block">
         <Link
           href="/"
-          className={`map-chrome-panel map-chrome-body inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30${
-            mobileFocus ? " hidden" : ""
-          }`}
+          className="map-chrome-panel map-chrome-body inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path
@@ -191,11 +189,7 @@ export function MapExperience() {
       </div>
 
       {!authorMode && (
-        <div
-          className={`absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:right-6 sm:top-6${
-            mobileFocus ? " hidden" : ""
-          }`}
-        >
+        <div className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 hidden sm:right-6 sm:top-6 md:block">
           <AuthStatus />
         </div>
       )}
