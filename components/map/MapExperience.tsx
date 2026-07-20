@@ -194,22 +194,21 @@ export function MapExperience() {
         </div>
       )}
 
-      <div
-        className={
-          authorMode
-            ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
-            : "absolute inset-x-0 top-0 z-0 h-[var(--map-mobile-height)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
-        }
-      >
+      {!mobileFocus && (
         <div
           className={
             authorMode
-              ? "h-full w-full"
-              : mobileFocus
-                ? "h-[320%] w-full -translate-y-[38%]"
-                : "h-[250%] w-full -translate-y-[30%] md:h-full md:translate-y-0"
+              ? "absolute inset-0 pb-[7.25rem] sm:pb-24"
+              : "absolute inset-x-0 top-0 z-0 h-[var(--map-mobile-height)] overflow-hidden md:inset-0 md:h-auto md:pb-24"
           }
         >
+          <div
+            className={
+              authorMode
+                ? "h-full w-full"
+                : "h-[250%] w-full -translate-y-[30%] md:h-full md:translate-y-0"
+            }
+          >
             {authorMode ? (
               <AuthorModeShell onSelectSiteBlocked={handleAuthorSelectBlocked} />
             ) : (
@@ -220,6 +219,7 @@ export function MapExperience() {
             )}
           </div>
         </div>
+      )}
 
       <MapChrome />
       <MapAttribution />
@@ -228,9 +228,11 @@ export function MapExperience() {
         <SlideOutPanel
           site={selectedSite}
           focusedConceptId={focusedConceptId}
+          selectedSiteId={selectedSiteId}
           isOpen={(panelOpen && selectedSite !== null) || (isMobile && selectedSite !== null)}
           isMobileExplore={isMobile}
           onConceptChange={handleConceptChange}
+          onSelectSite={handleSelectSite}
           onClose={handleClosePanel}
         />
       )}

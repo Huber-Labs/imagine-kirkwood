@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { AuthStatus } from "@/components/auth/AuthStatus";
+import { AerialMap } from "@/components/map/AerialMap";
 import { MobileConceptExplorer } from "@/components/panel/MobileConceptExplorer";
 import { SiteDetail } from "@/components/panel/SiteDetail";
 import type { OpportunitySite } from "@/lib/types";
@@ -10,18 +11,22 @@ import type { OpportunitySite } from "@/lib/types";
 interface SlideOutPanelProps {
   site: OpportunitySite | null;
   focusedConceptId: string | null;
+  selectedSiteId?: string | null;
   isOpen: boolean;
   isMobileExplore?: boolean;
   onConceptChange?: (siteId: string, conceptId: string) => void;
+  onSelectSite?: (siteId: string) => void;
   onClose: () => void;
 }
 
 export function SlideOutPanel({
   site,
   focusedConceptId,
+  selectedSiteId = null,
   isOpen,
   isMobileExplore = false,
   onConceptChange,
+  onSelectSite,
   onClose,
 }: SlideOutPanelProps) {
   useEffect(() => {
@@ -61,8 +66,10 @@ export function SlideOutPanel({
         aria-label={
           isMobileExplore ? "Explore Kirkwood concepts" : `${site.name} details`
         }
-        className={`fixed z-50 flex h-[var(--panel-mobile-height)] max-h-[var(--panel-mobile-height)] flex-col overflow-y-auto bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
-          isMobileExplore ? "rounded-none" : "rounded-t-[1.25rem]"
+        className={`fixed z-50 flex max-h-[var(--panel-mobile-height)] flex-col bg-background pb-[env(safe-area-inset-bottom)] shadow-[var(--panel-shadow)] transition-transform duration-500 ease-[var(--panel-ease)] inset-x-0 bottom-0 md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:max-h-none md:w-[var(--panel-width)] md:rounded-none md:pb-0 ${
+          isMobileExplore
+            ? "h-[var(--panel-mobile-height)] overflow-hidden rounded-none"
+            : "h-[var(--panel-mobile-height)] overflow-y-auto rounded-t-[1.25rem]"
         } ${
           isOpen
             ? "translate-y-0 md:translate-x-0"
@@ -70,7 +77,7 @@ export function SlideOutPanel({
         }`}
       >
         {isMobileExplore ? (
-          <div className="mobile-explore-chrome flex shrink-0 items-center justify-between gap-3 px-5 pb-0.5 pt-[max(0.5rem,env(safe-area-inset-top))]">
+          <div className="mobile-explore-chrome flex shrink-0 items-center justify-between gap-3 bg-background px-5 pb-0.5 pt-[max(0.5rem,env(safe-area-inset-top))]">
             <Link
               href="/"
               className="mobile-explore-chrome__back inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
@@ -91,6 +98,16 @@ export function SlideOutPanel({
         ) : (
           <div className="mx-auto mt-3 mb-0.5 h-[3px] w-8 shrink-0 rounded-full bg-foreground/10 md:hidden" />
         )}
+        {isMobileExplore && onSelectSite && (
+          <div className="mobile-explore-map h-[var(--map-mobile-height)]">
+            <div className="mobile-explore-map__canvas">
+              <AerialMap
+                selectedSiteId={selectedSiteId}
+                onSelectSite={onSelectSite}
+              />
+            </div>
+          </div>
+        )}
         {!isMobileExplore && (
           <button
             type="button"
@@ -109,11 +126,13 @@ export function SlideOutPanel({
           </button>
         )}
         {isMobileExplore && activeConceptId && onConceptChange ? (
-          <MobileConceptExplorer
-            siteId={site.id}
-            conceptId={activeConceptId}
-            onConceptChange={onConceptChange}
-          />
+          <div className="mobile-explore-scroll bg-background">
+            <MobileConceptExplorer
+              siteId={site.id}
+              conceptId={activeConceptId}
+              onConceptChange={onConceptChange}
+            />
+          </div>
         ) : (
           <SiteDetail
             key={`${site.id}-${focusedConceptId ?? "browse"}`}
