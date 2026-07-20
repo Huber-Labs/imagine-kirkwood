@@ -1,5 +1,17 @@
 function trimEnv(value: string | undefined) {
-  return value?.trim() || undefined;
+  let trimmed = value?.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    trimmed = trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed || undefined;
 }
 
 function normalizeSupabaseUrl(raw: string): string | null {
@@ -63,6 +75,22 @@ export function getSupabaseEnv():
     url,
     anonKey,
     serviceRoleKey: trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY),
+  };
+}
+
+export function getSupabaseEnvDiagnostics() {
+  const rawUrl = trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const rawAnon =
+    trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ??
+    trimEnv(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+  const url = normalizeSupabaseUrl(rawUrl ?? "");
+
+  return {
+    configured: getSupabaseEnv() !== null,
+    hasUrl: Boolean(rawUrl),
+    hasAnonKey: Boolean(rawAnon),
+    urlValid: Boolean(url),
+    hasServiceRoleKey: Boolean(trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY)),
   };
 }
 
