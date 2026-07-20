@@ -27,6 +27,11 @@
     --map-mobile-height: clamp(4rem, 12dvh, 5.5rem);
     --panel-mobile-height: calc(100dvh - var(--map-mobile-height));
   }
+
+  .map-scene--mobile-focus .place-marker text,
+  .map-scene--mobile-focus .place-marker line {
+    display: none;
+  }
 }
 
 .mobile-explore-chrome__back {
