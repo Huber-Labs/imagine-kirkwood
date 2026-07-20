@@ -249,14 +249,7 @@ function CivicPointsOverlayUI({
       </svg>
 
       <div className="civic-points-stepper__header">
-        <div className="civic-points-stepper__brand">
-          <UpvoteStarIcon
-            filled={displayPoints > 0}
-            active={displayPoints > 0}
-            gradientId={gradientId}
-          />
-          <span className="civic-points-stepper__overlay-label">Upvote</span>
-        </div>
+        <span className="civic-points-stepper__overlay-label">Upvote</span>
         <span
           className="civic-points-stepper__budget"
           aria-live="polite"
