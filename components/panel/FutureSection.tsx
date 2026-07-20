@@ -1,7 +1,6 @@
 "use client";
 
 import { ConceptComments } from "@/components/panel/ConceptComments";
-import { FutureEngagement } from "@/components/panel/FutureEngagement";
 import { FutureHero } from "@/components/panel/FutureHero";
 import type { OpportunitySite, PlaceFuture } from "@/lib/types";
 
@@ -103,14 +102,6 @@ export function FutureSection({
             {future.description}
           </p>
         </header>
-
-        {!isComingSoon && (
-          <FutureEngagement
-            siteId={site.id}
-            siteName={site.name}
-            future={future}
-          />
-        )}
 
         {!isComingSoon && (
           <ConceptComments siteId={site.id} futureId={future.id} />
