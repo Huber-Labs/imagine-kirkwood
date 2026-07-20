@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
 import { CivicPointsStepper } from "@/components/panel/CivicPointsStepper";
-import { useParticipate } from "@/components/participate/ParticipateProvider";
-import { CIVIC_POINTS_TOTAL } from "@/lib/portfolio/tags";
 
 interface FutureHeroProps {
   siteName: string;
@@ -83,13 +81,11 @@ export function FutureHero({
   const imageKey = `${src}-${isComingSoon}`;
   const [failedKey, setFailedKey] = useState<string | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const { portfolio } = useParticipate();
 
   const imageFailed = failedKey === imageKey;
   const showPlaceholder = imageFailed || !src || isComingSoon;
   const lightboxSrc = showPlaceholder ? CONCEPT_PLACEHOLDER_PATH : src;
   const canVote = showVoting && siteId && futureId && !isComingSoon;
-  const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
 
   const openLightbox = useCallback(() => {
     setLightboxOpen(true);
@@ -149,16 +145,6 @@ export function FutureHero({
 
           {isComingSoon && (
             <div className="future-hero__badge">Rendering coming soon</div>
-          )}
-
-          {!showPlaceholder && canVote && (
-            <span
-              className="future-hero__points-counter"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {remainingPoints} of {CIVIC_POINTS_TOTAL} left
-            </span>
           )}
 
           {!showPlaceholder && !canVote && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useId, useMemo, useState, useTransition } from "react";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 import { resolveInvestment } from "@/lib/portfolio/catalog";
 import { setInvestmentPoints } from "@/lib/portfolio/actions";
@@ -124,8 +124,41 @@ interface OverlayAllocationProps {
   maxAffordable: number;
   maxForInvestment: number;
   readOnly: boolean;
+  remainingPoints: number;
   requestSignIn: () => void;
   updatePoints: (nextPoints: number) => void;
+}
+
+function UpvoteStarIcon({
+  filled = false,
+  active = false,
+  gradientId,
+  className = "",
+}: {
+  filled?: boolean;
+  active?: boolean;
+  gradientId: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`upvote-star${filled ? " upvote-star--filled" : ""}${
+        active ? " upvote-star--active" : ""
+      }${className ? ` ${className}` : ""}`}
+    >
+      <path
+        d="M12 2.5l2.55 7.85h8.25l-6.68 4.85 2.55 7.85L12 18.2l-6.67 4.85 2.55-7.85L1.2 10.35h8.25L12 2.5z"
+        fill={filled ? `url(#${gradientId})` : "none"}
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function CivicPointsOverlayUI({
@@ -138,9 +171,11 @@ function CivicPointsOverlayUI({
   maxAffordable,
   maxForInvestment,
   readOnly,
+  remainingPoints,
   requestSignIn,
   updatePoints,
 }: OverlayAllocationProps) {
+  const gradientId = useId().replace(/:/g, "");
   const segments = useMemo(
     () => Array.from({ length: maxForInvestment }, (_, index) => index + 1),
     [maxForInvestment],
@@ -199,18 +234,42 @@ function CivicPointsOverlayUI({
     <div
       className="civic-points-stepper civic-points-stepper--overlay"
       role="group"
-      aria-label="Invest up to 3 Civic Points in this idea"
+      aria-label="Upvote this idea with up to 3 Civic Points"
       onClick={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
     >
-      <p className="civic-points-stepper__overlay-label panel-eyebrow">
-        Civic Points
-      </p>
+      <svg width="0" height="0" aria-hidden="true" className="sr-only">
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fde68a" />
+            <stop offset="48%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#b45309" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <div className="civic-points-stepper__header">
+        <div className="civic-points-stepper__brand">
+          <UpvoteStarIcon
+            filled={displayPoints > 0}
+            active={displayPoints > 0}
+            gradientId={gradientId}
+          />
+          <span className="civic-points-stepper__overlay-label">Upvote</span>
+        </div>
+        <span
+          className="civic-points-stepper__budget"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {remainingPoints} of {CIVIC_POINTS_TOTAL} left
+        </span>
+      </div>
 
       <div
         className="civic-points-stepper__segments"
         role="radiogroup"
-        aria-label="Allocate Civic Points"
+        aria-label="Choose up to 3 Civic Points"
       >
         {segments.map((value) => {
           const filled = displayPoints >= value;
@@ -218,8 +277,8 @@ function CivicPointsOverlayUI({
           const disabled = isSegmentDisabled(value);
           const segmentLabel =
             active && isSignedIn
-              ? `Clear ${value} of ${maxForInvestment} Civic Points`
-              : `Allocate ${value} of ${maxForInvestment} Civic Points`;
+              ? `Clear ${value} of ${maxForInvestment} upvotes`
+              : `Upvote ${value} of ${maxForInvestment} Civic Points`;
 
           return (
             <button
@@ -234,15 +293,19 @@ function CivicPointsOverlayUI({
               disabled={disabled}
               onClick={() => handleSegmentSelect(value)}
             >
-              <span className="civic-points-stepper__segment-mark" aria-hidden="true" />
-              <span className="civic-points-stepper__segment-label">{value}</span>
+              <UpvoteStarIcon
+                filled={filled}
+                active={active}
+                gradientId={gradientId}
+              />
             </button>
           );
         })}
       </div>
 
       <p className="sr-only" aria-live="polite" aria-atomic="true">
-        {displayPoints} of {maxForInvestment} Civic Points allocated
+        {displayPoints} of {maxForInvestment} Civic Points allocated.{" "}
+        {remainingPoints} of {CIVIC_POINTS_TOTAL} remaining.
       </p>
 
       {error && (

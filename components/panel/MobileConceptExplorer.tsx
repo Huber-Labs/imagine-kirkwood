@@ -293,13 +293,6 @@ export function MobileConceptExplorer({
           )}
 
           <div className="concept-carousel__chrome">
-            {visibleSlide.futures.length > 1 && displayFuture && (
-              <ConceptSwitcher
-                futures={visibleSlide.futures}
-                activeFutureId={displayFuture.id}
-                onSelect={handleConceptSelect}
-              />
-            )}
             <div
               className="concept-carousel__dots"
               role="tablist"
@@ -324,6 +317,13 @@ export function MobileConceptExplorer({
       </div>
 
       <div className="mobile-concept-explorer__body px-5 pb-24 pt-4">
+        {visibleSlide.futures.length > 1 && displayFuture && (
+          <ConceptSwitcher
+            futures={visibleSlide.futures}
+            activeFutureId={displayFuture.id}
+            onSelect={handleConceptSelect}
+          />
+        )}
         {displayFuture && (
           <FutureSection
             key={`${visibleSlide.siteId}-${displayFuture.id}`}
@@ -332,7 +332,7 @@ export function MobileConceptExplorer({
             showHero={false}
             showEyebrow={false}
             headline="site"
-            showConceptSubtitle={visibleSlide.futures.length > 1}
+            showConceptSubtitle={false}
           />
         )}
       </div>
