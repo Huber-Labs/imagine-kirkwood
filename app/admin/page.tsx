@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOptionalProfile } from "@/lib/auth/session";
+import { fetchAdminConceptComments } from "@/lib/comments/actions";
 import { fetchAdminInvestmentTotals } from "@/lib/portfolio/actions";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 
@@ -26,6 +27,7 @@ export default async function AdminPage() {
     }
 
     const totals = await fetchAdminInvestmentTotals();
+    const comments = await fetchAdminConceptComments();
 
     return (
       <main className="admin-page mx-auto max-w-5xl px-6 py-12 sm:py-16">
@@ -45,7 +47,13 @@ export default async function AdminPage() {
               href="/admin/export"
               className="admin-page__export inline-flex items-center justify-center rounded-full border border-foreground/15 px-4 py-2 text-sm transition-colors hover:border-foreground/30"
             >
-              Download CSV
+              Download points CSV
+            </a>
+            <a
+              href="/admin/comments/export"
+              className="admin-page__export inline-flex items-center justify-center rounded-full border border-foreground/15 px-4 py-2 text-sm transition-colors hover:border-foreground/30"
+            >
+              Download comments CSV
             </a>
             <Link
               href="/explore"
@@ -93,6 +101,61 @@ export default async function AdminPage() {
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">
                     {row.uniqueInvestors}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="admin-page__section mt-12">
+          <div className="admin-page__header flex flex-col gap-2">
+            <p className="panel-eyebrow">Community voice</p>
+            <h2 className="font-[family-name:var(--font-instrument-serif)] text-2xl tracking-[-0.02em]">
+              Concept notes
+            </h2>
+            <p className="max-w-2xl text-sm leading-relaxed text-foreground/65">
+              Public notes left on concepts. One note per signed-in participant
+              per idea.
+            </p>
+          </div>
+        </div>
+
+        <div className="admin-page__table-wrap mt-6 overflow-x-auto rounded-2xl border border-foreground/10">
+          <table className="admin-page__table min-w-full text-left text-sm">
+            <thead className="border-b border-foreground/10 bg-foreground/[0.03]">
+              <tr>
+                <th className="px-4 py-3 font-medium">Place</th>
+                <th className="px-4 py-3 font-medium">Concept</th>
+                <th className="px-4 py-3 font-medium">Author</th>
+                <th className="px-4 py-3 font-medium">Note</th>
+                <th className="px-4 py-3 font-medium">Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comments.length === 0 && (
+                <tr>
+                  <td
+                    className="px-4 py-8 text-center text-foreground/55"
+                    colSpan={5}
+                  >
+                    No concept notes yet.
+                  </td>
+                </tr>
+              )}
+              {comments.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-foreground/6 last:border-b-0"
+                >
+                  <td className="px-4 py-3 align-top">{row.placeName}</td>
+                  <td className="px-4 py-3 align-top">{row.conceptTitle}</td>
+                  <td className="px-4 py-3 align-top">{row.authorDisplayName}</td>
+                  <td className="max-w-md px-4 py-3 align-top whitespace-pre-wrap">
+                    {row.body}
+                  </td>
+                  <td className="px-4 py-3 align-top tabular-nums text-foreground/65">
+                    {new Date(row.updatedAt).toLocaleDateString()}
                   </td>
                 </tr>
               ))}

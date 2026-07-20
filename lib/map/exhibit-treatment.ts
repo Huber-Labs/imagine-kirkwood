@@ -50,7 +50,10 @@ export const EXHIBIT_PAPER_TINT = {
   opacity: 0.06,
 } as const;
 
-/** Indiana University crimson — opportunity place markers. */
+/** Map opportunity place markers. */
+export const MAP_PIN_BLUE = "#4A90D9";
+
+/** Indiana University crimson — legacy accent reference. */
 export const IU_CRIMSON = "#990000";
 
 /** Kirkwood Avenue label traced along the street centerline. */

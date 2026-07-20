@@ -196,7 +196,7 @@ export function CivicPointsStepper({
       onPointerDown={(event) => event.stopPropagation()}
     >
       <p className="civic-points-stepper__label panel-eyebrow">
-        Invest Civic Points
+        {variant === "overlay" ? "Points" : "Invest Civic Points"}
       </p>
       <div className="civic-points-stepper__controls">
         <button

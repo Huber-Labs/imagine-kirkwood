@@ -5,7 +5,7 @@ import { toOpportunityLocationFields } from "@/lib/author/session";
 import type { AuthorPlace } from "@/lib/author/types";
 import { getPublishedFutureCount } from "@/lib/data/opportunity-sites";
 import { percentToViewBox } from "@/lib/map/calibration";
-import { IU_CRIMSON } from "@/lib/map/exhibit-treatment";
+import { MAP_PIN_BLUE } from "@/lib/map/exhibit-treatment";
 import {
   getLabelAnchor,
   getOpportunityLocation,
@@ -72,14 +72,14 @@ export function OpportunityPlaceMarker({
   const futureCount = site ? getPublishedFutureCount(site) : 0;
   const displayName = authorPlace?.title ?? site?.name ?? location.label;
 
-  const pinRadius = isSelected ? 10 : isHovered ? 6.25 : 5;
-  const hitRadius = isSelected ? 32 : authorMode ? 26 : 22;
+  const pinRadius = isSelected ? 20 : isHovered ? 12.5 : 10;
+  const hitRadius = isSelected ? 64 : authorMode ? 52 : 44;
 
   let pinFill: string;
   if (authorMode) {
     pinFill = isScouted ? SCOUTED_PIN_COLOR : COMMITTED_AUTHOR_PIN;
   } else {
-    const markerColor = isAuthored ? IU_CRIMSON : "rgba(255,255,255,0.55)";
+    const markerColor = isAuthored ? MAP_PIN_BLUE : "rgba(255,255,255,0.55)";
     pinFill =
       isSelected || isHovered || isAuthored ? markerColor : "transparent";
   }
@@ -87,7 +87,7 @@ export function OpportunityPlaceMarker({
   const pinStroke =
     isSelected && authorMode ? "#FFE08A" : "rgba(255,255,255,0.96)";
   const pinStrokeWidth =
-    isSelected && authorMode ? 3.5 : isSelected ? 3 : isHovered ? 2 : 1.75;
+    isSelected && authorMode ? 4 : isSelected ? 3.5 : isHovered ? 2.5 : 2;
 
   const labelOpacity = isSelected
     ? 1
@@ -175,7 +175,7 @@ export function OpportunityPlaceMarker({
         <circle
           cx={pin.x}
           cy={pin.y}
-          r={pinRadius + 5}
+          r={pinRadius + 8}
           fill="none"
           stroke="rgba(255,255,255,0.72)"
           strokeWidth={1.5}
@@ -188,7 +188,7 @@ export function OpportunityPlaceMarker({
         <circle
           cx={pin.x}
           cy={pin.y}
-          r={pinRadius + 4}
+          r={pinRadius + 6}
           fill="none"
           stroke="rgba(255,255,255,0.5)"
           strokeWidth={1.25}
