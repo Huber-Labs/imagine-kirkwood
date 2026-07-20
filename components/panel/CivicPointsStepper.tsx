@@ -24,11 +24,7 @@ export function CivicPointsBar() {
     });
   }, [refreshPortfolio]);
 
-  if (!isConfigured) {
-    return null;
-  }
-
-  if (!user) {
+  if (!isConfigured || !user) {
     return (
       <div className="civic-points-bar civic-points-bar--prompt">
         <p className="civic-points-bar__copy">
@@ -139,17 +135,7 @@ export function CivicPointsStepper({
     [investment, refreshPortfolio],
   );
 
-  if (!isConfigured || !investment) {
-    return null;
-  }
-
-  const isSaved = portfolio?.status === "saved";
-  const participationOpen = portfolio?.participationOpen ?? true;
-  const readOnly = isSaved || !participationOpen;
-  const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
-  const maxForInvestment = investment.pointLimit;
-
-  if (!user) {
+  if (!isConfigured || !user) {
     return (
       <div className="civic-points-stepper civic-points-stepper--prompt">
         <p className="civic-points-stepper__hint">
@@ -165,6 +151,16 @@ export function CivicPointsStepper({
       </div>
     );
   }
+
+  if (!investment) {
+    return null;
+  }
+
+  const isSaved = portfolio?.status === "saved";
+  const participationOpen = portfolio?.participationOpen ?? true;
+  const readOnly = isSaved || !participationOpen;
+  const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
+  const maxForInvestment = investment.pointLimit;
 
   return (
     <div className="civic-points-stepper">
