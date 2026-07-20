@@ -15,8 +15,15 @@ import {
 } from "@/lib/data/opportunity-sites";
 import { AUTHOR_MODE_URL, isAuthorModeEnabled } from "@/lib/author/mode";
 import { migrateEngagementStorage } from "@/lib/engagement/migrate";
-import { parseExploreParams } from "@/lib/engagement/explore-url";
+import {
+  DEFAULT_EXPLORE_SITE_ID,
+} from "@/lib/engagement/explore-slides";
+import {
+  getDefaultConceptForSite,
+  parseExploreParams,
+} from "@/lib/engagement/explore-url";
 import { preloadConceptImage } from "@/lib/images";
+import { useIsMobile } from "@/lib/ui/use-is-mobile";
 
 function readInitialExploreState(
   searchParams: ReturnType<typeof useSearchParams>,
@@ -32,6 +39,7 @@ function readInitialExploreState(
 export function MapExperience() {
   const searchParams = useSearchParams();
   const authorMode = isAuthorModeEnabled(searchParams);
+  const isMobile = useIsMobile();
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(
     () => (authorMode ? null : readInitialExploreState(searchParams).selectedSiteId),
   );
@@ -49,6 +57,25 @@ export function MapExperience() {
   useEffect(() => {
     migrateEngagementStorage();
   }, []);
+
+  useEffect(() => {
+    if (authorMode || !isMobile) return;
+
+    const { siteId, conceptId } = parseExploreParams(
+      new URLSearchParams(window.location.search),
+    );
+
+    if (!siteId) {
+      setSelectedSiteId(DEFAULT_EXPLORE_SITE_ID);
+      setFocusedConceptId(getDefaultConceptForSite(DEFAULT_EXPLORE_SITE_ID));
+      setPanelOpen(true);
+      return;
+    }
+
+    if (!conceptId) {
+      setFocusedConceptId(getDefaultConceptForSite(siteId));
+    }
+  }, [authorMode, isMobile]);
 
   useEffect(() => {
     if (!selectedSite) return;
@@ -76,20 +103,35 @@ export function MapExperience() {
     window.history.replaceState(null, "", "/explore");
   }, [authorMode, selectedSiteId, focusedConceptId, panelOpen]);
 
-  const handleSelectSite = useCallback((id: string) => {
-    const site = getOpportunitySiteById(id);
-    const future = site ? getDefaultFuture(site) : undefined;
+  const handleSelectSite = useCallback(
+    (id: string) => {
+      const site = getOpportunitySiteById(id);
+      const future = site ? getDefaultFuture(site) : undefined;
+      if (future?.image) {
+        preloadConceptImage(future.image);
+      }
+      setSelectedSiteId(id);
+      setFocusedConceptId(isMobile ? getDefaultConceptForSite(id) : null);
+      setPanelOpen(true);
+    },
+    [isMobile],
+  );
+
+  const handleClosePanel = useCallback(() => {
+    if (isMobile) return;
+    setPanelOpen(false);
+    setFocusedConceptId(null);
+  }, [isMobile]);
+
+  const handleConceptChange = useCallback((siteId: string, conceptId: string) => {
+    const site = getOpportunitySiteById(siteId);
+    const future = site?.futures.find((item) => item.id === conceptId);
     if (future?.image) {
       preloadConceptImage(future.image);
     }
-    setSelectedSiteId(id);
-    setFocusedConceptId(null);
+    setSelectedSiteId(siteId);
+    setFocusedConceptId(conceptId);
     setPanelOpen(true);
-  }, []);
-
-  const handleClosePanel = useCallback(() => {
-    setPanelOpen(false);
-    setFocusedConceptId(null);
   }, []);
 
   const handleAuthorSelectBlocked = useCallback(() => {}, []);
@@ -180,7 +222,9 @@ export function MapExperience() {
         <SlideOutPanel
           site={selectedSite}
           focusedConceptId={focusedConceptId}
-          isOpen={panelOpen && selectedSite !== null}
+          isOpen={(panelOpen && selectedSite !== null) || (isMobile && selectedSite !== null)}
+          isMobileExplore={isMobile}
+          onConceptChange={handleConceptChange}
           onClose={handleClosePanel}
         />
       )}

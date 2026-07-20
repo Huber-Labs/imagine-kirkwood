@@ -1261,6 +1261,95 @@ body {
   }
 }
 
+.concept-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 0.25rem;
+}
+
+.concept-carousel__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.concept-carousel__hint {
+  margin: 0;
+}
+
+.concept-carousel__counter {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 45%, transparent);
+}
+
+.concept-carousel__track {
+  display: flex;
+  gap: 0.625rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.25rem;
+  padding-inline: 1.25rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.concept-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.concept-carousel__slide {
+  flex: 0 0 84%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  opacity: 0.72;
+  transform: scale(0.985);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.concept-carousel__slide--active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.concept-carousel__place {
+  margin: 0 0 0.5rem;
+}
+
+.concept-carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.375rem;
+  padding-inline: 1.25rem;
+}
+
+.concept-carousel__dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: color-mix(in srgb, var(--foreground) 18%, transparent);
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.concept-carousel__dot--active {
+  background: color-mix(in srgb, var(--foreground) 62%, transparent);
+  transform: scale(1.15);
+}
+
+.mobile-concept-explorer__body .civic-points-dock--concept {
+  position: static;
+  border-bottom: none;
+}
+
 .civic-points-bar--prompt,
 .civic-points-stepper--prompt {
   border-top: none;

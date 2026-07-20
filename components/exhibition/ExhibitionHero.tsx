@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
+import { buildExploreUrl } from "@/lib/engagement/explore-url";
+import { DEFAULT_EXPLORE_SITE_ID } from "@/lib/engagement/explore-slides";
 import {
   EXHIBITION_HERO_INTERVAL_MS,
   EXHIBITION_HERO_STAGES,
@@ -90,7 +92,9 @@ export function ExhibitionHero() {
           plazas, and gathering spaces.
         </p>
         <div className="mt-8 flex justify-center sm:mt-10 sm:justify-start">
-          <Button href="/explore">Explore the Map</Button>
+          <Button href={buildExploreUrl(DEFAULT_EXPLORE_SITE_ID)}>
+            Explore the Map
+          </Button>
         </div>
       </div>
     </section>
