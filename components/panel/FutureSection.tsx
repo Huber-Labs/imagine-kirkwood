@@ -38,6 +38,12 @@ export function FutureSection({
       className="future-section scroll-mt-4"
       aria-labelledby={`future-title-${future.id}`}
     >
+      {!isComingSoon && (
+        <div className="civic-points-dock civic-points-dock--concept">
+          <CivicPointsStepper siteId={site.id} futureId={future.id} />
+        </div>
+      )}
+
       {showEyebrow && (
         <p className="future-section__eyebrow panel-eyebrow">{site.name}</p>
       )}
@@ -51,12 +57,6 @@ export function FutureSection({
             alt={future.alt}
             isComingSoon={isComingSoon}
           />
-        </div>
-      )}
-
-      {!isComingSoon && (
-        <div className="pt-4 sm:pt-5">
-          <CivicPointsStepper siteId={site.id} futureId={future.id} />
         </div>
       )}
 
