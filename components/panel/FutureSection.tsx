@@ -70,10 +70,7 @@ export function FutureSection({
         }`}
       >
         {placeStory && (
-          <section className="place-story space-y-4">
-            <p className="place-story__today font-[family-name:var(--font-instrument-serif)] text-[1.0625rem] leading-[1.55] text-foreground/82 sm:text-[1.125rem]">
-              {placeStory.today}
-            </p>
+          <section className="place-story">
             <p className="place-story__what-if font-[family-name:var(--font-instrument-serif)] text-[1.25rem] leading-[1.4] tracking-[-0.01em] text-foreground sm:text-[1.375rem]">
               {placeStory.whatIf}
             </p>
