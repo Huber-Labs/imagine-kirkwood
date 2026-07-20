@@ -216,9 +216,6 @@ export function MobileConceptExplorer({
           )}
 
           <div className="concept-carousel__chrome">
-            <p className="concept-carousel__place panel-eyebrow">
-              {visibleSlide?.site.name}
-            </p>
             <div
               className="concept-carousel__dots"
               role="tablist"
@@ -249,6 +246,7 @@ export function MobileConceptExplorer({
           future={activeSlide.future}
           showHero={false}
           showEyebrow={false}
+          headline="site"
         />
       </div>
     </article>

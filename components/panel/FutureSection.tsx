@@ -17,6 +17,7 @@ interface FutureSectionProps {
     today: string;
     whatIf: string;
   } | null;
+  headline?: "site" | "concept";
 }
 
 export function FutureSection({
@@ -27,10 +28,14 @@ export function FutureSection({
   showHero = true,
   showEyebrow = true,
   placeStory = null,
+  headline = "concept",
 }: FutureSectionProps) {
   const isComingSoon = future.status === "coming-soon";
   const perfectFor = getPerfectForLabels(future);
-  const hideTitle = future.title === site.name;
+  const showSiteName = headline === "site";
+  const hideConceptTitle = !showSiteName && future.title === site.name;
+  const headingClassName =
+    "font-[family-name:var(--font-instrument-serif)] text-[1.5rem] leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[1.75rem]";
 
   return (
     <section
@@ -74,18 +79,23 @@ export function FutureSection({
         )}
 
         <header className="space-y-2">
-          {!hideTitle && (
-            <h3
-              id={`future-title-${future.id}`}
-              className="font-[family-name:var(--font-instrument-serif)] text-[1.5rem] leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[1.75rem]"
-            >
+          {showSiteName && (
+            <h3 id={`future-title-${future.id}`} className={headingClassName}>
+              {site.name}
+            </h3>
+          )}
+          {!showSiteName && !hideConceptTitle && (
+            <h3 id={`future-title-${future.id}`} className={headingClassName}>
               {future.title}
             </h3>
           )}
-          {hideTitle && (
+          {!showSiteName && hideConceptTitle && (
             <h3 id={`future-title-${future.id}`} className="sr-only">
               {future.title}
             </h3>
+          )}
+          {showSiteName && future.title !== site.name && (
+            <p className="sr-only">{future.title}</p>
           )}
           <p className="future-section__description text-[0.9375rem] leading-[1.65] text-foreground/78 sm:text-base sm:leading-[1.7]">
             {future.description}

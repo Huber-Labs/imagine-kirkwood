@@ -1707,10 +1707,6 @@ body {
   transform: scale(1);
 }
 
-.concept-carousel__place {
-  margin: 0;
-}
-
 .concept-carousel__chrome {
   position: absolute;
   inset-inline: 0;
@@ -1719,7 +1715,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 2rem 1rem 0.875rem;
+  padding: 1.25rem 1rem 0.875rem;
   pointer-events: none;
   background: linear-gradient(
     to top,
@@ -1790,10 +1786,6 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding-right: 3.25rem;
-}
-
-.concept-carousel__chrome .concept-carousel__place {
-  color: rgba(255, 255, 255, 0.92);
 }
 
 .concept-carousel__dots {
