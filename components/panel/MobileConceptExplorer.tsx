@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CivicPointsBar } from "@/components/panel/CivicPointsStepper";
 import { FutureHero } from "@/components/panel/FutureHero";
 import { FutureSection } from "@/components/panel/FutureSection";
+import { useParticipate } from "@/components/participate/ParticipateProvider";
 import {
   findExploreSlideIndex,
   getExploreSlides,
@@ -20,6 +21,7 @@ export function MobileConceptExplorer({
   conceptId,
   onConceptChange,
 }: MobileConceptExplorerProps) {
+  const { user } = useParticipate();
   const slides = useMemo(() => getExploreSlides(), []);
   const activeIndex = findExploreSlideIndex(siteId, conceptId);
   const activeSlide = slides[activeIndex] ?? slides[0];
@@ -109,9 +111,11 @@ export function MobileConceptExplorer({
       className="mobile-concept-explorer flex flex-col"
       style={{ "--hero-accent": activeSlide.site.accent } as React.CSSProperties}
     >
-      <div className="civic-points-dock civic-points-dock--site px-5">
-        <CivicPointsBar />
-      </div>
+      {user && (
+        <div className="civic-points-dock civic-points-dock--site px-5">
+          <CivicPointsBar />
+        </div>
+      )}
 
       <div className="concept-carousel">
         <div className="concept-carousel__header px-5">
@@ -144,6 +148,9 @@ export function MobileConceptExplorer({
                 accent={slide.site.accent}
                 image={slide.future.image}
                 alt={slide.future.alt}
+                siteId={slide.siteId}
+                futureId={slide.conceptId}
+                showVoting
               />
             </div>
           ))}

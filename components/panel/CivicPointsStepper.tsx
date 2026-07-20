@@ -4,11 +4,10 @@ import { useCallback, useMemo, useState, useTransition } from "react";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 import { resolveInvestment } from "@/lib/portfolio/catalog";
 import { savePortfolio, setInvestmentPoints } from "@/lib/portfolio/actions";
-import { CIVIC_POINTS_TOTAL } from "@/lib/portfolio/tags";
+import { CIVIC_POINTS_TOTAL, MAX_POINTS_PER_INVESTMENT } from "@/lib/portfolio/tags";
 
 export function CivicPointsBar() {
-  const { isConfigured, user, portfolio, openSignIn, refreshPortfolio } =
-    useParticipate();
+  const { user, portfolio, refreshPortfolio } = useParticipate();
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -24,22 +23,8 @@ export function CivicPointsBar() {
     });
   }, [refreshPortfolio]);
 
-  if (!isConfigured || !user) {
-    return (
-      <div className="civic-points-bar civic-points-bar--prompt">
-        <p className="civic-points-bar__copy">
-          Where would you invest limited resources? Sign in to allocate{" "}
-          {CIVIC_POINTS_TOTAL} Civic Points across Kirkwood ideas.
-        </p>
-        <button
-          type="button"
-          className="civic-points-bar__cta"
-          onClick={openSignIn}
-        >
-          Sign in to prioritize
-        </button>
-      </div>
-    );
+  if (!user) {
+    return null;
   }
 
   const totalPoints = portfolio?.totalPoints ?? 0;
@@ -88,14 +73,15 @@ export function CivicPointsBar() {
 interface CivicPointsStepperProps {
   siteId: string;
   futureId: string;
+  variant?: "default" | "overlay";
 }
 
 export function CivicPointsStepper({
   siteId,
   futureId,
+  variant = "default",
 }: CivicPointsStepperProps) {
   const {
-    isConfigured,
     user,
     portfolio,
     catalogIndex,
@@ -135,35 +121,80 @@ export function CivicPointsStepper({
     [investment, refreshPortfolio],
   );
 
-  if (!isConfigured || !user) {
-    return (
-      <div className="civic-points-stepper civic-points-stepper--prompt">
-        <p className="civic-points-stepper__hint">
-          Sign in to allocate Civic Points to this idea.
-        </p>
-        <button
-          type="button"
-          className="civic-points-stepper__sign-in"
-          onClick={openSignIn}
-        >
-          Sign in
-        </button>
-      </div>
-    );
-  }
-
-  if (!investment) {
-    return null;
-  }
-
+  const isSignedIn = Boolean(user);
   const isSaved = portfolio?.status === "saved";
   const participationOpen = portfolio?.participationOpen ?? true;
-  const readOnly = isSaved || !participationOpen;
+  const readOnly = isSignedIn && (isSaved || !participationOpen);
   const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
-  const maxForInvestment = investment.pointLimit;
+  const maxForInvestment = investment?.pointLimit ?? MAX_POINTS_PER_INVESTMENT;
+  const displayPoints = isSignedIn ? currentPoints : 0;
+
+  const requestSignIn = useCallback(() => {
+    openSignIn();
+  }, [openSignIn]);
+
+  const handleDecrement = useCallback(() => {
+    if (!isSignedIn) {
+      requestSignIn();
+      return;
+    }
+    if (!investment || readOnly || isPending || currentPoints <= 0) return;
+    updatePoints(currentPoints - 1);
+  }, [
+    currentPoints,
+    investment,
+    isPending,
+    isSignedIn,
+    readOnly,
+    requestSignIn,
+    updatePoints,
+  ]);
+
+  const handleIncrement = useCallback(() => {
+    if (!isSignedIn) {
+      requestSignIn();
+      return;
+    }
+    if (
+      !investment ||
+      readOnly ||
+      isPending ||
+      currentPoints >= maxForInvestment ||
+      remainingPoints <= 0
+    ) {
+      return;
+    }
+    updatePoints(currentPoints + 1);
+  }, [
+    currentPoints,
+    investment,
+    isPending,
+    isSignedIn,
+    maxForInvestment,
+    readOnly,
+    remainingPoints,
+    requestSignIn,
+    updatePoints,
+  ]);
+
+  const decrementDisabled =
+    isSignedIn && (readOnly || isPending || currentPoints <= 0 || !investment);
+  const incrementDisabled =
+    isSignedIn &&
+    (readOnly ||
+      isPending ||
+      !investment ||
+      currentPoints >= maxForInvestment ||
+      remainingPoints <= 0);
 
   return (
-    <div className="civic-points-stepper">
+    <div
+      className={`civic-points-stepper${
+        variant === "overlay" ? " civic-points-stepper--overlay" : ""
+      }`}
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+    >
       <p className="civic-points-stepper__label panel-eyebrow">
         Invest Civic Points
       </p>
@@ -172,13 +203,13 @@ export function CivicPointsStepper({
           type="button"
           className="civic-points-stepper__button"
           aria-label="Remove one point"
-          disabled={readOnly || isPending || currentPoints <= 0}
-          onClick={() => updatePoints(currentPoints - 1)}
+          disabled={decrementDisabled}
+          onClick={handleDecrement}
         >
           −
         </button>
         <span className="civic-points-stepper__value" aria-live="polite">
-          {currentPoints}
+          {displayPoints}
           <span className="civic-points-stepper__max">
             / {maxForInvestment}
           </span>
@@ -187,13 +218,8 @@ export function CivicPointsStepper({
           type="button"
           className="civic-points-stepper__button"
           aria-label="Add one point"
-          disabled={
-            readOnly ||
-            isPending ||
-            currentPoints >= maxForInvestment ||
-            remainingPoints <= 0
-          }
-          onClick={() => updatePoints(currentPoints + 1)}
+          disabled={incrementDisabled}
+          onClick={handleIncrement}
         >
           +
         </button>

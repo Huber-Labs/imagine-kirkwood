@@ -1,7 +1,6 @@
 "use client";
 
 import { getPerfectForLabels } from "@/lib/concepts/qualities";
-import { CivicPointsStepper } from "@/components/panel/CivicPointsStepper";
 import { FutureEngagement } from "@/components/panel/FutureEngagement";
 import { FutureHero } from "@/components/panel/FutureHero";
 import type { OpportunitySite, PlaceFuture } from "@/lib/types";
@@ -38,12 +37,6 @@ export function FutureSection({
       className="future-section scroll-mt-4"
       aria-labelledby={`future-title-${future.id}`}
     >
-      {!isComingSoon && (
-        <div className="civic-points-dock civic-points-dock--concept">
-          <CivicPointsStepper siteId={site.id} futureId={future.id} />
-        </div>
-      )}
-
       {showEyebrow && (
         <p className="future-section__eyebrow panel-eyebrow">{site.name}</p>
       )}
@@ -56,6 +49,9 @@ export function FutureSection({
             image={future.image}
             alt={future.alt}
             isComingSoon={isComingSoon}
+            siteId={site.id}
+            futureId={future.id}
+            showVoting={!isComingSoon}
           />
         </div>
       )}

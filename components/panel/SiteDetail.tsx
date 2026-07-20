@@ -2,6 +2,7 @@
 
 import { CivicPointsBar } from "@/components/panel/CivicPointsStepper";
 import { FutureExhibition } from "@/components/panel/FutureExhibition";
+import { useParticipate } from "@/components/participate/ParticipateProvider";
 import type { OpportunitySite } from "@/lib/types";
 
 interface SiteDetailProps {
@@ -10,14 +11,18 @@ interface SiteDetailProps {
 }
 
 export function SiteDetail({ site, focusedConceptId }: SiteDetailProps) {
+  const { user } = useParticipate();
+
   return (
     <article
       className="flex flex-col"
       style={{ "--hero-accent": site.accent } as React.CSSProperties}
     >
-      <div className="civic-points-dock civic-points-dock--site px-5 sm:px-8">
-        <CivicPointsBar />
-      </div>
+      {user && (
+        <div className="civic-points-dock civic-points-dock--site px-5 sm:px-8">
+          <CivicPointsBar />
+        </div>
+      )}
 
       {!focusedConceptId && (
         <header className="panel-rise px-5 pb-3 pt-4 sm:px-8 sm:pb-3 sm:pt-6">
