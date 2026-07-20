@@ -2,6 +2,7 @@
 
 import { CivicPointsBar } from "@/components/panel/CivicPointsStepper";
 import { FutureExhibition } from "@/components/panel/FutureExhibition";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 import { useParticipate } from "@/components/participate/ParticipateProvider";
 import type { OpportunitySite } from "@/lib/types";
 
@@ -40,6 +41,7 @@ export function SiteDetail({ site, focusedConceptId }: SiteDetailProps) {
         }`}
       >
         <FutureExhibition site={site} focusedConceptId={focusedConceptId} />
+        <SiteFooter />
       </div>
     </article>
   );

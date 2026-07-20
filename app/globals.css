@@ -240,6 +240,35 @@ body {
   color: rgb(255 255 255 / 0.6);
 }
 
+.site-footer {
+  flex-shrink: 0;
+  padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.site-footer__text {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--foreground) 46%, transparent);
+}
+
+.site-footer--exhibition {
+  background: #141310;
+}
+
+.site-footer--exhibition .site-footer__text {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.site-footer:not(.site-footer--exhibition) {
+  margin-top: 1.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .story-photo {
   border-radius: 2px;
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FutureHero } from "@/components/panel/FutureHero";
 import { FutureSection } from "@/components/panel/FutureSection";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 import {
   findExploreSlideIndex,
   getExploreSlides,
@@ -335,6 +336,7 @@ export function MobileConceptExplorer({
             showConceptSubtitle={false}
           />
         )}
+        <SiteFooter />
       </div>
     </article>
   );
