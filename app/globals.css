@@ -1098,8 +1098,16 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  padding-top: 0.25rem;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
   border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+@media (min-width: 640px) {
+  .concept-comments {
+    margin-top: 1.25rem;
+    padding-top: 1.5rem;
+  }
 }
 
 .concept-comments__header {
