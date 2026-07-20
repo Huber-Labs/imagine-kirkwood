@@ -42,6 +42,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
+Use either `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Supabase dashboard label) for the public key.
+
 - **Anon key** — safe for browser (RLS enforced).
 - **Service role key** — server only (admin aggregates in Phase 5). Never expose to the client.
 

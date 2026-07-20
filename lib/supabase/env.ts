@@ -10,6 +10,10 @@ function normalizeSupabaseUrl(raw: string): string | null {
     url = `h${url}`;
   }
 
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) {
+    url = `https://${url}`;
+  }
+
   try {
     const parsed = new URL(url);
     if (parsed.protocol !== "https:") {
@@ -22,6 +26,13 @@ function normalizeSupabaseUrl(raw: string): string | null {
   } catch {
     return null;
   }
+}
+
+function readAnonKey() {
+  return (
+    trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ??
+    trimEnv(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
+  );
 }
 
 export type SupabasePublicConfig = {
@@ -42,7 +53,7 @@ export function getSupabaseEnv():
   | { url: string; anonKey: string; serviceRoleKey: string | undefined }
   | null {
   const url = normalizeSupabaseUrl(trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL) ?? "");
-  const anonKey = trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const anonKey = readAnonKey();
 
   if (!url || !anonKey) {
     return null;
