@@ -799,7 +799,8 @@ body {
   max-width: calc(100% - 1rem);
 }
 
-.future-hero__expand-hint {
+.future-hero__expand-hint,
+.future-hero__points-counter {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
@@ -1878,7 +1879,8 @@ body {
     font-size: 0.75rem;
   }
 
-  .mobile-concept-explorer .future-hero__expand-hint {
+  .mobile-concept-explorer .future-hero__expand-hint,
+  .mobile-concept-explorer .future-hero__points-counter {
     top: 0.625rem;
     right: 0.625rem;
   }
