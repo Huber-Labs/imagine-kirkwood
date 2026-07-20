@@ -12,7 +12,7 @@ export function SiteFooter({ variant = "default" }: SiteFooterProps) {
       }`}
     >
       <p className="site-footer__text">
-        Built by Huber Labs&nbsp;|&nbsp;Copyright 2026 All rights reserved
+        Built by Huber Labs&nbsp;|&nbsp;&copy; 2026 All rights reserved
       </p>
     </footer>
   );
