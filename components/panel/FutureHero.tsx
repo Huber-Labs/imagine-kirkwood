@@ -14,6 +14,7 @@ interface FutureHeroProps {
   siteId?: string;
   futureId?: string;
   showVoting?: boolean;
+  immersive?: boolean;
 }
 
 function HeroLightbox({
@@ -74,6 +75,7 @@ export function FutureHero({
   siteId,
   futureId,
   showVoting = false,
+  immersive = false,
 }: FutureHeroProps) {
   const src = image || CONCEPT_PLACEHOLDER_PATH;
   const imageKey = `${src}-${isComingSoon}`;
@@ -99,7 +101,13 @@ export function FutureHero({
         className="future-hero relative w-full shrink-0"
         style={{ "--hero-accent": accent } as React.CSSProperties}
       >
-        <div className="future-hero__frame relative aspect-[4/3] w-full overflow-hidden bg-[color-mix(in_srgb,var(--hero-accent)_6%,var(--background))] sm:aspect-[16/10]">
+        <div
+          className={
+            immersive
+              ? "future-hero__frame future-hero__frame--immersive relative w-full overflow-hidden bg-[color-mix(in_srgb,var(--hero-accent)_6%,var(--background))]"
+              : "future-hero__frame relative aspect-[4/3] w-full overflow-hidden bg-[color-mix(in_srgb,var(--hero-accent)_6%,var(--background))] sm:aspect-[16/10]"
+          }
+        >
           <button
             type="button"
             className="future-hero__zoom"

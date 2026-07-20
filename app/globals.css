@@ -1750,9 +1750,31 @@ body {
 }
 
 @media (max-width: 767px) {
-  .mobile-concept-explorer .future-hero__frame {
-    aspect-ratio: auto;
-    min-height: clamp(18rem, 56dvh, 28rem);
+  .mobile-concept-explorer .concept-carousel__track {
+    gap: 0;
+    padding-inline: 0;
+    scroll-padding-inline: 0;
+  }
+
+  .mobile-concept-explorer .concept-carousel__slide {
+    flex-basis: 100%;
+  }
+
+  .mobile-concept-explorer .future-hero__frame--immersive {
+    aspect-ratio: unset;
+    height: clamp(18rem, 56dvh, 28rem);
+  }
+
+  .mobile-concept-explorer .future-hero__frame--immersive .future-hero__zoom {
+    position: absolute;
+    inset: 0;
+  }
+
+  .mobile-concept-explorer .future-hero__frame--immersive .future-hero__zoom img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 40%;
   }
 
   .mobile-concept-explorer .future-hero__voting {

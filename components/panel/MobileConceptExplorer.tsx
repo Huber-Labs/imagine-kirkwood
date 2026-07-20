@@ -132,6 +132,7 @@ export function MobileConceptExplorer({
                   siteId={slide.siteId}
                   futureId={slide.conceptId}
                   showVoting
+                  immersive
                 />
               </div>
             ))}
