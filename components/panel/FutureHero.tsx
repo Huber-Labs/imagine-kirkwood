@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { CONCEPT_PLACEHOLDER_PATH } from "@/lib/concepts";
 import { CivicPointsStepper } from "@/components/panel/CivicPointsStepper";
 
@@ -146,9 +147,15 @@ export function FutureHero({
         </div>
       </figure>
 
-      {lightboxOpen && (
-        <HeroLightbox src={lightboxSrc} alt={alt || siteName} onClose={closeLightbox} />
-      )}
+      {lightboxOpen &&
+        createPortal(
+          <HeroLightbox
+            src={lightboxSrc}
+            alt={alt || siteName}
+            onClose={closeLightbox}
+          />,
+          document.body,
+        )}
     </>
   );
 }
