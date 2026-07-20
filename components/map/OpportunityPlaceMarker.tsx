@@ -111,7 +111,7 @@ export function OpportunityPlaceMarker({
     <g
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`place-marker ${isSelected ? "place-marker--selected" : ""} ${isAuthored ? "place-marker--authored" : "place-marker--placeholder"}${isScouted ? " place-marker--scouted" : ""}`}
+      className={`place-marker ${isSelected ? "place-marker--selected" : ""} ${isHovered ? "place-marker--hovered" : ""} ${authorMode ? "place-marker--author" : ""} ${isAuthored ? "place-marker--authored" : "place-marker--placeholder"}${isScouted ? " place-marker--scouted" : ""}`}
       style={{ cursor: authorMode ? "grab" : "pointer" }}
     >
       <g

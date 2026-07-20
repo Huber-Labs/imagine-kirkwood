@@ -42,11 +42,7 @@ interface CivicPointsStepperProps {
   variant?: "default" | "overlay";
 }
 
-export function CivicPointsStepper({
-  siteId,
-  futureId,
-  variant = "default",
-}: CivicPointsStepperProps) {
+function useCivicPointsAllocation(siteId: string, futureId: string) {
   const {
     user,
     portfolio,
@@ -93,84 +89,234 @@ export function CivicPointsStepper({
   const remainingPoints = portfolio?.remainingPoints ?? CIVIC_POINTS_TOTAL;
   const maxForInvestment = investment?.pointLimit ?? MAX_POINTS_PER_INVESTMENT;
   const displayPoints = isSignedIn ? currentPoints : 0;
+  const maxAffordable = Math.min(
+    maxForInvestment,
+    currentPoints + remainingPoints,
+  );
 
   const requestSignIn = useCallback(() => {
     openSignIn();
   }, [openSignIn]);
 
-  const handleDecrement = useCallback(() => {
-    if (!isSignedIn) {
-      requestSignIn();
-      return;
-    }
-    if (!investment || readOnly || isPending || currentPoints <= 0) return;
-    updatePoints(currentPoints - 1);
-  }, [
+  return {
     currentPoints,
+    displayPoints,
+    error,
     investment,
     isPending,
     isSignedIn,
-    readOnly,
-    requestSignIn,
-    updatePoints,
-  ]);
-
-  const handleIncrement = useCallback(() => {
-    if (!isSignedIn) {
-      requestSignIn();
-      return;
-    }
-    if (
-      !investment ||
-      readOnly ||
-      isPending ||
-      currentPoints >= maxForInvestment ||
-      remainingPoints <= 0
-    ) {
-      return;
-    }
-    updatePoints(currentPoints + 1);
-  }, [
-    currentPoints,
-    investment,
-    isPending,
-    isSignedIn,
+    maxAffordable,
     maxForInvestment,
     readOnly,
     remainingPoints,
     requestSignIn,
     updatePoints,
-  ]);
+  };
+}
 
-  const decrementDisabled =
-    isSignedIn && (readOnly || isPending || currentPoints <= 0 || !investment);
-  const incrementDisabled =
-    isSignedIn &&
-    (readOnly ||
-      isPending ||
-      !investment ||
-      currentPoints >= maxForInvestment ||
-      remainingPoints <= 0);
+interface OverlayAllocationProps {
+  currentPoints: number;
+  displayPoints: number;
+  error: string | null;
+  investment: ReturnType<typeof resolveInvestment>;
+  isPending: boolean;
+  isSignedIn: boolean;
+  maxAffordable: number;
+  maxForInvestment: number;
+  readOnly: boolean;
+  requestSignIn: () => void;
+  updatePoints: (nextPoints: number) => void;
+}
+
+function CivicPointsOverlayUI({
+  currentPoints,
+  displayPoints,
+  error,
+  investment,
+  isPending,
+  isSignedIn,
+  maxAffordable,
+  maxForInvestment,
+  readOnly,
+  requestSignIn,
+  updatePoints,
+}: OverlayAllocationProps) {
+  const segments = useMemo(
+    () => Array.from({ length: maxForInvestment }, (_, index) => index + 1),
+    [maxForInvestment],
+  );
+
+  const isSegmentDisabled = useCallback(
+    (value: number) => {
+      if (!isSignedIn) return false;
+      if (readOnly || isPending || !investment) return true;
+      if (value > maxForInvestment) return true;
+      if (value === currentPoints) return false;
+      return value > maxAffordable;
+    },
+    [
+      currentPoints,
+      investment,
+      isPending,
+      isSignedIn,
+      maxAffordable,
+      maxForInvestment,
+      readOnly,
+    ],
+  );
+
+  const handleSegmentSelect = useCallback(
+    (value: number) => {
+      if (!isSignedIn) {
+        requestSignIn();
+        return;
+      }
+      if (readOnly || isPending || !investment) return;
+
+      if (currentPoints === value) {
+        updatePoints(0);
+        return;
+      }
+
+      if (value <= maxForInvestment && value <= maxAffordable) {
+        updatePoints(value);
+      }
+    },
+    [
+      currentPoints,
+      investment,
+      isPending,
+      isSignedIn,
+      maxAffordable,
+      maxForInvestment,
+      readOnly,
+      requestSignIn,
+      updatePoints,
+    ],
+  );
 
   return (
     <div
-      className={`civic-points-stepper${
-        variant === "overlay" ? " civic-points-stepper--overlay" : ""
-      }`}
-      aria-label={variant === "overlay" ? "Vote with Civic Points" : undefined}
+      className="civic-points-stepper civic-points-stepper--overlay"
+      role="group"
+      aria-label="Invest up to 3 Civic Points in this idea"
       onClick={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
     >
-      {variant === "overlay" && (
-        <p className="civic-points-stepper__overlay-label" aria-hidden="true">
-          Vote
+      <p className="civic-points-stepper__overlay-label panel-eyebrow">
+        Civic Points
+      </p>
+
+      <div
+        className="civic-points-stepper__segments"
+        role="radiogroup"
+        aria-label="Allocate Civic Points"
+      >
+        {segments.map((value) => {
+          const filled = displayPoints >= value;
+          const active = displayPoints === value;
+          const disabled = isSegmentDisabled(value);
+          const segmentLabel =
+            active && isSignedIn
+              ? `Clear ${value} of ${maxForInvestment} Civic Points`
+              : `Allocate ${value} of ${maxForInvestment} Civic Points`;
+
+          return (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              className={`civic-points-stepper__segment${
+                filled ? " civic-points-stepper__segment--filled" : ""
+              }${active ? " civic-points-stepper__segment--active" : ""}`}
+              aria-checked={active}
+              aria-label={segmentLabel}
+              disabled={disabled}
+              onClick={() => handleSegmentSelect(value)}
+            >
+              <span className="civic-points-stepper__segment-mark" aria-hidden="true" />
+              <span className="civic-points-stepper__segment-label">{value}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {displayPoints} of {maxForInvestment} Civic Points allocated
+      </p>
+
+      {error && (
+        <p className="civic-points-stepper__error" role="alert">
+          {error}
         </p>
       )}
-      {variant !== "overlay" && (
-        <p className="civic-points-stepper__label panel-eyebrow">
-          Invest Civic Points
-        </p>
-      )}
+    </div>
+  );
+}
+
+export function CivicPointsStepper({
+  siteId,
+  futureId,
+  variant = "default",
+}: CivicPointsStepperProps) {
+  const allocation = useCivicPointsAllocation(siteId, futureId);
+
+  const handleDecrement = useCallback(() => {
+    if (!allocation.isSignedIn) {
+      allocation.requestSignIn();
+      return;
+    }
+    if (
+      !allocation.investment ||
+      allocation.readOnly ||
+      allocation.isPending ||
+      allocation.currentPoints <= 0
+    ) {
+      return;
+    }
+    allocation.updatePoints(allocation.currentPoints - 1);
+  }, [allocation]);
+
+  const handleIncrement = useCallback(() => {
+    if (!allocation.isSignedIn) {
+      allocation.requestSignIn();
+      return;
+    }
+    if (
+      !allocation.investment ||
+      allocation.readOnly ||
+      allocation.isPending ||
+      allocation.currentPoints >= allocation.maxForInvestment ||
+      allocation.remainingPoints <= 0
+    ) {
+      return;
+    }
+    allocation.updatePoints(allocation.currentPoints + 1);
+  }, [allocation]);
+
+  if (variant === "overlay") {
+    return <CivicPointsOverlayUI {...allocation} />;
+  }
+
+  const decrementDisabled =
+    allocation.isSignedIn &&
+    (allocation.readOnly ||
+      allocation.isPending ||
+      allocation.currentPoints <= 0 ||
+      !allocation.investment);
+  const incrementDisabled =
+    allocation.isSignedIn &&
+    (allocation.readOnly ||
+      allocation.isPending ||
+      !allocation.investment ||
+      allocation.currentPoints >= allocation.maxForInvestment ||
+      allocation.remainingPoints <= 0);
+
+  return (
+    <div className="civic-points-stepper">
+      <p className="civic-points-stepper__label panel-eyebrow">
+        Invest Civic Points
+      </p>
       <div className="civic-points-stepper__controls">
         <button
           type="button"
@@ -182,9 +328,9 @@ export function CivicPointsStepper({
           −
         </button>
         <span className="civic-points-stepper__value" aria-live="polite">
-          {displayPoints}
+          {allocation.displayPoints}
           <span className="civic-points-stepper__max">
-            / {maxForInvestment}
+            / {allocation.maxForInvestment}
           </span>
         </span>
         <button
@@ -197,9 +343,9 @@ export function CivicPointsStepper({
           +
         </button>
       </div>
-      {error && (
+      {allocation.error && (
         <p className="civic-points-stepper__error" role="alert">
-          {error}
+          {allocation.error}
         </p>
       )}
     </div>
