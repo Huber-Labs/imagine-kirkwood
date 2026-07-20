@@ -115,7 +115,7 @@ export const opportunitySites: OpportunitySite[] = [
   ),
   createPlaceholderSite(
     "restaurant-alley",
-    "Restaurant Alley",
+    "Food Truck Alley",
     "parklet-promenade",
     "#C4A35A",
     "/images/opportunities/restaurant-alley/hero.webp",

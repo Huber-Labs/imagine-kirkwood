@@ -73,7 +73,7 @@ export const opportunityLocations: OpportunityLocation[] = [
     siteId: "restaurant-alley",
     x: 65.2,
     y: 51.6,
-    label: "Restaurant Alley",
+    label: "Food Truck Alley",
     labelAlign: "left",
     labelOffset: { x: -14, y: 4 },
   },

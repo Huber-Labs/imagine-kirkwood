@@ -30,7 +30,7 @@ The exhibition is the front door. A visitor should arrive curious, open a place 
 
 ## Upcoming (Phase 1)
 
-- **Complete all opportunity sites** — extend People's Park futures template across Dining District, Library Plaza, Restaurant Alley, Crossing Plaza, Village Courtyard
+- **Complete all opportunity sites** — extend People's Park futures template across Dining District, Library Plaza, Food Truck Alley, Crossing Plaza, Village Courtyard
 - **Better renderings** — higher-fidelity heroes per [`image-style-guide.md`](image-style-guide.md)
 - **Homepage polish** — align homepage hero with futures model when ready
 
