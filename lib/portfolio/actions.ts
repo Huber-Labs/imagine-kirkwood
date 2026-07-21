@@ -8,6 +8,10 @@ import type {
   InvestmentTotal,
   PortfolioState,
 } from "@/lib/portfolio/types";
+import {
+  buildV1CatalogInvestments,
+  mergeCatalogInvestments,
+} from "@/lib/portfolio/v1-catalog";
 import { CIVIC_POINTS_TOTAL } from "@/lib/portfolio/tags";
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { getSupabaseEnv } from "@/lib/supabase/env";
@@ -15,8 +19,10 @@ import { getSupabaseEnv } from "@/lib/supabase/env";
 type ActionResult = { ok: true } | { ok: false; error: string };
 
 export async function fetchInvestmentCatalog(): Promise<CatalogInvestment[]> {
+  const fallbackCatalog = buildV1CatalogInvestments();
+
   if (!getSupabaseEnv()) {
-    return [];
+    return fallbackCatalog;
   }
 
   const supabase = await createClient();
@@ -30,12 +36,12 @@ export async function fetchInvestmentCatalog(): Promise<CatalogInvestment[]> {
     ]);
 
   if (investmentsError || placesError || !investments || !places) {
-    return [];
+    return fallbackCatalog;
   }
 
   const placesById = new Map(places.map((place) => [place.id, place]));
 
-  return investments.flatMap((investment) => {
+  const fromDatabase = investments.flatMap((investment) => {
     const place = placesById.get(investment.place_id);
     if (!place) return [];
     return [
@@ -49,6 +55,8 @@ export async function fetchInvestmentCatalog(): Promise<CatalogInvestment[]> {
       },
     ];
   });
+
+  return mergeCatalogInvestments(fromDatabase, fallbackCatalog);
 }
 
 export async function fetchPortfolioState(): Promise<PortfolioState | null> {

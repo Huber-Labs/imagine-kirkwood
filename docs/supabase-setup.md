@@ -56,6 +56,8 @@ In the Supabase **SQL Editor**, run in order:
 1. [`supabase/migrations/001_civic_portfolio.sql`](../supabase/migrations/001_civic_portfolio.sql)
 2. [`supabase/migrations/002_seed_catalog.sql`](../supabase/migrations/002_seed_catalog.sql)
 3. [`supabase/migrations/003_sync_v1_catalog.sql`](../supabase/migrations/003_sync_v1_catalog.sql)
+4. [`supabase/migrations/004_add_shaded_street.sql`](../supabase/migrations/004_add_shaded_street.sql) — **required for Shaded Street voting**
+5. [`supabase/migrations/005_concept_comments.sql`](../supabase/migrations/005_concept_comments.sql) through [`010_pause_big_screen_nights.sql`](../supabase/migrations/010_pause_big_screen_nights.sql) as needed
 
 Or with the Supabase CLI:
 
