@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AuthStatus } from "@/components/auth/AuthStatus";
 import { SignInSheet } from "@/components/auth/SignInSheet";
+import { ExploreSubmitButton } from "@/components/submit/ExploreSubmitButton";
 import { AuthorModeShell } from "@/components/author/AuthorModeShell";
 import { AerialMap } from "@/components/map/AerialMap";
 import { MapAttribution, MapChrome } from "@/components/map/MapChrome";
@@ -189,9 +190,17 @@ export function MapExperience() {
       </div>
 
       {!authorMode && (
-        <div className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 hidden sm:right-6 sm:top-6 md:block">
+        <div className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 hidden items-center gap-2 sm:right-6 sm:top-6 md:flex">
+          <ExploreSubmitButton variant="pill" />
           <AuthStatus />
         </div>
+      )}
+
+      {!authorMode && (
+        <ExploreSubmitButton
+          variant="fab"
+          className="pointer-events-auto absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-30 md:hidden"
+        />
       )}
 
       {!mobileFocus && (
