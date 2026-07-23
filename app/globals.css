@@ -2120,6 +2120,22 @@ body {
   }
 }
 
+/* Centered-dialog variant: renders as a floating popup at every screen size
+   (instead of a bottom sheet on mobile), keeping the page visible behind it. */
+.sign-in-sheet--dialog {
+  align-items: center;
+  padding: calc(1.25rem + env(safe-area-inset-top)) 1.25rem
+    calc(1.25rem + env(safe-area-inset-bottom));
+}
+
+.sign-in-sheet--dialog .sign-in-sheet__panel {
+  width: min(100%, 28rem);
+  max-height: calc(100dvh - 2.5rem);
+  overflow-y: auto;
+  border-radius: 1.25rem;
+  padding-bottom: 1.5rem;
+}
+
 .sign-in-sheet__close {
   position: absolute;
   top: 0.875rem;

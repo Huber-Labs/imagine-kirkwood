@@ -58,7 +58,7 @@ export function SubmitIdeaModal({ onClose }: { onClose: () => void }) {
   const submitting = status === "submitting";
 
   return (
-    <div className="sign-in-sheet">
+    <div className="sign-in-sheet sign-in-sheet--dialog">
       <button
         type="button"
         className="sign-in-sheet__backdrop"
@@ -100,7 +100,7 @@ export function SubmitIdeaModal({ onClose }: { onClose: () => void }) {
         ) : (
           <>
             <h2 id="submit-idea-title" className="sign-in-sheet__title">
-              Submit an idea
+              Submit an Idea
             </h2>
             <p className="sign-in-sheet__copy">
               Have a vision for Kirkwood Avenue? Share a title, a short
