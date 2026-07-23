@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { SubmissionActions } from "@/components/admin/SubmissionActions";
 import { getOptionalProfile } from "@/lib/auth/session";
 import { fetchAdminConceptComments } from "@/lib/comments/actions";
 import { fetchAdminInvestmentTotals } from "@/lib/portfolio/actions";
+import { fetchAdminSubmissions } from "@/lib/submissions/actions";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 
 export default async function AdminPage() {
@@ -28,6 +30,7 @@ export default async function AdminPage() {
 
     const totals = await fetchAdminInvestmentTotals();
     const comments = await fetchAdminConceptComments();
+    const submissions = await fetchAdminSubmissions();
 
     return (
       <main className="admin-page mx-auto max-w-5xl px-6 py-12 sm:py-16">
@@ -156,6 +159,102 @@ export default async function AdminPage() {
                   </td>
                   <td className="px-4 py-3 align-top tabular-nums text-foreground/65">
                     {new Date(row.updatedAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="admin-page__section mt-12">
+          <div className="admin-page__header flex flex-col gap-2">
+            <p className="panel-eyebrow">Community voice</p>
+            <h2 className="font-[family-name:var(--font-instrument-serif)] text-2xl tracking-[-0.02em]">
+              Idea submissions
+            </h2>
+            <p className="max-w-2xl text-sm leading-relaxed text-foreground/65">
+              Ideas submitted from the public form. Review each one, then create
+              approved concepts manually. Mark reviewed or archive to keep the
+              queue tidy.
+            </p>
+          </div>
+        </div>
+
+        <div className="admin-page__table-wrap mt-6 overflow-x-auto rounded-2xl border border-foreground/10">
+          <table className="admin-page__table min-w-full text-left text-sm">
+            <thead className="border-b border-foreground/10 bg-foreground/[0.03]">
+              <tr>
+                <th className="px-4 py-3 font-medium">Photo</th>
+                <th className="px-4 py-3 font-medium">Idea</th>
+                <th className="px-4 py-3 font-medium">From</th>
+                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Submitted</th>
+                <th className="px-4 py-3 font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions.length === 0 && (
+                <tr>
+                  <td
+                    className="px-4 py-8 text-center text-foreground/55"
+                    colSpan={6}
+                  >
+                    No idea submissions yet.
+                  </td>
+                </tr>
+              )}
+              {submissions.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-foreground/6 last:border-b-0"
+                >
+                  <td className="px-4 py-3 align-top">
+                    {row.photoUrl ? (
+                      <a
+                        href={row.photoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={row.photoUrl}
+                          alt={`Photo for ${row.title}`}
+                          className="h-16 w-16 rounded-lg object-cover"
+                        />
+                      </a>
+                    ) : (
+                      <span className="text-foreground/40">—</span>
+                    )}
+                  </td>
+                  <td className="max-w-md px-4 py-3 align-top">
+                    <div className="font-medium">{row.title}</div>
+                    <div className="mt-1 whitespace-pre-wrap text-foreground/70">
+                      {row.description}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    {row.submitterName || row.submitterEmail ? (
+                      <div className="flex flex-col">
+                        {row.submitterName && <span>{row.submitterName}</span>}
+                        {row.submitterEmail && (
+                          <a
+                            href={`mailto:${row.submitterEmail}`}
+                            className="text-foreground/65 underline"
+                          >
+                            {row.submitterEmail}
+                          </a>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-foreground/40">Anonymous</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 align-top capitalize">{row.status}</td>
+                  <td className="px-4 py-3 align-top tabular-nums text-foreground/65">
+                    {new Date(row.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <SubmissionActions id={row.id} status={row.status} />
                   </td>
                 </tr>
               ))}

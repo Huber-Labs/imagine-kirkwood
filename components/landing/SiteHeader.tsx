@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SubmitIdeaLauncher } from "@/components/submit/SubmitIdeaLauncher";
 
 interface SiteHeaderProps {
   variant?: "default" | "exhibition";
@@ -18,14 +19,17 @@ export function SiteHeader({ variant = "default" }: SiteHeaderProps) {
         >
           Imagine Kirkwood
         </Link>
-        {!isExhibition && (
-          <Link
-            href="/explore"
-            className="text-sm text-muted transition-colors hover:text-foreground"
-          >
-            Explore
-          </Link>
-        )}
+        <div className="flex items-center gap-4 sm:gap-5">
+          {!isExhibition && (
+            <Link
+              href="/explore"
+              className="text-sm text-muted transition-colors hover:text-foreground"
+            >
+              Explore
+            </Link>
+          )}
+          <SubmitIdeaLauncher tone={isExhibition ? "light" : "dark"} />
+        </div>
       </div>
     </header>
   );
