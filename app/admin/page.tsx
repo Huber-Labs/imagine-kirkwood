@@ -22,12 +22,14 @@ export default async function AdminPage() {
     );
   }
 
-  try {
-    const profile = await getOptionalProfile();
-    if (!profile?.is_admin) {
-      redirect("/explore");
-    }
+  // Auth check stays outside the try/catch: redirect() intentionally throws a
+  // NEXT_REDIRECT signal that Next.js must handle, so it must not be caught.
+  const profile = await getOptionalProfile();
+  if (!profile?.is_admin) {
+    redirect("/explore");
+  }
 
+  try {
     const totals = await fetchAdminInvestmentTotals();
     const comments = await fetchAdminConceptComments();
     const submissions = await fetchAdminSubmissions();
